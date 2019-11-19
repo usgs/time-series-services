@@ -3,7 +3,7 @@
     "name": "Time Series Services",
     "organization": "U.S. Geological Survey",
     "description": "Time series services - contains services for time series data",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "status": "Development",
 
     "permissions": {
@@ -25,7 +25,10 @@
     "laborHours": null,
 
     "tags": [
-      "water data"
+      "water data",
+      "U.S. Geological Survey",
+      "USGS",
+      "wma"
     ],
 
     "languages": [

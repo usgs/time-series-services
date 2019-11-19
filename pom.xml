@@ -11,7 +11,6 @@
     <properties>
         <java.version>11</java.version>
         <springfox.version>2.9.2</springfox.version>
-        <start-class>gov.usgs.wma.waterdata.Application</start-class>
     </properties>
 
     <licenses>
@@ -31,6 +30,13 @@
             </comments>
         </license>
     </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/usgs/time-series-services.git</connection>
+        <developerConnection>scm:git:git@github.com:usgs/time-series-services.git</developerConnection>
+        <url>https://github.com/usgs/time-series-services</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
