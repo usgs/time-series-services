@@ -15,8 +15,8 @@ rulePriority: 309
 # port that is exposed by your container
 containerPort: 8080
 # string parameter specifying a path that ALB should use to verify that your application is alive
-healthCheck: "/data/about/health"
+healthCheck: "/api/observations/about/health"
 # string parameter that tells the ALB how to route requests to the containers (e.g. /my-app/*); this forms a listener rule for the load balancer
-contextPath: "data/*"
+contextPath: "/api/observations/*"
 configRepoPath: "wma/docker/time-series-services"
 configCredentialsId: "wma-eto-eb-rsa"

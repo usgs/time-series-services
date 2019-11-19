@@ -1,0 +1,14 @@
+sudo: required
+
+language: java
+
+services:
+  - docker
+
+jdk:
+  - openjdk11
+
+install: true
+
+script:
+  - mvn verify
