@@ -8,3 +8,15 @@ Water Data for the Nation time series data streaming service.
 This is a Spring Boot project. All of the normal caveats relating to a Spring Boot application apply.
 
 ## Configuration
+This application is configured to be run as a jar. It can also be run using the command ``` mvn spring-boot:run ``` in the project root directory.
+ 
+To run in a development environment, create an application.yml file in
+the project root directory containing the following (shown are example values):
+```.yml
+SERVER_PORT: "8080"
+SERVER_CONTEXT_PATH: "/api/observations"
+SWAGGER_DISPLAY_HOST: ""
+SWAGGER_DISPLAY_PATH: "/api/observations"
+SWAGGER_DISPLAY_PROTOCOL: "https"
+ROOT_LOG_LEVEL: "INFO"
+```
