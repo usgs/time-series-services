@@ -1,5 +1,5 @@
 .idea/
 time-series-services.iml
-application.yml
+/application.yml
 *.env
 /target

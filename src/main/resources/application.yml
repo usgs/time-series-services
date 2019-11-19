@@ -1,0 +1,41 @@
+spring:
+#  datasource:
+#    url: jdbc:postgresql://${WDFN_DB_HOST}:${WDFN_DB_PORT}/${WDFN_DB_NAME}
+#    username: ${WDFN_DB_READ_ONLY_USERNAME}
+#    password: ${WDFN_DB_READ_ONLY_PASSWORD}
+
+  profiles:
+    active: default,swagger
+
+logging:
+  level:
+    root: ${ROOT_LOG_LEVEL}
+
+server:
+  port: ${SERVER_PORT}
+  servlet:
+    context-path: ${SERVER_CONTEXT_PATH}
+
+swagger:
+  display:
+    host: ${SWAGGER_DISPLAY_HOST}
+    path: ${SWAGGER_DISPLAY_PATH}
+
+management:
+  endpoints:
+    enabled-by-default: false
+    jmx:
+      exposure:
+        exclude: "*"
+    web:
+      base-path: /about
+      exposure:
+        include:
+          - info
+          - health
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+      show-details: never
