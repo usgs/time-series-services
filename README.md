@@ -15,7 +15,7 @@ the project root directory containing the following (shown are example values):
 ```.yml
 SERVER_PORT: "8080"
 SERVER_CONTEXT_PATH: "/api/observations"
-SWAGGER_DISPLAY_HOST: ""
+SWAGGER_DISPLAY_HOST: "<swagger display host name>"
 SWAGGER_DISPLAY_PATH: "/api/observations"
 SWAGGER_DISPLAY_PROTOCOL: "https"
 ROOT_LOG_LEVEL: "INFO"
