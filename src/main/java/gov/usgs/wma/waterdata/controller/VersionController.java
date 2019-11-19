@@ -1,4 +1,4 @@
-package gov.usgs.wma.waterdata.webservice;
+package gov.usgs.wma.waterdata.controller;
 
 import gov.usgs.wma.waterdata.swagger.SwaggerConfig;
 import org.springframework.http.MediaType;
