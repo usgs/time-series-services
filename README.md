@@ -6,3 +6,5 @@ Water Data for the Nation time series data streaming service.
 
 ## Development
 This is a Spring Boot project. All of the normal caveats relating to a Spring Boot application apply.
+
+## Configuration
