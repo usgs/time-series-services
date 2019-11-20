@@ -20,6 +20,7 @@ swagger:
   display:
     host: ${SWAGGER_DISPLAY_HOST}
     path: ${SWAGGER_DISPLAY_PATH}
+    scheme: ${SWAGGER_DISPLAY_SCHEME}
 
 management:
   endpoints:
