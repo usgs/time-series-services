@@ -1,6 +1,6 @@
  # docker image path in artifactory
 artifactoryPath: "wdfn"
-gitlabPath: "wma/docker/time-series-services"
+gitlabPath: "wma/docker/wdfn/time-series-services"
 dockerImageName: "time-series-services"
 repoPath: "USGS/time-series-services.git"
 gitRepoUrl: "https://github.com/USGS/time-series-services.git"
@@ -18,5 +18,5 @@ containerPort: 8080
 healthCheck: "/api/observations/about/health"
 # string parameter that tells the ALB how to route requests to the containers (e.g. /my-app/*); this forms a listener rule for the load balancer
 contextPath: "/api/observations/*"
-configRepoPath: "wma/docker/time-series-services"
+configRepoPath: "wma/docker/wdfn/time-series-services"
 configCredentialsId: "wma-eto-eb-rsa"

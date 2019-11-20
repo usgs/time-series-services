@@ -13,6 +13,9 @@ import springfox.documentation.spring.web.paths.AbstractPathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 @Configuration
 @EnableSwagger2
 @Profile("swagger")
@@ -27,14 +30,18 @@ public class SwaggerConfig {
 	@Value("${swagger.display.path}")
 	private String swaggerDisplayPath;
 
+	@Value("${swagger.display.scheme}")
+	private String swaggerDisplayScheme;
+
 	@Bean
 	public Docket timeSeriesServicesApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
+				.protocols(new HashSet<>(Arrays.asList(swaggerDisplayScheme)))
 				.host(swaggerDisplayHost)
 				.pathProvider(pathProvider())
 				.tags(new Tag(VERSION_TAG_NAME, TAG_DESCRIPTION))
 				.select()
-				.apis(RequestHandlerSelectors.any())
+				.apis(RequestHandlerSelectors.basePackage("gov.usgs.wma.waterdata"))
 				.paths(PathSelectors.any())
 				.build();
 	}
