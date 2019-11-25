@@ -10,7 +10,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <springfox.version>2.9.2</springfox.version>
+        <springdoc.version>1.1.49</springdoc.version>
     </properties>
 
     <licenses>
@@ -54,14 +54,9 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <!-- TEST dependencies -->

@@ -3,3 +3,6 @@ time-series-services.iml
 /application.yml
 *.env
 /target
+/.settings/
+/.project
+/.classpath
