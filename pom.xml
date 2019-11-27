@@ -92,7 +92,7 @@
                 <configuration>
                     <environmentVariables>
                         <ROOT_LOG_LEVEL>INFO</ROOT_LOG_LEVEL>
-                        <CODES_SERVICE_URL>/</CODES_SERVICE_URL>
+                        <SITE_URL_BASE>/</SITE_URL_BASE>
                     </environmentVariables>
                 </configuration>
                 <executions>
