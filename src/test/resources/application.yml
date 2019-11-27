@@ -6,11 +6,6 @@ logging:
   level:
     root: ${ROOT_LOG_LEVEL}
 
-server:
-  port: ${SERVER_PORT}
-  servlet:
-    context-path: ${SERVER_CONTEXT_PATH}
-
 site:
   url:
     base: ${SITE_URL_BASE:/}
