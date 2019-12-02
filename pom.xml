@@ -104,30 +104,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <environmentVariables>
-                        <WQP_DATABASE_ADDRESS>${TESTING_DATABASE_ADDRESS}</WQP_DATABASE_ADDRESS>
-                        <WQP_DATABASE_PORT>${TESTING_DATABASE_PORT}</WQP_DATABASE_PORT>
-                        <WQP_DATABASE_NAME>wqp_db</WQP_DATABASE_NAME>
-                        <WQP_SCHEMA_OWNER_USERNAME>wqp_core</WQP_SCHEMA_OWNER_USERNAME>
-                        <WQP_SCHEMA_OWNER_PASSWORD>changeMe</WQP_SCHEMA_OWNER_PASSWORD>
-                        <WQP_DB_READ_ONLY_USERNAME>wqp_user</WQP_DB_READ_ONLY_USERNAME>
-                        <WQP_DB_READ_ONLY_PASSWORD>changeMe</WQP_DB_READ_ONLY_PASSWORD>
-                        <CODES_SERVICE_URL>/</CODES_SERVICE_URL>
-                    </environmentVariables>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
