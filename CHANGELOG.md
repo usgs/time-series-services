@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.1.0...master)
 ### Changed
 -   Replaced SpringFox with SpringDoc.
--   Modified Version Controller to work in dpeloyed environment.
+-   Modified Version Controller to work in deployed environment.
 
 ## [0.1.0](https://github.com/usgs/time-series-services/tree/time-series-services-0.1.0)
 ### Added
