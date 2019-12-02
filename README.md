@@ -13,10 +13,8 @@ This application is configured to be run as a jar. It can also be run using the 
 To run in a development environment, create an application.yml file in
 the project root directory containing the following (shown are example values):
 ```.yml
+ROOT_LOG_LEVEL: "INFO"
 SERVER_PORT: "8080"
 SERVER_CONTEXT_PATH: "/api/observations"
-SWAGGER_DISPLAY_HOST: "<swagger display host name>"
-SWAGGER_DISPLAY_PATH: "/api/observations"
-SWAGGER_DISPLAY_PROTOCOL: "https"
-ROOT_LOG_LEVEL: "INFO"
+SITE_URL_BASE: "http://localhost:8080/api/observations/"
 ```

@@ -10,7 +10,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <springfox.version>2.9.2</springfox.version>
+        <springdoc.version>1.1.49</springdoc.version>
     </properties>
 
     <licenses>
@@ -54,14 +54,9 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <!-- TEST dependencies -->
@@ -87,6 +82,24 @@
                     <execution>
                         <goals>
                             <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <environmentVariables>
+                        <ROOT_LOG_LEVEL>INFO</ROOT_LOG_LEVEL>
+                        <SITE_URL_BASE>/</SITE_URL_BASE>
+                    </environmentVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>

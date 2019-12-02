@@ -1,24 +1,35 @@
 package gov.usgs.wma.waterdata.controller;
 
-import gov.usgs.wma.waterdata.swagger.SwaggerConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Api(tags={SwaggerConfig.VERSION_TAG_NAME})
-@Controller
+@Tag(name="Application Version", description="Display")
+@RestController
 public class VersionController {
-	@ApiOperation(value="Return the web service version information.")
-	@RequestMapping(
+
+	@Value("${site.url.base}")
+	private String serverUrl;
+
+	@Operation(
+			description="Return the web service version information.",
+			responses= {
+					@ApiResponse(content=@Content(schema=@Schema(nullable=true)))
+			})
+	@GetMapping(
 			value="version",
-			method=RequestMethod.GET,
 			produces=MediaType.APPLICATION_JSON_VALUE
 	)
-	public String getVersion() {
-		return "redirect:/about/info";
+	public RedirectView getVersion(RedirectAttributes attributes) {
+		return new RedirectView(serverUrl + "about/info", true, true);
 	}
 }
