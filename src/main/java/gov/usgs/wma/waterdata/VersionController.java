@@ -1,4 +1,4 @@
-package gov.usgs.wma.waterdata.controller;
+package gov.usgs.wma.waterdata;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -23,7 +23,7 @@ public class VersionController {
 	@Operation(
 			description="Return the web service version information.",
 			responses= {
-					@ApiResponse(content=@Content(schema=@Schema(nullable=true)))
+					@ApiResponse(content=@Content(schema=@Schema(implementation=Version.class)))
 			})
 	@GetMapping(
 			value="version",

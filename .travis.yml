@@ -11,4 +11,9 @@ jdk:
 install: true
 
 script:
-  - mvn verify
+  - docker network create wdfn
+  - docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$TRAVIS_BUILD_DIR":/usr/src/mymaven -w /usr/src/mymaven --network=wqp -e TESTING_DATABASE_PORT=5432 -e TESTING_DATABASE_ADDRESS=wdfnDatabase -e TESTING_DATABASE_NETWORK=wdfn maven:3.6.0-jdk-11 mvn clean verify
+  - docker network rm wdfn
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

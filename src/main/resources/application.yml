@@ -1,11 +1,8 @@
 spring:
-#  datasource:
-#    url: jdbc:postgresql://${WDFN_DB_HOST}:${WDFN_DB_PORT}/${WDFN_DB_NAME}
-#    username: ${WDFN_DB_READ_ONLY_USERNAME}
-#    password: ${WDFN_DB_READ_ONLY_PASSWORD}
-
-  profiles:
-    active: default
+  datasource:
+    url: jdbc:postgresql://${WDFN_DATABASE_ADDRESS}:${WDFN_DATABASE_PORT}/${WDFN_DATABASE_NAME}
+    username: ${WDFN_DB_READ_ONLY_USERNAME}
+    password: ${WDFN_DB_READ_ONLY_PASSWORD}
 
 logging:
   level:

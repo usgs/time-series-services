@@ -6,3 +6,4 @@ time-series-services.iml
 /.settings/
 /.project
 /.classpath
+/.attach_*
