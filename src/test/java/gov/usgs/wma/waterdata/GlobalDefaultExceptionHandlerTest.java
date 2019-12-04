@@ -47,7 +47,7 @@ public class GlobalDefaultExceptionHandlerTest {
 	}
 
 	@Test
-	public void HttpMediaTypeNotAcceptableException() throws IOException {
+	public void handleHttpMediaTypeNotAcceptableException() throws IOException {
 		HttpServletResponse response = new MockHttpServletResponse();
 		String expected = "no way";
 		Map<String, String> actual = controller.handleUncaughtException(new HttpMediaTypeNotAcceptableException(expected), request, response);

@@ -27,7 +27,7 @@ import gov.usgs.wma.waterdata.springinit.BaseIT;
 public class MonitoringLocationControllerIT extends BaseIT {
 
 	@Autowired
-	TestRestTemplate restTemplate;
+	private TestRestTemplate restTemplate;
 
 	@Test
 	public void foundTest() {
