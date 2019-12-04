@@ -10,7 +10,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <springdoc.version>1.2.15</springdoc.version>
+        <springdoc.version>1.2.16</springdoc.version>
     </properties>
 
     <licenses>
