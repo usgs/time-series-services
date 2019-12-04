@@ -196,7 +196,7 @@
                     <images>
                         <image>
                             <name>usgswma/wqp_db:etl</name>
-                            <alias>wqpDatabase</alias>
+                            <alias>wdfnDatabase</alias>
                             <run>
                                 <network>
                                     <mode>custom</mode>
