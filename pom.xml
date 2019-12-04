@@ -152,6 +152,13 @@
                     <environmentVariables>
                         <ROOT_LOG_LEVEL>INFO</ROOT_LOG_LEVEL>
                         <SITE_URL_BASE>/</SITE_URL_BASE>
+                        <WDFN_DATABASE_ADDRESS>${TESTING_DATABASE_ADDRESS}</WDFN_DATABASE_ADDRESS>
+                        <WDFN_DATABASE_PORT>${TESTING_DATABASE_PORT}</WDFN_DATABASE_PORT>
+                        <WDFN_DATABASE_NAME>wqp_db</WDFN_DATABASE_NAME>
+                        <WDFN_DB_READ_ONLY_USERNAME>wdfn_user</WDFN_DB_READ_ONLY_USERNAME>
+                        <WDFN_DB_READ_ONLY_PASSWORD>changeMe</WDFN_DB_READ_ONLY_PASSWORD>
+                        <WDFN_SCHEMA_OWNER_USERNAME>nwis_ws_star</WDFN_SCHEMA_OWNER_USERNAME>
+                        <WDFN_SCHEMA_OWNER_PASSWORD>changeMe</WDFN_SCHEMA_OWNER_PASSWORD>
                     </environmentVariables>
                 </configuration>
                 <executions>
