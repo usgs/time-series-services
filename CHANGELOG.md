@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 -   Replaced SpringFox with SpringDoc.
 -   Modified Version Controller to work in deployed environment.
+-   Added GeoJSON endpoint.
 
 ## [0.1.0](https://github.com/usgs/time-series-services/tree/time-series-services-0.1.0)
 ### Added
