@@ -7,14 +7,43 @@ Water Data for the Nation time series data streaming service.
 ## Development
 This is a Spring Boot project. All of the normal caveats relating to a Spring Boot application apply.
 
-## Configuration
-This application is configured to be run as a jar. It can also be run using the command ``` mvn spring-boot:run ``` in the project root directory.
- 
-To run in a development environment, create an application.yml file in
-the project root directory containing the following (shown are example values):
+### Environment Variables
+To run in a development environment, create an application.yml file in the project root directory containing the following (shown are example values):
+
 ```.yml
 ROOT_LOG_LEVEL: "INFO"
 SERVER_PORT: "8080"
 SERVER_CONTEXT_PATH: "/api/observations"
 SITE_URL_BASE: "http://localhost:8080/api/observations/"
+WDFN_DATABASE_ADDRESS: "localhost"
+WDFN_DATABASE_PORT: "5432"
+WDFN_DATABASE_NAME: "wdfn_db"
+WDFN_DB_READ_ONLY_USERNAME: "wdfn_user"
+WDFN_DB_READ_ONLY_PASSWORD: "changeMe"
+WDFN_SCHEMA_OWNER_USERNAME: "wdfn_owner"
+WDFN_SCHEMA_OWNER_PASSWORD: "changeMe"
+```
+
+## Testing
+This project contains JUnit tests. Maven can be used to run them (in addition to the capabilities of your IDE).
+
+### Docker Network
+A named Docker Network is needed to run the automated tests via maven. The following is a sample command for creating your own local network. In this example the name is wqp and the ip addresses will be 172.25.0.x
+
+```.sh
+docker network create --subnet=172.25.0.0/16 wqp
+```
+
+### Unit Testing
+To run the unit tests of the application use:
+
+```.sh
+mvn package
+```
+
+### Database Integration Testing
+To additionally start up a Docker database and run the integration tests of the application use:
+
+```.sh
+mvn verify -DTESTING_DATABASE_PORT=5437 -DTESTING_DATABASE_ADDRESS=localhost -DTESTING_DATABASE_NETWORK=wdfn
 ```
