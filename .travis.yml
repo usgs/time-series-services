@@ -23,7 +23,7 @@ script:
     -e TESTING_DATABASE_PORT=5432 \
     -e TESTING_DATABASE_ADDRESS=wdfnDatabase \
     -e TESTING_DATABASE_NETWORK=wdfn \
-    maven:3.6.0-jdk-11 mvn clean verify \
+    maven:3.6.0-jdk-11 mvn clean verify
   - docker network rm wdfn
 
 after_success:
