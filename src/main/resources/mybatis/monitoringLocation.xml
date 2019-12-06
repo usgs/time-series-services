@@ -21,7 +21,7 @@
                        st_transform(geom, 4326) geom
                   from nwis.monitoring_location
                  where geom is not null and
-                       site_identification_number = #{value,jdbcType=VARCHAR}) site_data
+                       monitoring_location_identifier = #{value,jdbcType=VARCHAR}) site_data
     </select>
 
 </mapper>

@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description="Monitoring Location MetaData in GeoJSON format.")
 public class GeoJSON {
 
-	@Schema(description="Monitoring Location Identification Number.", example="07227448")
+	@Schema(description="Monitoring Location Identification Number.", example="USGS-07227448")
 	private String id;
 	@Schema(description="The geometry associated with this Monitoring Location.")
 	private Geometry geometry;
