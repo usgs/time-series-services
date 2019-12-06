@@ -31,12 +31,12 @@ public class MonitoringLocationControllerIT extends BaseIT {
 
 	@Test
 	public void foundTest() {
-		ResponseEntity<String> rtn = restTemplate.getForEntity("/monitoring-location/07227448", String.class);
+		ResponseEntity<String> rtn = restTemplate.getForEntity("/monitoring-location/USGS-07227448", String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
 
 		try {
 			assertThat(new JSONObject(rtn.getBody()),
-					sameJSONObjectAs(new JSONObject(getCompareFile("07227448.json"))));
+					sameJSONObjectAs(new JSONObject(getCompareFile("USGS-07227448.json"))));
 		} catch (JSONException e) {
 			fail("Unexpected JSONException during test", e);
 		} catch (IOException e) {
@@ -46,14 +46,14 @@ public class MonitoringLocationControllerIT extends BaseIT {
 
 	@Test
 	public void notFoundTest() {
-		ResponseEntity<String> rtn = restTemplate.getForEntity("/monitoring-location/12345678", String.class);
+		ResponseEntity<String> rtn = restTemplate.getForEntity("/monitoring-location/USGS-12345678", String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertNull(rtn.getBody());
 	}
 
 	@Test
 	public void noGeomTest() {
-		ResponseEntity<String> rtn = restTemplate.getForEntity("/monitoring-location/04028090", String.class);
+		ResponseEntity<String> rtn = restTemplate.getForEntity("/monitoring-location/USGS-04028090", String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertNull(rtn.getBody());
 	}

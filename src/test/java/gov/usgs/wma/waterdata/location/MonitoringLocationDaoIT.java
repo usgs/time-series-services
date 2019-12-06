@@ -25,7 +25,7 @@ public class MonitoringLocationDaoIT extends BaseIT {
 
 	@Test
 	public void foundTest() {
-		GeoJSON geoJSON = monitoringLocationDao.getLocation("07227448");
+		GeoJSON geoJSON = monitoringLocationDao.getLocation("USGS-07227448");
 		assertNotNull(geoJSON);
 		assertEquals("Feature", geoJSON.getType());
 		assertEquals("USGS-07227448", geoJSON.getId());
@@ -38,13 +38,13 @@ public class MonitoringLocationDaoIT extends BaseIT {
 
 	@Test
 	public void notFoundTest() {
-		GeoJSON geoJSON = monitoringLocationDao.getLocation("12345678");
+		GeoJSON geoJSON = monitoringLocationDao.getLocation("USGS-12345678");
 		assertNull(geoJSON);
 	}
 
 	@Test
 	public void noGeomTest() {
-		GeoJSON geoJSON = monitoringLocationDao.getLocation("04028090");
+		GeoJSON geoJSON = monitoringLocationDao.getLocation("USGS-04028090");
 		assertNull(geoJSON);
 	}
 }
