@@ -4,7 +4,7 @@
 <mapper namespace="monitoringLocation">
 
     <resultMap id="monitoringLocationResult" type="GeoJSON">
-        <result property="id" column="site_identification_number"/>
+        <result property="id" column="monitoring_location_identifier"/>
         <result property="desc" column="description"/>
         <result property="properties.samplingFeatureName" column="site_name"/>
         <result property="geometry.longitude" column="longitude"/>
@@ -12,11 +12,11 @@
     </resultMap>
 
     <select id="getGeoJson" parameterType="String" resultMap="monitoringLocationResult">
-        select site_identification_number,
+        select monitoring_location_identifier,
                site_name,
                to_char(st_y(geom),'FM90.0000000') latitude,
                to_char(st_x(geom),'FM990.0000000') longitude
-          from (select site_identification_number,
+          from (select monitoring_location_identifier,
                        site_name,
                        st_transform(geom, 4326) geom
                   from nwis.monitoring_location

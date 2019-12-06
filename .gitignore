@@ -7,3 +7,4 @@ time-series-services.iml
 /.project
 /.classpath
 /.attach_*
+/application-it.yml
