@@ -28,7 +28,7 @@ public class MonitoringLocationDaoIT extends BaseIT {
 		GeoJSON geoJSON = monitoringLocationDao.getLocation("07227448");
 		assertNotNull(geoJSON);
 		assertEquals("Feature", geoJSON.getType());
-		assertEquals("07227448", geoJSON.getId());
+		assertEquals("USGS-07227448", geoJSON.getId());
 		assertEquals("Point", geoJSON.getGeometry().getType());
 		assertEquals(2, geoJSON.getGeometry().getCoordinates().length);
 		assertEquals("-102.4804790", geoJSON.getGeometry().getCoordinates()[0].toString());
