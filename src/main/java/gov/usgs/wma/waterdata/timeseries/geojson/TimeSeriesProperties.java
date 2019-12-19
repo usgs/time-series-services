@@ -9,10 +9,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder(value={"observationType","phenomenonTimeStart","phenomenonTimeEnd",
 		"observedPropertyName","observedPropertyReference","samplingFeatureName",
-		"samplingFeatureName","statistic","statisticReference",
-		"timeStep","unitOfMeasureName","unitOfMeasureReference",
-		"result","nilReason","approvals",
-		"qualifiers","grades"})
+		"statistic","statisticReference","timeStep","unitOfMeasureName",
+		"unitOfMeasureReference","result","nilReason",
+		"approvals","qualifiers","grades"})
 public class TimeSeriesProperties extends Properties {
 
 	@Schema(description="The type of this observation - Currently only 'MeasureTimeseriesObservation' objects are produced.", example="MeasureTimeseriesObservation")
