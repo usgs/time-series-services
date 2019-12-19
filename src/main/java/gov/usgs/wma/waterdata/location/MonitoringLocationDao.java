@@ -5,8 +5,6 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import gov.usgs.wma.waterdata.location.geojson.GeoJSON;
-
 @Repository
 public class MonitoringLocationDao extends SqlSessionDaoSupport {
 
@@ -15,7 +13,7 @@ public class MonitoringLocationDao extends SqlSessionDaoSupport {
 		setSqlSessionFactory(sqlSessionFactory);
 	}
 
-	public GeoJSON getLocation(String id) {
+	public String getLocation(String id) {
 		return getSqlSession().selectOne("monitoringLocation.getGeoJson", id);
 	}
 }

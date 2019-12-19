@@ -2,15 +2,12 @@ package gov.usgs.wma.waterdata.springinit;
 
 import javax.sql.DataSource;
 
-import org.apache.ibatis.type.TypeAliasRegistry;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-import gov.usgs.wma.waterdata.location.geojson.GeoJSON;
 
 @Configuration
 public class MybatisConfig {
@@ -28,9 +25,6 @@ public class MybatisConfig {
 		config.setCacheEnabled(false);
 		config.setLazyLoadingEnabled(false);
 		config.setAggressiveLazyLoading(false);
-
-		registerAliases(config.getTypeAliasRegistry());
-
 		return config;
 	}
 
@@ -42,9 +36,5 @@ public class MybatisConfig {
 		Resource[] mappers = new PathMatchingResourcePatternResolver().getResources(MYBATIS_MAPPERS);
 		sqlSessionFactory.setMapperLocations(mappers);
 		return sqlSessionFactory;
-	}
-
-	private void registerAliases(TypeAliasRegistry registry) {
-		registry.registerAlias(GEOJSON_ALIAS, GeoJSON.class);
 	}
 }

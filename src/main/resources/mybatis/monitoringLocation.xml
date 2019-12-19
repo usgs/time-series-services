@@ -3,25 +3,24 @@
 
 <mapper namespace="monitoringLocation">
 
-    <resultMap id="monitoringLocationResult" type="GeoJSON">
-        <result property="id" column="monitoring_location_identifier"/>
-        <result property="desc" column="description"/>
-        <result property="properties.samplingFeatureName" column="site_name"/>
-        <result property="geometry.longitude" column="longitude"/>
-        <result property="geometry.latitude" column="latitude"/>
-    </resultMap>
-
-    <select id="getGeoJson" parameterType="String" resultMap="monitoringLocationResult">
-        select monitoring_location_identifier,
-               site_name,
-               to_char(st_y(geom),'FM90.0000000') latitude,
-               to_char(st_x(geom),'FM990.0000000') longitude
-          from (select monitoring_location_identifier,
-                       site_name,
-                       st_transform(geom, 4326) geom
-                  from nwis.monitoring_location
-                 where geom is not null and
-                       monitoring_location_identifier = #{value,jdbcType=VARCHAR}) site_data
+    <select id="getGeoJson" parameterType="String" resultType="String">
+        select json_build_object(
+                                 'type', 'Feature',
+                                 'id', monitoring_location_identifier,
+                                 'geometry', json_build_object(
+                                                               'type', 'Point',
+                                                               'coordinates', json_build_array(
+                                                                                               to_json(trunc(st_x(st_transform(geom, 4326))::numeric, 7)),
+                                                                                               to_json(trunc(st_y(st_transform(geom, 4326))::numeric, 7))
+                                                                                              )
+                                                                ),
+                                 'properties', json_build_object(
+                                                                 'samplingFeatureName', site_name
+                                                                 )
+                                )
+          from nwis.monitoring_location
+         where geom is not null and
+               monitoring_location_identifier = #{value,jdbcType=VARCHAR}
     </select>
 
 </mapper>

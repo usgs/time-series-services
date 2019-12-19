@@ -1,4 +1,4 @@
-package gov.usgs.wma.waterdata.location.geojson;
+package gov.usgs.wma.waterdata.geojson;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

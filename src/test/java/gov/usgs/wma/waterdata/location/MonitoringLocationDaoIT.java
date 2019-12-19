@@ -1,8 +1,10 @@
 package gov.usgs.wma.waterdata.location;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
-import gov.usgs.wma.waterdata.location.geojson.GeoJSON;
 import gov.usgs.wma.waterdata.springinit.BaseIT;
 import gov.usgs.wma.waterdata.springinit.DBTestConfig;
 
@@ -25,26 +26,22 @@ public class MonitoringLocationDaoIT extends BaseIT {
 
 	@Test
 	public void foundTest() {
-		GeoJSON geoJSON = monitoringLocationDao.getLocation("USGS-07227448");
-		assertNotNull(geoJSON);
-		assertEquals("Feature", geoJSON.getType());
-		assertEquals("USGS-07227448", geoJSON.getId());
-		assertEquals("Point", geoJSON.getGeometry().getType());
-		assertEquals(2, geoJSON.getGeometry().getCoordinates().length);
-		assertEquals("-102.4804790", geoJSON.getGeometry().getCoordinates()[0].toString());
-		assertEquals("35.6675430", geoJSON.getGeometry().getCoordinates()[1].toString());
-		assertEquals("Punta De Agua Ck ñr Channing, TX", geoJSON.getProperties().getSamplingFeatureName());
+		try {
+			assertEquals(getCompareFile("USGS-07227448.txt"), monitoringLocationDao.getLocation("USGS-07227448"));
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
 	}
 
 	@Test
 	public void notFoundTest() {
-		GeoJSON geoJSON = monitoringLocationDao.getLocation("USGS-12345678");
+		String geoJSON = monitoringLocationDao.getLocation("USGS-12345678");
 		assertNull(geoJSON);
 	}
 
 	@Test
 	public void noGeomTest() {
-		GeoJSON geoJSON = monitoringLocationDao.getLocation("USGS-04028090");
+		String geoJSON = monitoringLocationDao.getLocation("USGS-04028090");
 		assertNull(geoJSON);
 	}
 }
