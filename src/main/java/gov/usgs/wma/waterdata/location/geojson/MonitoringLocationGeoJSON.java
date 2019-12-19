@@ -10,14 +10,14 @@ public class MonitoringLocationGeoJSON extends GeoJSON {
 
 	@Schema(description="Monitoring Location Identification Number.", example="USGS-07227448")
 	public String getId() {
-		return id;
+		return null;
 	}
 	@Schema(description="The geometry associated with this Monitoring Location.")
 	public Geometry getGeometry() {
-		return geometry;
+		return null;
 	}
 	@Schema(description="The properties associated with this Monitoring Location.")
 	public Properties getProperties() {
-		return properties;
+		return null;
 	}
 }

@@ -14,6 +14,6 @@ public class Geometry {
 		return "Point";
 	}
 	public BigDecimal[] getCoordinates() {
-		return new BigDecimal[] {new BigDecimal(-102.480479), new BigDecimal(35.667543)};
+		return null;
 	}
 }
