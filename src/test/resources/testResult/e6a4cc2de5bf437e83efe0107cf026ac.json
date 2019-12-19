@@ -1,0 +1,113 @@
+{
+  "type": "Feature",
+  "id": "USGS-07227448-e6a4cc2de5bf437e83efe0107cf026ac",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -102.480479,
+      35.667543
+    ]
+  },
+  "properties": {
+    "observationType": "MeasureTimeseriesObservation",
+    "phenomenonTimeStart": "2019-11-09",
+    "phenomenonTimeEnd": "2019-11-15",
+    "observedPropertyName": "Depth to water level, ft below land surface",
+    "observedPropertyReference": "https://waterdata.usgs.gov/nwisweb/rdf?parmCd=72019",
+    "samplingFeatureName": "Punta De Agua Ck ñr Channing, TX",
+    "statistic": "DAILY MAXIMUM VALUES",
+    "statisticReference": "https://waterdata.usgs.gov/nwisweb/rdf?statCd=00001",
+    "timeStep": [
+      "2019-11-09",
+      "2019-11-10",
+      "2019-11-11",
+      "2019-11-12",
+      "2019-11-13",
+      "2019-11-14",
+      "2019-11-15"
+    ],
+    "unitOfMeasureName": "ft",
+    "unitOfMeasureReference": "http://www.opengis.net/def/uom/UCUM/degC",
+    "result": [
+      "12.5",
+      "12.0",
+      "11.0",
+      "13.2",
+      "13.5",
+      "14.1",
+      "14.1"
+    ],
+    "nilReason": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      "because",
+      "because"
+    ],
+    "approvals": [
+      [
+        "Estimated",
+        "Approved"
+      ],
+      [
+        "Approved"
+      ],
+      [
+        "Approved"
+      ],
+      [
+        "Approved"
+      ],
+      [
+        "Approved"
+      ],
+      [
+        "Approved"
+      ],
+      [
+        "Approved"
+      ]
+    ],
+    "qualifiers": [
+      null,
+      null,
+      null,
+      null,
+      [
+        "Revised"
+      ],
+      [
+        "Revised"
+      ],
+      [
+        "Revised"
+      ]
+    ],
+    "grades": [
+      [
+        "50"
+      ],
+      [
+        "50"
+      ],
+      [
+        "50"
+      ],
+      [
+        "50"
+      ],
+      [
+        "50"
+      ],
+      [
+        "50"
+      ],
+      [
+        "50",
+        "-1"
+      ]
+    ]
+  }
+}

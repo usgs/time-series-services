@@ -1,0 +1,1 @@
+{"type" : "Feature", "id" : "USGS-07227448", "geometry" : {"type" : "Point", "coordinates" : [-102.4804790, 35.6675430]}, "properties" : {"samplingFeatureName" : "Punta De Agua Ck ñr Channing, TX"}}

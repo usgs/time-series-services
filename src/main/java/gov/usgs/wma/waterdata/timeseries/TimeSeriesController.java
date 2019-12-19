@@ -1,4 +1,4 @@
-package gov.usgs.wma.waterdata.location;
+package gov.usgs.wma.waterdata.timeseries;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.usgs.wma.waterdata.location.geojson.MonitoringLocationGeoJSON;
+import gov.usgs.wma.waterdata.timeseries.geojson.TimeSeriesGeoJSON;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,33 +19,35 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name="Observations - Monitoring Location", description="Download osmf-json")
 @RestController
-public class MonitoringLocationController {
+public class TimeSeriesController {
 
-	protected MonitoringLocationDao monitoringLocationDao;
+	protected TimeSeriesDao timeSeriesDao;
 
 	@Autowired
-	public MonitoringLocationController(MonitoringLocationDao monitoringLocationDao) {
-		this.monitoringLocationDao = monitoringLocationDao;
+	public TimeSeriesController(TimeSeriesDao timeSeriesDao) {
+		this.timeSeriesDao = timeSeriesDao;
 	}
 
 	@Operation(
-			description="Return GeoJSON Data specific to the requested Monitoring Location.",
+			description="Return GeoJSON Data specific to the requested Monitoring Location and Time Series.",
 			responses= {
 					@ApiResponse(
 							responseCode="200",
-							description="GeoJSON representation of the Monitoring Location.",
-							content=@Content(schema=@Schema(implementation=MonitoringLocationGeoJSON.class))),
+							description="GeoJSON representation of the Time Series.",
+							content=@Content(schema=@Schema(implementation=TimeSeriesGeoJSON.class))),
 					@ApiResponse(
 							responseCode="404",
-							description="The requested Monitoring Location was not found.",
+							description="The requested Time Series was not found.",
 							content=@Content())
 			},
 			externalDocs=@ExternalDocumentation(url="https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json")
 			)
-	@GetMapping(value="monitoring-location/{monitoringLocationId}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public String getMonitoringLocation(@PathVariable(value="monitoringLocationId") String monitoringLocationId,
+	@GetMapping(value="monitoring-location/{monitoringLocationId}/time-series/{timeSeriesId}", produces=MediaType.APPLICATION_JSON_VALUE)
+	public String getMonitoringLocation(
+			@PathVariable(value="monitoringLocationId") String monitoringLocationId,
+			@PathVariable(value="timeSeriesId") String timeSeriesId,
 			HttpServletResponse response) {
-		String rtn = monitoringLocationDao.getLocation(monitoringLocationId);
+		String rtn = timeSeriesDao.getTimeSeries(monitoringLocationId, timeSeriesId);
 		if (null == rtn) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
