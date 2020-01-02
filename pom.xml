@@ -13,7 +13,7 @@
         <mybatis-spring.version>2.0.3</mybatis-spring.version>
         <mybatis.version>3.5.3</mybatis.version>
         <postgis-jdbc.version>2.3.0</postgis-jdbc.version>
-        <springdoc.version>1.2.18</springdoc.version>
+        <springdoc.version>1.2.22</springdoc.version>
     </properties>
 
     <licenses>
