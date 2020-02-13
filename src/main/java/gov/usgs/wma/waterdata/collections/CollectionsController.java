@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -31,7 +28,7 @@ public class CollectionsController {
 	}
 
 	@Operation(description = "Return Collections.", responses = {
-			@ApiResponse(responseCode = "200", description = "JSON representation the Collections.", content = @Content(schema = @Schema(implementation = OgcCollections.class))), }, externalDocs = @ExternalDocumentation(url = "https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json"))
+			@ApiResponse(responseCode = "200", description = "JSON representation the Collections.")})
 	@GetMapping(value = "collections", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollections(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			HttpServletResponse response) {
@@ -40,7 +37,8 @@ public class CollectionsController {
 	}
 
 	@Operation(description = "Return collection by id.", responses = {
-			@ApiResponse(responseCode = "200", description = "JSON representation the monitoring-locations Collection Metadata.", content = @Content(schema = @Schema(implementation = OgcCollections.class))), }, externalDocs = @ExternalDocumentation(url = "https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json"))
+			@ApiResponse(responseCode = "200", description = "JSON representation the Collection."),
+			@ApiResponse(responseCode="404", description="The requested collection was not found.")})
 	@GetMapping(value = "collections/{collectionId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollection(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
