@@ -55,7 +55,6 @@ public class ColectionsControllerIT extends BaseIT {
 	private void doGetCollectionTest(String path, String resultFile) {
 		ResponseEntity<String> rtn = restTemplate.getForEntity(path, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-		System.out.println("JSON = " + rtn.getBody() );
 
 		try {
 			String actual = rtn.getBody();
