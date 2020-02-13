@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="collections">
+    <sql id="monLocCollectionCols">
+          'monitoring-locations' id, #{monLocTitle,jdbcType=VARCHAR} title, #{monLocDescription,jdbcType=VARCHAR} description,
+         ST_XMin(ST_Extent(geom)) xmin, ST_YMin(ST_Extent(geom)) ymin, ST_XMax(ST_Extent(geom)) xmax,
+         ST_YMax(ST_Extent(geom)) ymax, #{serverUrl,jdbcType=VARCHAR} serverUrl
+    </sql>
+
+    <sql id="networkCollectionCols">
+         network_code id, network_name title, null description,
+         ST_XMin(ST_Extent(geom)) xmin, ST_YMin(ST_Extent(geom)) ymin, ST_XMax(ST_Extent(geom)) xmax,
+         ST_YMax(ST_Extent(geom)) ymax, #{serverUrl,jdbcType=VARCHAR} serverUrl
+    </sql>
+
+
+    <sql id="selectCollections">
+         select <include refid="monLocCollectionCols"/>
+         from nwis.monitoring_location
+         where geom is not null
+      UNION
+         select <include refid="networkCollectionCols"/>
+         from nwis.network, nwis.network_sites, nwis.monitoring_location
+         where network.network_id = network_sites.network_id and
+               network_sites.monitoring_location_id = monitoring_location.monitoring_location_id and
+               geom is not null
+         group by id, title, description
+    </sql>
+
+    <sql id="buildExtent">
+       json_build_object('spatial',
+            json_build_object('bbox', json_build_array(
+              json_build_array( xmin, ymin, xmax, ymax)
+            )
+         ),
+         'crs', 'http://www.opengis.net/def/crs/OGC/1.3/CRS83'
+       )
+    </sql>
+
+    <sql id="buildCollectionLinks">
+        json_build_array(json_build_object(
+             'type', 'application/json',
+             'rel',  'self',
+             'title', 'This document as JSON',
+             'href',  serverUrl || '/collections/' || id || '?f=json'
+            ), json_build_object(
+              'type', 'application/geo+json',
+               'rel',  'self',
+               'title', 'Features as GeoJSON',
+               'href',  serverUrl || '/collections/' || id || '/items?f=json'
+          )
+        )
+    </sql>
+
+    <sql id="buildCollectionsLinks">
+        json_build_array(json_build_object(
+                'type', 'application/json',
+                'rel',  'self',
+                'title', 'This document as JSON',
+                'href',  #{serverUrl} || '/collections?f=json'
+              )
+         )
+    </sql>
+
+    <sql id="collectionCols">
+        'id', collectionId,
+        'itemType', 'feature',
+        'title', title,
+        'description', description,
+        'extent', json_build_object('spatial',
+            json_build_object('bbox', json_build_array(
+              json_build_array( xmin, ymin, xmax, ymax)
+            )
+          ),
+          'crs', 'http://www.opengis.net/def/crs/OGC/1.3/CRS83'
+        ),
+        'links', json_build_array(json_build_object(
+             'type', 'application/json',
+             'rel',  'self',
+             'title', 'This document as JSON',
+             'href',  serverUrl || '/collections/' || id || '?f=json'
+            ), json_build_object(
+              'type', 'application/geo+json',
+               'rel',  'self',
+               'title', 'Features as GeoJSON',
+               'href',  serverUrl || '/collections/' || id || '/items?f=json'
+          )
+        )
+    </sql>
+
+    <sql id="colsToJsonFieldName">
+         id "collectionId", 'feature' "itemType", title "title", description "description",
+         json_build_array('') keywords,
+         <include refid="buildExtent"/> extent,
+         <include refid="buildCollectionLinks"/> links
+    </sql>
+
+    <select id="getCollectionsJson" parameterType="Map" resultType="String">
+      select json_build_object('collections', json_agg(collections),
+                              'links', <include refid="buildCollectionsLinks"/>)
+        from(select <include refid="colsToJsonFieldName"/> 
+          from (select *
+                        from (<include refid="selectCollections"/>) as a) as jsonFields)
+           as collections
+    </select>
+
+    <select id="getCollectionJson" parameterType="Map" resultType="String">
+      select row_to_json(collection)
+        from(select <include refid="colsToJsonFieldName"/> 
+          from (select *
+                        from (<include refid="selectCollections"/>) as a
+                        where id = #{collectionId}) as jsonFields)
+           as collection
+    </select>
+
+</mapper>

@@ -1,0 +1,36 @@
+{
+  "collectionId": "AHS",
+  "itemType": "feature",
+  "title": "Arkansas Hot Springs National Park Network",
+  "description": null,
+  "keywords": [
+    ""
+  ],
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -93.0154556,
+          34.5345341,
+          -93.0154556,
+          34.5345341
+        ]
+      ]
+    },
+    "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS83"
+  },
+  "links": [
+    {
+      "type": "application/json",
+      "rel": "self",
+      "title": "This document as JSON",
+      "href": "{serverUrl}/collections/AHS?f=json"
+    },
+    {
+      "type": "application/geo+json",
+      "rel": "self",
+      "title": "Features as GeoJSON",
+      "href": "{serverUrl}/collections/AHS/items?f=json"
+    }
+  ]
+}
