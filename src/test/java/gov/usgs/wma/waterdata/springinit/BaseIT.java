@@ -43,8 +43,8 @@ public abstract class BaseIT {
 
 	public void assertJsonEquals(String expected, String actual) {
 		try {
-			assertThat(new JSONObject(expected),
-					sameJSONObjectAs(new JSONObject(actual)));
+			assertThat(new JSONObject(actual),
+					sameJSONObjectAs(new JSONObject(expected)));
 		} catch (JSONException e) {
 			fail("Unexpected JSONException during test", e);
 		}
