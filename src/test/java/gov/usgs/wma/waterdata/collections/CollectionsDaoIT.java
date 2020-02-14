@@ -1,6 +1,5 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -32,7 +31,6 @@ public class CollectionsDaoIT extends BaseIT {
 		try {
 			String expected = getCompareFile("collections.json").replace("{serverUrl}", collectionsParams.getServerUrl());
 			String actual = collectionsDao.getCollectionsJson(collectionsParams.getParameters(null));
-			assertNotNull(actual);
 			assertJsonEquals(expected, actual);
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);
@@ -44,7 +42,6 @@ public class CollectionsDaoIT extends BaseIT {
 		try {
 			String expected = getCompareFile("monLocsCollection.json").replace("{serverUrl}", collectionsParams.getServerUrl());
 			String actual = collectionsDao.getCollectionJson(collectionsParams.getParameters("monitoring-locations"));
-			assertNotNull(actual);
 			assertJsonEquals(expected, actual);
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);
@@ -56,7 +53,6 @@ public class CollectionsDaoIT extends BaseIT {
 		try {
 			String expected = getCompareFile("ahsCollection.json").replace("{serverUrl}", collectionsParams.getServerUrl());
 			String actual = collectionsDao.getCollectionJson(collectionsParams.getParameters("AHS"));
-			assertNotNull(actual);
 			assertJsonEquals(expected, actual);
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);

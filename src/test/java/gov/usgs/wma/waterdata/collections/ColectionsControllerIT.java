@@ -31,17 +31,29 @@ public class ColectionsControllerIT extends BaseIT {
 
 	@Test
 	public void getCollectionsTest() {
-		doGetCollectionTest("/collections", "collections.json");
+		try {
+			doGetCollectionTest("/collections", "collections.json");
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
 	}
 
 	@Test
 	public void getMonLocsCollectionTest() {
-		doGetCollectionTest("/collections/monitoring-locations", "monLocsCollection.json");
+		try {
+			doGetCollectionTest("/collections/monitoring-locations", "monLocsCollection.json");
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
 	}
 
 	@Test
 	public void getNetworkCollectionTest() {
-		doGetCollectionTest("/collections/AHS", "ahsCollection.json");
+		try {
+			doGetCollectionTest("/collections/AHS", "ahsCollection.json");
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
 	}
 
 	@Test
@@ -52,18 +64,13 @@ public class ColectionsControllerIT extends BaseIT {
 		assertEquals("Collection with id 'xyz' not found.", rtn.getBody());
 	}
 
-	private void doGetCollectionTest(String path, String resultFile) {
+	private void doGetCollectionTest(String path, String resultFile) throws IOException {
 		ResponseEntity<String> rtn = restTemplate.getForEntity(path, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
 
-		try {
 			String actual = rtn.getBody();
 			String expected = getCompareFile(resultFile).replace("{serverUrl}", collectionsParams.getServerUrl());
 			assertJsonEquals(expected, actual);
-		} catch (IOException e) {
-			fail("Unexpected IOException during test", e);
-		}
-
 	}
 
 }
