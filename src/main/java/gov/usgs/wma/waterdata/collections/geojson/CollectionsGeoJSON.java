@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder(value={"collections","links"})
+@Schema(description="Collections MetaData in GeoJSON format.")
 public class CollectionsGeoJSON {
 	@Schema(description="List of collections avaialble.")
 	public CollectionGeoJSON[] getCollections() {

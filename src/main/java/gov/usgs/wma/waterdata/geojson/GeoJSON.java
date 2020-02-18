@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonPropertyOrder(value={"type","id","geometry","properties"})
 public class GeoJSON {
 
-	@Schema(description="The type of this object - Currently on 'Feature' objects are produced.", example="Feature")
+	@Schema(description="The type of this object - Currently only 'Feature' objects are produced.", example="Feature")
 	public String getType() {
 		return null;
 	}

@@ -21,7 +21,7 @@ import gov.usgs.wma.waterdata.springinit.DBTestConfig;
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
 public class CollectionsDaoIT extends BaseIT {
 	@Autowired
-	protected CollectionParams collectionsParams;
+	private CollectionParams collectionsParams;
 
 	@Autowired
 	private CollectionsDao collectionsDao;
@@ -29,7 +29,7 @@ public class CollectionsDaoIT extends BaseIT {
 	@Test
 	public void foundCollectionsTest() {
 		try {
-			String expected = getCompareFile("collections.json").replace("{serverUrl}", collectionsParams.getServerUrl());
+			String expected = getCompareFile("collections.json");
 			String actual = collectionsDao.getCollectionsJson(collectionsParams.getParameters(null));
 			assertJsonEquals(expected, actual);
 		} catch (IOException e) {
@@ -40,7 +40,7 @@ public class CollectionsDaoIT extends BaseIT {
 	@Test
 	public void foundMonLocCollectionTest() {
 		try {
-			String expected = getCompareFile("monLocsCollection.json").replace("{serverUrl}", collectionsParams.getServerUrl());
+			String expected = getCompareFile("monLocsCollection.json");
 			String actual = collectionsDao.getCollectionJson(collectionsParams.getParameters("monitoring-locations"));
 			assertJsonEquals(expected, actual);
 		} catch (IOException e) {
@@ -51,7 +51,7 @@ public class CollectionsDaoIT extends BaseIT {
 	@Test
 	public void foundNetworkCollectionTest() {
 		try {
-			String expected = getCompareFile("ahsCollection.json").replace("{serverUrl}", collectionsParams.getServerUrl());
+			String expected = getCompareFile("ahsCollection.json");
 			String actual = collectionsDao.getCollectionJson(collectionsParams.getParameters("AHS"));
 			assertJsonEquals(expected, actual);
 		} catch (IOException e) {

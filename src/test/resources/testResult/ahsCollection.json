@@ -1,5 +1,5 @@
 {
-  "collectionId": "AHS",
+  "id": "AHS",
   "itemType": "feature",
   "title": "Arkansas Hot Springs National Park Network",
   "description": null,
@@ -21,16 +21,22 @@
   },
   "links": [
     {
+      "type": "text/html",
+      "rel": "canonical",
+      "title": "information",
+      "href": "https://waterdata.usgs.gov"
+    },
+    {
       "type": "application/json",
       "rel": "self",
       "title": "This document as JSON",
-      "href": "{serverUrl}/api/observations/collections/AHS?f=json"
+      "href": "https://unittest/api/observations/collections/AHS?f=json"
     },
     {
       "type": "application/geo+json",
       "rel": "self",
       "title": "Features as GeoJSON",
-      "href": "{serverUrl}/api/observations/collections/AHS/items?f=json"
+      "href": "https://unittest/api/observations/collections/AHS/items?f=json"
     }
   ]
 }

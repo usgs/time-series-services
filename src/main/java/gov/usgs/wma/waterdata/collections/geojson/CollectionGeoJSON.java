@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder(value={"id","itemType","title","description", "keywords", "extent", "links"})
+@Schema(description="Collection MetaData in GeoJSON format.")
 public class CollectionGeoJSON {
 	public static final String EXAMPLE_TITLE = "NWIS Monitoring Locations";
 	public static final String EXAMPLE_DESC = "USGS water monitoring locations managed in the National Water Information System";
