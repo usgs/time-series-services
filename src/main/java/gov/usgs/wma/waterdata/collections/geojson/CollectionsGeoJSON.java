@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonPropertyOrder(value={"collections","links"})
 @Schema(description="Collections MetaData in GeoJSON format.")
 public class CollectionsGeoJSON {
-	@Schema(description="List of collections avaialble.")
+	@Schema(description="List of collections available.")
 	public CollectionGeoJSON[] getCollections() {
 		return null;
 	}

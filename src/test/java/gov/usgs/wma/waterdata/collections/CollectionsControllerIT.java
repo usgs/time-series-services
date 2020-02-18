@@ -28,7 +28,7 @@ import gov.usgs.wma.waterdata.springinit.BaseIT;
 
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
-public class ColectionsControllerIT extends BaseIT {
+public class CollectionsControllerIT extends BaseIT {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
