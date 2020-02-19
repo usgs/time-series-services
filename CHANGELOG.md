@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.2.0...master)
 ### Added
 -   Time Series GeoJSON endpoint.
+-   Collections GeoJSON endpoint.
+-   Collections/{collectionId} GeoJSON endpoint.
 
 ## [0.2.0](https://github.com/usgs/time-series-services/compare/time-series-services-0.1.0...time-series-services-0.2.0)
 ### Changed
