@@ -1,0 +1,42 @@
+{
+  "id": "monitoring-locations",
+  "itemType": "feature",
+  "title": "NWIS Monitoring Locations",
+  "description": "USGS water monitoring locations managed in the National Water Information System",
+  "keywords": [
+    ""
+  ],
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -102.480479,
+          34.5345341,
+          -90.1218414,
+          46.3477249
+        ]
+      ]
+    },
+    "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS83"
+  },
+  "links": [
+    {
+      "type": "text/html",
+      "rel": "canonical",
+      "title": "information",
+      "href": "https://waterdata.usgs.gov"
+    },
+    {
+      "type": "application/json",
+      "rel": "self",
+      "title": "This document as JSON",
+      "href": "https://unittest/api/observations/collections/monitoring-locations?f=json"
+    },
+    {
+      "type": "application/geo+json",
+      "rel": "self",
+      "title": "Features as GeoJSON",
+      "href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json"
+    }
+  ]
+}

@@ -1,7 +1,13 @@
 package gov.usgs.wma.waterdata.springinit;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
+import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
+
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.context.annotation.Import;
@@ -33,5 +39,14 @@ public abstract class BaseIT {
 
 	public String getCompareFile(String file) throws IOException {
 		return new String(FileCopyUtils.copyToByteArray(new ClassPathResource("testResult/" + file).getInputStream()));
+	}
+
+	public void assertJsonEquals(String expected, String actual) {
+		try {
+			assertThat(new JSONObject(actual),
+					sameJSONObjectAs(new JSONObject(expected)));
+		} catch (JSONException e) {
+			fail("Unexpected JSONException during test", e);
+		}
 	}
 }
