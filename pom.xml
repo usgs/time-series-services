@@ -157,7 +157,7 @@
                 <configuration>
                     <environmentVariables>
                         <ROOT_LOG_LEVEL>INFO</ROOT_LOG_LEVEL>
-                        <SITE_URL_BASE>https://unittest</SITE_URL_BASE>
+                        <SITE_URL_BASE>https://unittest/api/observations/</SITE_URL_BASE>
                         <WDFN_DATABASE_ADDRESS>${TESTING_DATABASE_ADDRESS}</WDFN_DATABASE_ADDRESS>
                         <WDFN_DATABASE_PORT>${TESTING_DATABASE_PORT}</WDFN_DATABASE_PORT>
                         <WDFN_DATABASE_NAME>wqp_db</WDFN_DATABASE_NAME>
