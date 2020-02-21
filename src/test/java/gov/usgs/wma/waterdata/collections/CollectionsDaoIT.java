@@ -60,9 +60,44 @@ public class CollectionsDaoIT extends BaseIT {
 	}
 
 	@Test
+	public void foundCollectionFeatureTest() {
+		try {
+			String expected = getCompareFile("features/monitoring-locations/USGS-07227448.json");
+			String actual = collectionsDao.getCollectionFeatureJson(collectionsParams.getParameters("monitoring-locations","USGS-07227448"));
+			assertJsonEquals(expected, actual);
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
+	}
+
+	@Test
 	public void notFoundTest() {
 		String collectionJson = collectionsDao.getCollectionJson(collectionsParams.getParameters("xyz"));
 		assertNull(collectionJson);
+	}
+
+	@Test
+	public void notFoundFeatureNoCollectionTest() {
+		String featureJson = collectionsDao.getCollectionFeatureJson(collectionsParams.getParameters("xyz","USGS-07227448"));
+		assertNull(featureJson);
+	}
+
+	@Test
+	public void notFoundFeatureId() {
+		String featureJson = collectionsDao.getCollectionFeatureJson(collectionsParams.getParameters("monitoring-locations","xyz"));
+		assertNull(featureJson);
+	}
+
+	@Test
+	public void notFoundFeatureNoGeom() {
+		String featureJson = collectionsDao.getCollectionFeatureJson(collectionsParams.getParameters("monitoring-locations","USGS-04028090"));
+		assertNull(featureJson);
+	}
+
+	@Test
+	public void notFoundFeatureNotInCollection() {
+		String featureJson = collectionsDao.getCollectionFeatureJson(collectionsParams.getParameters("AHS","USGS-07227448"));
+		assertNull(featureJson);
 	}
 
 }

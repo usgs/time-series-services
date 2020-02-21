@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gov.usgs.wma.waterdata.collections.geojson.CollectionGeoJSON;
 import gov.usgs.wma.waterdata.collections.geojson.CollectionsGeoJSON;
+import gov.usgs.wma.waterdata.collections.geojson.FeatureGeoJSON;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -70,6 +71,37 @@ public class CollectionsController {
 		String rtn = collectionsDao.getCollectionJson(collectionsParams.getParameters(collectionId));
 		if (null == rtn) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
+		}
+
+		return rtn;
+	}
+
+	@Operation(
+			description = "Return GeoJSON Data specific to the requested Collection Feature.",
+			responses = {
+					@ApiResponse(
+							responseCode = "200",
+							description = "GeoJSON representation of the Feature.",
+							content = @Content(schema = @Schema(implementation = FeatureGeoJSON.class))),
+					@ApiResponse(
+							responseCode = "404",
+							description = "The requested collection feature was not found.",
+							content=@Content())
+			},
+			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_feature_")
+			)
+	@GetMapping(value = "collections/{collectionId}/items/{featureId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public String getOgcCollectionFeature(
+			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
+			@PathVariable(value = "collectionId") String collectionId,
+			@PathVariable(value = "featureId") String featureId, HttpServletResponse response) {
+
+		String rtn = getOgcCollection(mimeType, collectionId, response);
+		if (response.getStatus() == HttpServletResponse.SC_OK) {
+			rtn = collectionsDao.getCollectionFeatureJson(collectionsParams.getParameters(collectionId, featureId));
+			if (rtn == null) {
+				response.setStatus(HttpStatus.NOT_FOUND.value());
+			}
 		}
 
 		return rtn;

@@ -87,9 +87,64 @@ public class CollectionsControllerIT extends BaseIT {
 	}
 
 	@Test
-	public void notFoundTest() {
+	public void collectionNotFoundTest() {
 		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/xyz", String.class);
-		assertEquals(rtn.getStatusCode().value(), HttpStatus.NOT_FOUND.value());
+		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
+		assertNull(rtn.getBody());
+	}
+
+	@Test
+	public void getCollectionFeatureTest() {
+		try {
+			doGetCollectionTest("/collections/monitoring-locations/items/USGS-07227448",
+					"features/monitoring-locations/USGS-07227448.json");
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
+	}
+
+	@Test
+	public void getNetworkCollectionFeatureTest() {
+		try {
+			doGetCollectionTest("/collections/AHS/items/USGS-343204093005501",
+					"features/AHS/USGS-343204093005501.json");
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
+		// this feature should also be in the monitoring-locations collection
+		try {
+			doGetCollectionTest("/collections/monitoring-locations/items/USGS-343204093005501",
+					"features/monitoring-locations/USGS-343204093005501.json");
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
+	}
+
+	@Test
+	public void collectionNotFoundItemsTest() {
+		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/xyz/items/USGS-07227448", String.class);
+		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
+		assertNull(rtn.getBody());
+	}
+
+	@Test
+	public void featureNotFoundTest() {
+		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/AHS/items/xyz", String.class);
+		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
+		assertNull(rtn.getBody());
+	}
+
+	@Test
+	public void featureNotFoundNoGeomTest() {
+		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items/USGS-0402809", String.class);
+		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
+		assertNull(rtn.getBody());
+	}
+
+	@Test
+	public void featureExistsInAnotherCollectionTest() {
+		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/AHS/items/USGS-07227448", String.class);
+		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
 		assertNull(rtn.getBody());
 	}
 
