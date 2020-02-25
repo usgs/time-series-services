@@ -1,0 +1,55 @@
+
+{
+
+    "type": "Feature",
+    "id": "USGS-343204093005501",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -93.0154556,
+            34.5345341
+        ]
+    },
+    "properties": {
+        "agency": "U.S. Geological Survey",
+        "monitoringLocationNumber": "343204093005501",
+        "monitoringLocationName": "02S19W26BBD1 Novastone T",
+        "monitoringLocationType": "Well",
+        "district": "Arkansas",
+        "state": "Arkansas",
+        "county": "Garland County",
+        "country": "US",
+        "monitoringLocationAltitudeLandSurface": "865",
+        "altitudeMethod": "Interpolated from topographic map.",
+        "altitudeAccuracy": "20",
+        "altitudeDatum": "National Geodetic Vertical Datum of 1929",
+        "nationalAquifer": "Other aquifers",
+        "localAquifer": "Arkansas Novaculite",
+        "localAquiferType": null,
+        "wellDepth": "263",
+        "holeDepth": null,
+        "holeDepthSource": "S",
+        "agencyCode": "USGS",
+        "districtCode": "05",
+        "stateFIPS": "US:05",
+        "countyFIPS": "US:05:051",
+        "countryFIPS": "US",
+        "hydrologicUnit": "080401010805",
+        "monitoringLocationUrl": "https://waterdata.usgs.gov/monitoring-location/343204093005501"
+    },
+    "links": [
+        {
+            "rel": "self",
+            "type": "application/geo+json",
+            "title": "This document as GeoJSON",
+            "href": "https://unittest/api/observations/collections/AHS/items/USGS-343204093005501?f=json"
+        },
+        {
+            "rel": "collection",
+            "type": "application/json",
+            "title": "Arkansas Hot Springs National Park Network",
+            "href": "https://unittest/api/observations/collections/AHS?f=json"
+        }
+    ]
+
+}

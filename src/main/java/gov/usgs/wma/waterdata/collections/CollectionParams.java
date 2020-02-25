@@ -17,15 +17,18 @@ public class CollectionParams {
 	@Value("${collections.monitoring-locations.description}")
 	private String monLocDescription;
 
-	public String getServerUrl() {
-		return serverUrl;
+	public Map<String, Object> getParameters(String collectionId) {
+		return getParameters(collectionId, null);
 	}
 
-	public Map<String, Object> getParameters(String collectionId) {
+	public Map<String, Object> getParameters(String collectionId, String featureId) {
 		HashMap<String, Object> paramMap = new HashMap<>();
 		paramMap.put("serverUrl", serverUrl);
 		if (collectionId != null) {
 			paramMap.put("collectionId", collectionId);
+		}
+		if (featureId != null) {
+			paramMap.put("featureId", featureId);
 		}
 		paramMap.put("monLocTitle", monLocTitle);
 		paramMap.put("monLocDescription", monLocDescription);

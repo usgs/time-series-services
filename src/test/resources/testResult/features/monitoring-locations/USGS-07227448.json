@@ -1,0 +1,52 @@
+{
+  "type": "Feature",
+  "id": "USGS-07227448",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -102.480479,
+      35.667543
+    ]
+  },
+  "properties": {
+        "agency": "U.S. Geological Survey",
+        "monitoringLocationNumber": "07227448",
+        "monitoringLocationName": "Punta De Agua Ck ñr Channing, TX",
+        "monitoringLocationType": "Stream",
+        "district": "Texas",
+        "state": "Texas",
+        "county": "Hartley County",
+        "country": "US",
+        "monitoringLocationAltitudeLandSurface": "3407",
+        "altitudeMethod": "Interpolated from topographic map.",
+        "altitudeAccuracy": "10",
+        "altitudeDatum": "National Geodetic Vertical Datum of 1929",
+        "nationalAquifer": null,
+        "localAquifer": null,
+        "localAquiferType": null,
+        "wellDepth": null,
+        "holeDepth": null,
+        "holeDepthSource": null,
+        "agencyCode": "USGS",
+        "districtCode": "48",
+        "stateFIPS": "US:48",
+        "countyFIPS": "US:48:205",
+        "countryFIPS": "US",
+        "hydrologicUnit": "110901030506",
+        "monitoringLocationUrl": "https://waterdata.usgs.gov/monitoring-location/07227448"
+  },
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/geo+json",
+      "title": "This document as GeoJSON",
+      "href": "https://unittest/api/observations/collections/monitoring-locations/items/USGS-07227448?f=json"
+    },
+    {
+      "rel": "collection",
+      "type": "application/json",
+      "title": "NWIS Monitoring Locations",
+      "href": "https://unittest/api/observations/collections/monitoring-locations?f=json"
+    }
+  ]
+}
