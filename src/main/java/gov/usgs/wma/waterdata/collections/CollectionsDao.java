@@ -24,6 +24,6 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 	}
 
 	public String getCollectionFeatureJson(Map<String, Object> params) {
-		return getSqlSession().selectOne("collections.getCollectionFeatureJson", params);
+		return getSqlSession().selectOne("features.getCollectionFeatureJson", params);
 	}
 }

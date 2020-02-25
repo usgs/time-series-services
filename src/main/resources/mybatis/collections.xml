@@ -9,67 +9,6 @@
         trunc(ST_YMax(ST_Extent(st_transform(geom, 4326)))::numeric,7) ymax
     </sql>
 
-    <sql id="featureCols">
-         'Feature' itemType,
-          monitoring_location_identifier featureId,
-          trunc(st_x(st_transform(geom, 4326))::numeric, 7) xCorr,
-          trunc(st_y(st_transform(geom, 4326))::numeric, 7) yCorr,
-          agency  agency,
-          site_identification_number  monitoringLocationNumber,
-          site_name  monitoringLocationName,
-          site_type  monitoringLocationType,
-          district  district,
-          state  state,
-          county  county,
-          country  country,
-          altitude_of_guage_land_surface  monitoringLocationAltitudeLandSurface,
-          method_altitude_determined  altitudeMethod,
-          altitude_accuracy  altitudeAccuracy,
-          altitude_datum  altitudeDatum,
-          national_aquifer  nationalAquifer,
-          local_aquifer  localAquifer,
-          local_aquifer_type  localAquiferType,
-          well_depth  wellDepth,
-          hole_depth  holeDepth,
-          source_of_hole_depth  holeDepthSource,
-          agency_cd  agencyCode,
-          district_cd  districtCode,
-          country_cd || ':' || state_cd stateFips,
-          country_cd || ':' || state_cd || ':' || county_cd countyFips,
-          country_cd countryFips,
-          calculated_huc_12  hydrologicUnit,
-          'https://waterdata.usgs.gov/monitoring-location/' || site_identification_number  monitoringLocationUrl
-     </sql>
-
-     <sql id="selectFeaturesQuery">
-          (select
-              'monitoring-locations' collectionId, #{monLocTitle,jdbcType=VARCHAR} collectionTitle,
-              <include refid="featureCols"/>
-           from nwis.monitoring_location
-           where geom is not null
-           <if test="featureId != null">
-             and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-           </if>
-           <if test="collectionId != null and collectionId != 'monitoring-locations'">
-             limit 0
-           </if>
-          )
-       UNION
-          select
-             network_code collectionId, network_name collectionTitle,
-             <include refid="featureCols"/>
-          from nwis.network
-          join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
-          join nwis.monitoring_location on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-          where geom is not null
-          <if test="collectionId != null">
-              and network_code = #{collectionId,jdbcType=VARCHAR}
-          </if>
-          <if test="featureId != null">
-              and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-          </if>
-     </sql>
-
     <sql id="selectCollectionsQuery">
         (select
             'monitoring-locations' id,
@@ -132,54 +71,6 @@
         ) links
     </sql>
 
-    <sql id="featureColumnsToJson">
-          itemType "type",
-          featureId id,
-          json_build_object(
-             'type', 'Point',
-             'coordinates', json_build_array(xCorr, yCorr)
-          ) geometry,
-          json_build_object(
-             'agency', agency,
-             'monitoringLocationNumber', monitoringLocationNumber,
-             'monitoringLocationName', monitoringLocationName,
-             'monitoringLocationType', monitoringLocationType,
-             'district', district,
-             'state', state,
-             'county', county,
-             'country', country,
-             'monitoringLocationAltitudeLandSurface', monitoringLocationAltitudeLandSurface,
-             'altitudeMethod', altitudeMethod,
-             'altitudeAccuracy', altitudeAccuracy,
-             'altitudeDatum', altitudeDatum,
-             'nationalAquifer', nationalAquifer,
-             'localAquifer', localAquifer,
-             'localAquiferType', localAquiferType,
-             'wellDepth', wellDepth,
-             'holeDepth', holeDepth,
-             'holeDepthSource', holeDepthSource,
-             'agencyCode', agencyCode,
-             'districtCode', districtCode,
-             'stateFIPS', stateFIPS,
-             'countyFIPS', countyFIPS,
-             'countryFIPS', countryFIPS,
-             'hydrologicUnit', hydrologicUnit,
-             'monitoringLocationUrl', monitoringLocationUrl
-          ) properties,
-          json_build_array(json_build_object(
-              'rel',  'self',
-              'type', 'application/geo+json',
-              'title', 'This document as GeoJSON',
-              'href',  #{serverUrl,jdbcType=VARCHAR} || 'collections/' || collectionId || '/items/' || featureId || '?f=json'
-             ), json_build_object(
-              'rel',  'collection',
-              'type', 'application/json',
-               'title', collectionTitle,
-               'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || collectionId || '?f=json'
-             )
-          ) links
-     </sql>
-
     <select id="getCollectionsJson" parameterType="map" resultType="String">
         select json_build_object(
             'collections', json_agg(collections),
@@ -204,14 +95,6 @@
             select <include refid="collectionColumnsToJson"/>
                 from (<include refid="selectCollectionsQuery"/>) as cols
         ) as collection
-    </select>
-
-    <select id="getCollectionFeatureJson" parameterType="map" resultType="String">
-      select row_to_json(feature)
-        from (
-            select <include refid="featureColumnsToJson"/>
-                from (<include refid="selectFeaturesQuery"/>) as cols
-        ) as feature
     </select>
 
 </mapper>
