@@ -42,10 +42,10 @@ public class TimeSeriesController {
 			},
 			externalDocs=@ExternalDocumentation(url="https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json")
 			)
-	@GetMapping(value="collections/{collectionId}/features/{featureId}", produces=MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value="collections/{collectionId}/items/{itemId}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public String getMonitoringLocation(
 			@PathVariable(value="collectionId") String monitoringLocationId,
-			@PathVariable(value="featureId") String timeSeriesId,
+			@PathVariable(value="itemId") String timeSeriesId,
 			HttpServletResponse response) {
 		String rtn = timeSeriesDao.getTimeSeries(monitoringLocationId, timeSeriesId);
 		if (null == rtn) {
