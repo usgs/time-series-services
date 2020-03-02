@@ -103,7 +103,7 @@ public class FeatureProperties {
 	public String getHydrologicUnit() {
 		return null;
 	}
-	@Schema(description = "monitoringLocationUrl", example = "https://waterdata.usgs.gov/monitoring-location/07227448")
+	@Schema(description = "monitoringLocationUrl", example = "https://waterdata.usgs.gov/collections/07227448")
 	public String getMonitoringLocationUrl() {
 		return null;
 	}

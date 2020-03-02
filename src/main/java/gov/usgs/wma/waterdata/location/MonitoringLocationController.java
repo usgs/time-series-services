@@ -42,8 +42,8 @@ public class MonitoringLocationController {
 			},
 			externalDocs=@ExternalDocumentation(url="https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json")
 			)
-	@GetMapping(value="monitoring-location/{monitoringLocationId}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public String getMonitoringLocation(@PathVariable(value="monitoringLocationId") String monitoringLocationId,
+	@GetMapping(value="collections/{collectionId}", produces=MediaType.APPLICATION_JSON_VALUE)
+	public String getMonitoringLocation(@PathVariable(value="collectionId") String monitoringLocationId,
 			HttpServletResponse response) {
 		String rtn = monitoringLocationDao.getLocation(monitoringLocationId);
 		if (null == rtn) {
