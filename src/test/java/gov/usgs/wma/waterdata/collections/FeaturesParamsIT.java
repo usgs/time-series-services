@@ -277,9 +277,9 @@ public class FeaturesParamsIT extends BaseIT {
 
 	private String getCollectionTitle(String collectionId) {
 		String title = "";
-		if (collectionId.equals("monitoring-locations")) {
+		if ("monitoring-locations".equals(collectionId)) {
 			title = "NWIS Monitoring Locations";
-		} else if (collectionId.equals("ANC")) {
+		} else if ("ANC".equals(collectionId)) {
 			title = "Arkansas Natural Resources Commission Groundwater Network";
 		}
 
