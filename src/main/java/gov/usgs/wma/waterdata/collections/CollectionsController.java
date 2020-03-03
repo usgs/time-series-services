@@ -1,6 +1,7 @@
 package gov.usgs.wma.waterdata.collections;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.usgs.wma.waterdata.collections.geojson.CollectionGeoJSON;
 import gov.usgs.wma.waterdata.collections.geojson.CollectionsGeoJSON;
 import gov.usgs.wma.waterdata.collections.geojson.FeatureGeoJSON;
+import gov.usgs.wma.waterdata.timeseries.TimeSeriesDao;
+import gov.usgs.wma.waterdata.timeseries.geojson.TimeSeriesGeoJSON;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,11 +31,15 @@ public class CollectionsController {
 	protected CollectionsDao collectionsDao;
 
 	protected CollectionParams collectionsParams;
+	
+	protected TimeSeriesDao timeSeriesDao;
+
 
 	@Autowired
-	public CollectionsController(CollectionsDao collectionsDao, CollectionParams collectionsParams) {
+	public CollectionsController(CollectionsDao collectionsDao, CollectionParams collectionsParams, TimeSeriesDao timeSeriesDao) {
 		this.collectionsDao = collectionsDao;
 		this.collectionsParams = collectionsParams;
+		this.timeSeriesDao = timeSeriesDao;
 	}
 
 	@Operation(
@@ -144,4 +151,36 @@ public class CollectionsController {
 		return rtn;
 	}
 
+	@Operation(
+			description="Return GeoJSON Data specific to the requested Monitoring Location and Time Series.",
+			responses= {
+					@ApiResponse(
+							responseCode="200",
+							description="GeoJSON representation of the Time Series.",
+							content=@Content(schema=@Schema(implementation=TimeSeriesGeoJSON.class))),
+					@ApiResponse(
+							responseCode="404",
+							description="The requested Time Series was not found.",
+							content=@Content())
+			},
+			externalDocs=@ExternalDocumentation(url="https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json")
+			)
+	@GetMapping(value="collections/{collectionId}/items/{featureId}/time-series/{timeSeriesId}", produces=MediaType.APPLICATION_JSON_VALUE)
+	public String getTimeSeries(
+			@PathVariable(value="collectionId") String collectionId, // ex: networkId,
+			@PathVariable(value="featureId") String featureId, // ex: monitoringLocationId
+			@PathVariable(value="timeSeriesId") String timeSeriesId, //ex: USGS:1234598765
+			HttpServletResponse response) {
+		
+		Optional<String> feature = Optional.of(getOgcCollectionFeature("json", collectionId, featureId, response));
+		
+		String rtn = null;
+		if (feature.isPresent()) {
+			rtn = timeSeriesDao.getTimeSeries(featureId, timeSeriesId);
+		}
+		if (null == rtn) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+		}
+		return rtn;
+	}
 }
