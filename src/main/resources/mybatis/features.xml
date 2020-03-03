@@ -36,20 +36,35 @@
 
      <sql id="selectFeaturesQuery">
           (select
-              'monitoring-locations' collection_id, #{monLocTitle,jdbcType=VARCHAR} collectionTitle,
+              'monitoring-locations' collection_id, #{monLocTitle,jdbcType=VARCHAR} collection_title,
               <include refid="featureCols"/>
            from nwis.monitoring_location
            where geom is not null
            <if test="featureId != null">
              and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
            </if>
-           <if test="collectionId != null and collectionId != 'monitoring-locations'">
-             limit 0
+           <if test="pointLowLeft != null and pointUpRight != null">
+             and ST_Intersects(ST_SetSRID(ST_MakeBox2D(
+                                         ST_GeomFromText(#{pointLowLeft},4326),
+                                         ST_GeomFromText(#{pointUpRight},4326)), 4326),
+                 ST_setSRID(geom,4326))
+           </if>
+           ORDER BY collection_id, feature_id
+           <choose>
+             <when test="collectionId != null and collectionId != 'monitoring-locations'">
+               limit 0
+             </when>
+             <when test="limit != null">
+              limit #{limit}
+             </when>
+           </choose>
+           <if test="startIndex != null">
+              offset #{startIndex}
            </if>
           )
        UNION
-          select
-             network_code collection_id, network_name collectionTitle,
+          (select
+             network_code collection_id, network_name collection_title,
              <include refid="featureCols"/>
           from nwis.network
           join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
@@ -61,6 +76,35 @@
           <if test="featureId != null">
               and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
           </if>
+          <if test="pointLowLeft != null and pointUpRight != null">
+             and ST_Intersects(ST_SetSRID(ST_MakeBox2D(
+                                         ST_GeomFromText(#{pointLowLeft},4326),
+                                         ST_GeomFromText(#{pointUpRight},4326)), 4326),
+                 ST_setSRID(geom,4326))
+          </if>
+          ORDER BY collection_id, feature_id
+          <if test="limit != null">
+              limit #{limit}
+           </if>
+          <if test="startIndex != null">
+             offset #{startIndex}
+          </if>
+           )
+          ORDER BY collection_id, feature_id
+     </sql>
+
+     <sql id="selectCollectionTitleQuery">
+       <choose>
+         <when test="collectionId == 'monitoring-locations'">
+             select #{monLocTitle,jdbcType=VARCHAR} collection_title
+          </when>
+          <otherwise>
+             select network_name collection_title
+             from network
+             where network_code = #{collectionId,jdbcType=VARCHAR}
+             limit 1
+           </otherwise>
+       </choose>
      </sql>
 
     <sql id="featureColumnsToJson">
@@ -105,11 +149,66 @@
              ), json_build_object(
               'rel',  'collection',
               'type', 'application/json',
-               'title', collectionTitle,
+               'title', collection_title,
                'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || collection_id || '?f=json'
              )
           ) links
      </sql>
+
+     <select id="getCollectionFeaturesJson" parameterType="map" resultType="String">
+       with title as (select collection_title from (<include refid="selectCollectionTitleQuery"/>) as collection_title)
+       select case
+         when coalesce(count(features),0) = 0
+         then null
+         else
+           json_build_object(
+              'type', 'FeatureCollection',
+               'features', json_agg(features),
+               'links' , json_build_array(
+                   json_build_object(
+                        'type', 'text/html',
+                         'rel',  'canonical',
+                         'title', 'information',
+                         'href', 'https://waterdata.usgs.gov'
+                   ),
+                   json_build_object(
+                        'type', 'application/geo+json',
+                         'rel',  'self',
+                         'title', 'This document as GeoJSON',
+                         'href',  #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR} || '/items?f=json'
+                   ),
+                   json_build_object(
+                        'type', 'application/json',
+                         'rel',  'collection',
+                         'title', title.collection_title,
+                         'href',  #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR} || '?f=json'
+                   )
+                   <if test="prevStartIndex != null">
+                     ,json_build_object(
+                       'type', 'application/geo+json',
+                       'rel',  'prev',
+                       'title', 'items (prev)',
+                       'href',  #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR} || '/items?f=json'  || #{prevStartIndex}
+                      )
+                   </if>
+                    <if test="nextStartIndex != null">
+                      ,json_build_object(
+                              'type', 'application/geo+json',
+                        'rel',  'next',
+                        'title', 'items (next)',
+                        'href',  #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR} || '/items?f=json'  || #{nextStartIndex}
+                            )
+                    </if>
+                 ),
+                 'timeStamp', to_char(now()::timestamp at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')
+           )
+         end
+       from (
+           select <include refid="featureColumnsToJson"/>
+               from (<include refid="selectFeaturesQuery"/>) as cols
+       ) as features, title
+       group by title.collection_title
+    </select>
 
     <select id="getCollectionFeatureJson" parameterType="map" resultType="String">
       select row_to_json(feature)
@@ -117,6 +216,11 @@
             select <include refid="featureColumnsToJson"/>
                 from (<include refid="selectFeaturesQuery"/>) as cols
         ) as feature
+    </select>
+
+    <select id="getCollectionFeatureCount" parameterType="map" resultType="int">
+      select count(*)
+        from (<include refid="selectFeaturesQuery"/>) as features
     </select>
 
 </mapper>
