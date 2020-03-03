@@ -1,7 +1,7 @@
 package gov.usgs.wma.waterdata.collections;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -77,12 +77,9 @@ public class CollectionsController {
 	public String getOgcCollection(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
 
-		String rtn = collectionsDao.getCollectionJson(collectionsParams.buildParams(collectionId));
-		if (null == rtn) {
-			response.setStatus(HttpStatus.NOT_FOUND.value());
-		}
-
-		return rtn;
+		
+		return doIfResponseOk(response, 
+				()->collectionsDao.getCollectionJson(collectionsParams.buildParams(collectionId)));
 	}
 
 	@Operation(
@@ -107,20 +104,17 @@ public class CollectionsController {
 			@RequestParam(value = "bbox", required = false) List<String> bbox,
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
 
-		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
 
-		String rtn = null;
-		if (limit == 0 || startIndex >= count) {
-			response.setStatus(HttpStatus.NOT_FOUND.value());
-		} else {
-			rtn = collectionsDao.getCollectionFeaturesJson(
-					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count));
-			if (rtn == null) {
-				response.setStatus(HttpStatus.NOT_FOUND.value());
-			}
+		// requesting less than one is a non-starter
+		resultOr404(response, limit>0 ?"Good" :null);
+		if (response.getStatus() == HttpServletResponse.SC_OK) {
+			// check the collection feature count
+			int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
+			// verify the start index is within the feature count
+			resultOr404(response, startIndex<count  ?"Good" :null);
 		}
-
-		return rtn;
+		return doIfResponseOk(response, ()->collectionsDao.getCollectionFeaturesJson(
+						collectionsParams.buildParams(collectionId)));
 	}
 
 	@Operation(
@@ -143,12 +137,10 @@ public class CollectionsController {
 			@PathVariable(value = "collectionId") String collectionId,
 			@PathVariable(value = "featureId") String featureId, HttpServletResponse response) {
 
-		String rtn = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId));
-		if (rtn == null) {
-			response.setStatus(HttpStatus.NOT_FOUND.value());
-		}
-
-		return rtn;
+		// verify the collection exist before fetching the feature
+		getOgcCollection(mimeType, collectionId, response);
+		return doIfResponseOk(response, 
+				()->collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId)));
 	}
 
 	@Operation(
@@ -169,18 +161,37 @@ public class CollectionsController {
 	public String getTimeSeries(
 			@PathVariable(value="collectionId") String collectionId, // ex: networkId,
 			@PathVariable(value="featureId") String featureId, // ex: monitoringLocationId
-			@PathVariable(value="timeSeriesId") String timeSeriesId, //ex: USGS:1234598765
+			@PathVariable(value="timeSeriesId") String timeSeriesId, //ex: USGS-123456
 			HttpServletResponse response) {
 		
-		Optional<String> feature = Optional.of(getOgcCollectionFeature("json", collectionId, featureId, response));
-		
-		String rtn = null;
-		if (feature.isPresent()) {
-			rtn = timeSeriesDao.getTimeSeries(featureId, timeSeriesId);
+		// verify the collection and feature exist before fetching the time series
+		getOgcCollectionFeature("json", collectionId, featureId, response);
+		return doIfResponseOk(response, ()->timeSeriesDao.getTimeSeries(featureId, timeSeriesId));
+	}
+
+	/**
+	 * Helper method to perform a call to ensure higher level entities exist.
+	 * @param response the instance of the response for the request provided by spring
+	 * @param lambda an action to do to respond to the request that returns a string upon success
+	 * @return on a successful response it will be the string provided by the lambda.
+	 */
+	protected String doIfResponseOk(HttpServletResponse response, Supplier<String> lambda) {
+		if (response.getStatus() == HttpServletResponse.SC_OK) {
+			return resultOr404(response, lambda.get());
 		}
-		if (null == rtn) {
+		return null; // TODO should we return the empty string?
+	}
+	
+	/**
+	 * Helper method to set the response to 404 if there is no result from the request.
+	 * @param lambda an action to do to respond to the request that returns a string upon success
+	 * @param result the string response from any request
+	 * @return on a successful response it will be the string provided by the lambda.
+	 */
+	protected String resultOr404(HttpServletResponse response, String result) {
+		if (null == result) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
-		return rtn;
+		return result;
 	}
 }
