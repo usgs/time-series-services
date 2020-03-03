@@ -208,9 +208,9 @@ public class CollectionsControllerIT extends BaseIT {
 
 	private List<String> getCollectionFeatureIds(String collectionId) {
 		List<String> ids = List.of("");
-		if (collectionId.equals("AHS")) {
+		if ("AHS".equals(collectionId)) {
 			ids = AHS_FEATURE_IDS;
-		} else if (collectionId.equals("monitoring-locations")) {
+		} else if ("monitoring-locations".equals(collectionId)) {
 			ids = MONLOC_FEATURE_IDS;
 		}
 

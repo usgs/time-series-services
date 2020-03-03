@@ -47,7 +47,7 @@ public class FeaturesParamsIT extends BaseIT {
 				String featuresJsonStr = doCollectionRequest("/collections/" + collectionId + "/items");
 				JSONObject featuresJson = new JSONObject(featuresJsonStr);
 				assertTrue(featuresJson.get("features") instanceof JSONArray);
-				verifyFeatureFields(featuresJson, collectionId, 0, maxLimit - 1, maxLimit, maxLimit);
+				verifyFeatureFields(featuresJson, collectionId, 0, maxLimit, maxLimit);
 			} catch (JSONException e) {
 				fail("Unexpected JSONException during test", e);
 			}
@@ -85,7 +85,7 @@ public class FeaturesParamsIT extends BaseIT {
 							System.out.println("url = " + url);
 							System.out.println("uturesrl = " + featuresJsonStr);
 							assertTrue(featuresJson.get("features") instanceof JSONArray);
-							verifyFeatureFields(featuresJson, collectionId, startIndex, endIndex, expectedLength, l);
+							verifyFeatureFields(featuresJson, collectionId, startIndex, expectedLength, l);
 						}
 					} catch (JSONException e) {
 						fail("Unexpected JSONException during test", e);
@@ -174,7 +174,7 @@ public class FeaturesParamsIT extends BaseIT {
 		return b > a ? c >= a && c <= b : c >= b && c <= a;
 	}
 
-	private void verifyFeatureFields(JSONObject featuresJson, String collectionId, int startIndex, int endIndex,
+	private void verifyFeatureFields(JSONObject featuresJson, String collectionId, int startIndex,
 			int length, int limit) throws JSONException {
 		assertNotNull(featuresJson.names());
 		assertEquals(4, featuresJson.names().length());
@@ -192,10 +192,10 @@ public class FeaturesParamsIT extends BaseIT {
 			assertEquals("monitoringLocationName" + suffix, properties.getString("monitoringLocationName"));
 			currIndex++;
 		}
-		verifyFeaturePagingLinks(featuresJson, collectionId, startIndex, endIndex, limit);
+		verifyFeaturePagingLinks(featuresJson, collectionId, startIndex, limit);
 	}
 
-	private void verifyFeaturePagingLinks(JSONObject featuresJson, String collectionId, int startIndex, int endIndex,
+	private void verifyFeaturePagingLinks(JSONObject featuresJson, String collectionId, int startIndex,
 			int limit) throws JSONException {
 		assertTrue(featuresJson.get("links") instanceof JSONArray);
 		JSONArray links = (JSONArray) featuresJson.get("links");
@@ -208,11 +208,11 @@ public class FeaturesParamsIT extends BaseIT {
 			assertTrue(REL_TYPES.contains(rel), "unknown link rel value returned: " + rel);
 			assertFalse(returnedRels.contains(rel), "duplicate link rel value returned: " + rel);
 			returnedRels.add(rel);
-			verifyLink(link, collectionId, startIndex, endIndex, limit);
+			verifyLink(link, collectionId, startIndex, limit);
 		}
 	}
 
-	private void verifyLink(JSONObject link, String collectionId, int startIndex, int endIndex, int limit)
+	private void verifyLink(JSONObject link, String collectionId, int startIndex, int limit)
 			throws JSONException {
 		String rel = link.getString("rel");
 		String type = link.getString("type");
@@ -255,6 +255,7 @@ public class FeaturesParamsIT extends BaseIT {
 			break;
 		default:
 			fail("Unexpected link rel returned: " + rel);
+			break;
 		}
 	}
 

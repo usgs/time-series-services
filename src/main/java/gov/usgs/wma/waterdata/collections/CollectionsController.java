@@ -106,13 +106,14 @@ public class CollectionsController {
 			Map<String, Object> params = collectionsParams.getParameters(collectionId);
 			int count = collectionsDao.getCollectionFeatureCount(params);
 
-			if (limit == null) {
-				limit = collectionsParams.getMaxLimit();
+			Integer limitParam = limit;
+			if (limitParam == null) {
+				limitParam = collectionsParams.getMaxLimit();
 			}
 			if (limit > collectionsParams.getMaxLimit()) {
-				limit = collectionsParams.getMaxLimit();
+				limitParam = collectionsParams.getMaxLimit();
 			}
-			collectionsParams.setLimit(params, limit);
+			collectionsParams.setLimit(params, limitParam);
 			collectionsParams.setStartIndex(params, startIndex);
 			collectionsParams.setBbox(params, bbox);
 			collectionsParams.setPagingParams(params, count);
