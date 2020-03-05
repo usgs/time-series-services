@@ -1,7 +1,6 @@
 package gov.usgs.wma.waterdata.collections;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,7 +49,7 @@ public class CollectionsController {
 	public String getOgcCollections(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			HttpServletResponse response) {
 
-		return collectionsDao.getCollectionsJson(collectionsParams.getParameters(null));
+		return collectionsDao.getCollectionsJson(collectionsParams.buildParams(null));
 	}
 
 	@Operation(
@@ -71,7 +70,7 @@ public class CollectionsController {
 	public String getOgcCollection(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
 
-		String rtn = collectionsDao.getCollectionJson(collectionsParams.getParameters(collectionId));
+		String rtn = collectionsDao.getCollectionJson(collectionsParams.buildParams(collectionId));
 		if (null == rtn) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
@@ -96,29 +95,19 @@ public class CollectionsController {
 	@GetMapping(value = "collections/{collectionId}/items", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollectionFeatures(
 			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
-			@RequestParam(value = "limit", required = false, defaultValue = "${query.limit.max}") Integer limit,
+			@RequestParam(value = "limit", required = false, defaultValue = "10000") int limit,
 			@RequestParam(value = "startIndex", required = false, defaultValue = "0") int startIndex,
-			@RequestParam(value = "bbox", required = false) List<Double> bbox,
+			@RequestParam(value = "bbox", required = false) List<String> bbox,
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
 
-		String rtn = getOgcCollection(mimeType, collectionId, response);
-		if (response.getStatus() == HttpServletResponse.SC_OK) {
-			Map<String, Object> params = collectionsParams.getParameters(collectionId);
-			int count = collectionsDao.getCollectionFeatureCount(params);
+		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
 
-			Integer limitParam = limit;
-			if (limitParam == null) {
-				limitParam = collectionsParams.getMaxLimit();
-			}
-			if (limit > collectionsParams.getMaxLimit()) {
-				limitParam = collectionsParams.getMaxLimit();
-			}
-			collectionsParams.setLimit(params, limitParam);
-			collectionsParams.setStartIndex(params, startIndex);
-			collectionsParams.setBbox(params, bbox);
-			collectionsParams.setPagingParams(params, count);
-
-			rtn = collectionsDao.getCollectionFeaturesJson(params);
+		String rtn = null;
+		if (limit == 0 || startIndex >= count) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+		} else {
+			rtn = collectionsDao.getCollectionFeaturesJson(
+					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count));
 			if (rtn == null) {
 				response.setStatus(HttpStatus.NOT_FOUND.value());
 			}
@@ -147,12 +136,9 @@ public class CollectionsController {
 			@PathVariable(value = "collectionId") String collectionId,
 			@PathVariable(value = "featureId") String featureId, HttpServletResponse response) {
 
-		String rtn = getOgcCollection(mimeType, collectionId, response);
-		if (response.getStatus() == HttpServletResponse.SC_OK) {
-			rtn = collectionsDao.getCollectionFeatureJson(collectionsParams.getParameters(collectionId, featureId));
-			if (rtn == null) {
-				response.setStatus(HttpStatus.NOT_FOUND.value());
-			}
+		String rtn = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId));
+		if (rtn == null) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
 
 		return rtn;

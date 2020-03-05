@@ -1,0 +1,1065 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "id": "USGS-000000",
+            "geometry": {
+                "coordinates": [
+                    -90.1218382,
+                    46.3477259
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000000?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000000",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000001",
+            "geometry": {
+                "coordinates": [
+                    -90.1732309,
+                    46.4916141
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000001?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000001",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000002",
+            "geometry": {
+                "coordinates": [
+                    -102.480479,
+                    35.667543
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000002?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000002",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000003",
+            "geometry": {
+                "coordinates": [
+                    -93.0154556,
+                    34.5345341
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000003?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000003",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000004",
+            "geometry": {
+                "coordinates": [
+                    -102.2807222,
+                    35.6750972
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000004?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000004",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000005",
+            "geometry": {
+                "coordinates": [
+                    -102.2601957,
+                    35.5189363
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000005?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000005",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000006",
+            "geometry": {
+                "coordinates": [
+                    -102.0060255,
+                    35.2653299
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000006?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000006",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000007",
+            "geometry": {
+                "coordinates": [
+                    -101.879628,
+                    35.4703261
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000007?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000007",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000008",
+            "geometry": {
+                "coordinates": [
+                    -101.5512813,
+                    35.7105973
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000008?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000008",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000009",
+            "geometry": {
+                "coordinates": [
+                    -101.3509971,
+                    35.6647649
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000009?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000009",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000010",
+            "geometry": {
+                "coordinates": [
+                    -100.3706884,
+                    35.935042
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000010?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000010",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000011",
+            "geometry": {
+                "coordinates": [
+                    -101.305993,
+                    36.2022549
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000011?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000011",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000012",
+            "geometry": {
+                "coordinates": [
+                    -101.1640167,
+                    36.3614416
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000012?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000012",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000013",
+            "geometry": {
+                "coordinates": [
+                    -100.2760889,
+                    36.4027166
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000013?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000013",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000014",
+            "geometry": {
+                "coordinates": [
+                    -100.2756889,
+                    36.2386488
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000014?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000014",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000015",
+            "geometry": {
+                "coordinates": [
+                    -102.1760295,
+                    34.8486714
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000015?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000015",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000016",
+            "geometry": {
+                "coordinates": [
+                    -102.1007513,
+                    34.9239474
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000016?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000016",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000017",
+            "geometry": {
+                "coordinates": [
+                    -102.0996401,
+                    34.9242251
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000017?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000017",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000018",
+            "geometry": {
+                "coordinates": [
+                    -101.891857,
+                    35.0106111
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000018?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000018",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        },
+        {
+            "id": "USGS-000019",
+            "geometry": {
+                "coordinates": [
+                    -101.4140578,
+                    34.837555
+                ],
+                "type": "Point"
+            },
+            "links": [
+                {
+                    "href": "https://unittest/api/observations/collections/ANC/items/USGS-000019?f=json",
+                    "rel": "self",
+                    "title": "This document as GeoJSON",
+                    "type": "application/geo+json"
+                },
+                {
+                    "href": "https://unittest/api/observations/collections/ANC?f=json",
+                    "rel": "collection",
+                    "title": "Arkansas Natural Resources Commission Groundwater Network",
+                    "type": "application/json"
+                }
+            ],
+            "properties": {
+                "agency": null,
+                "agencyCode": null,
+                "altitudeAccuracy": null,
+                "altitudeDatum": null,
+                "altitudeMethod": null,
+                "country": null,
+                "countryFIPS": null,
+                "county": null,
+                "countyFIPS": null,
+                "district": null,
+                "districtCode": null,
+                "holeDepth": null,
+                "holeDepthSource": null,
+                "hydrologicUnit": null,
+                "localAquifer": null,
+                "localAquiferType": null,
+                "monitoringLocationAltitudeLandSurface": null,
+                "monitoringLocationName": "monitoringLocationName000019",
+                "monitoringLocationNumber": null,
+                "monitoringLocationType": null,
+                "monitoringLocationUrl": null,
+                "nationalAquifer": null,
+                "state": null,
+                "stateFIPS": null,
+                "wellDepth": null
+            },
+            "type": "Feature"
+        }
+    ],
+    "links": [
+        {
+            "href": "https://waterdata.usgs.gov",
+            "rel": "canonical",
+            "title": "information",
+            "type": "text/html"
+        },
+        {
+            "href": "https://unittest/api/observations/collections/ANC/items?f=json&startIndex=0&limit=10000",
+            "rel": "self",
+            "title": "This document as GeoJSON",
+            "type": "application/geo+json"
+        },
+        {
+            "href": "https://unittest/api/observations/collections/ANC?f=json",
+            "rel": "collection",
+            "title": "Arkansas Natural Resources Commission Groundwater Network",
+            "type": "application/json"
+        }
+    ]
+}

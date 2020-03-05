@@ -1,0 +1,141 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "USGS-000010",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -100.3706884,
+          35.935042
+        ]
+      },
+      "properties": {
+        "agency": null,
+        "monitoringLocationNumber": null,
+        "monitoringLocationName": "monitoringLocationName000010",
+        "monitoringLocationType": null,
+        "district": null,
+        "state": null,
+        "county": null,
+        "country": null,
+        "monitoringLocationAltitudeLandSurface": null,
+        "altitudeMethod": null,
+        "altitudeAccuracy": null,
+        "altitudeDatum": null,
+        "nationalAquifer": null,
+        "localAquifer": null,
+        "localAquiferType": null,
+        "wellDepth": null,
+        "holeDepth": null,
+        "holeDepthSource": null,
+        "agencyCode": null,
+        "districtCode": null,
+        "stateFIPS": null,
+        "countyFIPS": null,
+        "countryFIPS": null,
+        "hydrologicUnit": null,
+        "monitoringLocationUrl": null
+      },
+      "links": [
+        {
+          "rel": "self",
+          "type": "application/geo+json",
+          "title": "This document as GeoJSON",
+          "href": "https://unittest/api/observations/collections/ANC/items/USGS-000010?f=json"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "title": "Arkansas Natural Resources Commission Groundwater Network",
+          "href": "https://unittest/api/observations/collections/ANC?f=json"
+        }
+      ]
+    },
+    {
+      "type": "Feature",
+      "id": "USGS-000011",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -101.305993,
+          36.2022549
+        ]
+      },
+      "properties": {
+        "agency": null,
+        "monitoringLocationNumber": null,
+        "monitoringLocationName": "monitoringLocationName000011",
+        "monitoringLocationType": null,
+        "district": null,
+        "state": null,
+        "county": null,
+        "country": null,
+        "monitoringLocationAltitudeLandSurface": null,
+        "altitudeMethod": null,
+        "altitudeAccuracy": null,
+        "altitudeDatum": null,
+        "nationalAquifer": null,
+        "localAquifer": null,
+        "localAquiferType": null,
+        "wellDepth": null,
+        "holeDepth": null,
+        "holeDepthSource": null,
+        "agencyCode": null,
+        "districtCode": null,
+        "stateFIPS": null,
+        "countyFIPS": null,
+        "countryFIPS": null,
+        "hydrologicUnit": null,
+        "monitoringLocationUrl": null
+      },
+      "links": [
+        {
+          "rel": "self",
+          "type": "application/geo+json",
+          "title": "This document as GeoJSON",
+          "href": "https://unittest/api/observations/collections/ANC/items/USGS-000011?f=json"
+        },
+        {
+          "rel": "collection",
+          "type": "application/json",
+          "title": "Arkansas Natural Resources Commission Groundwater Network",
+          "href": "https://unittest/api/observations/collections/ANC?f=json"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "type": "text/html",
+      "rel": "canonical",
+      "title": "information",
+      "href": "https://waterdata.usgs.gov"
+    },
+    {
+      "type": "application/geo+json",
+      "rel": "self",
+      "title": "This document as GeoJSON",
+      "href": "https://unittest/api/observations/collections/ANC/items?f=json&startIndex=10&limit=2"
+    },
+    {
+      "type": "application/json",
+      "rel": "collection",
+      "title": "Arkansas Natural Resources Commission Groundwater Network",
+      "href": "https://unittest/api/observations/collections/ANC?f=json"
+    },
+    {
+      "type": "application/geo+json",
+      "rel": "prev",
+      "title": "items (prev)",
+      "href": "https://unittest/api/observations/collections/ANC/items?f=json&startIndex=8&limit=2"
+    },
+    {
+      "type": "application/geo+json",
+      "rel": "next",
+      "title": "items (next)",
+      "href": "https://unittest/api/observations/collections/ANC/items?f=json&startIndex=12&limit=2"
+    }
+  ]
+}
