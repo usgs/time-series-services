@@ -23,7 +23,7 @@
         )
       UNION
         select
-            network_code id, network_name title, null description,
+            network_code id, network_name title, description,
             <include refid="geomColumns"/>
         from nwis.network
         join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
