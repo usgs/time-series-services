@@ -3,7 +3,7 @@
     "id":"AHS",
      "itemType":"feature",
       "title":"Arkansas Hot Springs National Park Network",
-       "description":null,
+       "description":"description of AHS",
        "keywords":[""],
        "extent":{
          "spatial" :
