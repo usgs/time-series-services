@@ -68,10 +68,7 @@ public class CollectionParams {
 		}
 		params.put("startIndex", startIndex);
 		if (startIndex > 0) {
-			int prevStartIndex = startIndex - limit;
-			if (prevStartIndex < 0) {
-				prevStartIndex = 0;
-			}
+			int prevStartIndex = Math.max(0, startIndex - limit);
 			params.put("prevStartIndex", String.format("&startIndex=%d&limit=%d", prevStartIndex, limit));
 		}
 

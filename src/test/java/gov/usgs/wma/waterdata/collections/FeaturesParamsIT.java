@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -110,31 +109,12 @@ public class FeaturesParamsIT extends BaseIT {
 		double upRightLat = 36.0;
 
 		for (String collectionId : COLLECTION_IDS) {
-			try {
-				String featuresJsonStr = doCollectionRequest("/collections/" + collectionId + "/items");
-				JSONObject featuresJson = new JSONObject(featuresJsonStr);
-				List<String> expectedIds = getBboxFeaturedIds(featuresJson, lowerLeftLong, lowerLeftLat, upRightLong,
-						upRightLat);
-				assertTrue(expectedIds.size() == 2);
-
-				ArrayList<String> returnedIds = new ArrayList<>();
-				String bboxUrlParams = String.format("bbox=%f,%f,%f,%f", lowerLeftLong, lowerLeftLat, upRightLong,
-						upRightLat);
-				featuresJsonStr = doCollectionRequest("/collections/" + collectionId + "/items?" + bboxUrlParams);
-				featuresJson = new JSONObject(featuresJsonStr);
-
-				assertTrue(featuresJson.get("features") instanceof JSONArray);
-				JSONArray features = (JSONArray) featuresJson.get("features");
-				for (int i = 0; i < features.length(); i++) {
-					assertTrue(features.get(i) instanceof JSONObject);
-					JSONObject feature = features.getJSONObject(i);
-					returnedIds.add(feature.getString("id"));
-				}
-				assertEquals(expectedIds.size(), returnedIds.size());
-				assertEquals(expectedIds, returnedIds);
-			} catch (JSONException e) {
-				fail("Unexpected JSONException during test", e);
-			}
+			String bboxUrlParams = String.format("bbox=%f,%f,%f,%f", lowerLeftLong, lowerLeftLat, upRightLong,
+					upRightLat);
+			ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/" + collectionId + "/items?" + bboxUrlParams, String.class);
+			assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+			String compareFile = "featureCollection/" + collectionId + "/featureCollection_bbox.json";
+			doJsonCompare(rtn, compareFile);
 		}
 	}
 
@@ -158,37 +138,6 @@ public class FeaturesParamsIT extends BaseIT {
 		assertTrue(featureCollection.get("features") instanceof JSONArray);
 		assertTrue(featureCollection.get("links") instanceof JSONArray);
 		assertNotNull(featureCollection.getString("timeStamp"));
-	}
-
-	private List<String> getBboxFeaturedIds(JSONObject featuresJson, double lowerLeftLong, double lowerLeftLat,
-			double upRightLong, double upRightLat) throws JSONException {
-		JSONArray features = (JSONArray) featuresJson.get("features");
-		ArrayList<String> ids = new ArrayList<>();
-		for (int i = 0; i < features.length(); i++) {
-			assertTrue(features.get(i) instanceof JSONObject);
-			JSONObject featureJson = (JSONObject) features.get(i);
-
-			JSONObject geomJson = (JSONObject) featureJson.get("geometry");
-			JSONArray coordinates = (JSONArray) geomJson.get("coordinates");
-			assertTrue(coordinates.length() == 2);
-			Double longitude = coordinates.getDouble(0);
-			Double lat = coordinates.getDouble(1);
-
-			if (isBetween(lowerLeftLong, upRightLong, longitude) && isBetween(lowerLeftLat, upRightLat, lat)) {
-				ids.add(featureJson.getString("id"));
-			}
-
-		}
-
-		return ids;
-	}
-
-	private boolean isBetween(double a, double b, double c) {
-		return b > a ? c >= a && c <= b : c >= b && c <= a;
-	}
-
-	private String doCollectionRequest(String path) {
-		return doCollectionRequest(path, HttpStatus.OK.value());
 	}
 
 	private String doCollectionRequest(String path, int expectedStatus) {
