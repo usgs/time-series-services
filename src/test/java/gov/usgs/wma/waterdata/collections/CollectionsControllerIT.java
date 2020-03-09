@@ -8,8 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -33,6 +37,8 @@ public class CollectionsControllerIT extends BaseIT {
 	private TestRestTemplate restTemplate;
 
 	public static final List<String> COLLECTION_IDS = List.of("AHS", "monitoring-locations");
+	public static final List<String> AHS_FEATURE_IDS = List.of("USGS-343204093005501");
+	public static final List<String> MONLOC_FEATURE_IDS = List.of("USGS-04027940", "USGS-07227448", "USGS-343204093005501");
 
 	@Test
 	public void collectionsToCollectionTest() {
@@ -91,6 +97,44 @@ public class CollectionsControllerIT extends BaseIT {
 		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/xyz", String.class);
 		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
 		assertNull(rtn.getBody());
+	}
+
+	@Test
+	public void collectionFeaturesTest() {
+		for (String collectionId : COLLECTION_IDS) {
+			try {
+				String featuresJsonStr = doCollectionRequest("/collections/" + collectionId + "/items");
+				JSONObject featuresJson = new JSONObject(featuresJsonStr);
+				assertNotNull(featuresJson.names());
+				assertEquals(4, featuresJson.names().length());
+				assertEquals("FeatureCollection",featuresJson.getString("type"));
+				assertTrue(featuresJson.get("features") instanceof JSONArray);
+				JSONArray features = (JSONArray) featuresJson.get("features");
+				ArrayList<String> returnedFeatureIds = new ArrayList<>();
+				List<String> featureIds = getCollectionFeatureIds(collectionId);
+				assertTrue(features.length() == featureIds.size());
+				for (int i = 0; i < features.length(); i++) {
+					assertTrue(features.get(i) instanceof JSONObject);
+					JSONObject featureJson = (JSONObject) features.get(i);
+					String featureId = featureJson.getString("id");
+					assertNotNull(featureId);
+					assertTrue(featureIds.contains(featureId));
+					assertFalse(returnedFeatureIds.contains(collectionId),
+							"Duplicate feature id returned: " + featureId);
+					assertEquals(featureIds.get(i), featureId, String.format(
+							"featureId '%s' returned at index %d, expected '%s'", featureId, i, featureIds.get(i)));
+					String returnedFeature = doCollectionRequest("/collections/" + collectionId + "/items/" + featureId);
+					assertJsonEquals(featureJson.toString(), returnedFeature);
+					returnedFeatureIds.add(featureId);
+				}
+				String timeStamp = featuresJson.getString("timeStamp");
+				assertNotNull(timeStamp);
+				long timestampMillis = getTimeStampMillis(timeStamp);
+				assertTrue(timestampMillis >= 0);
+			} catch (JSONException e) {
+				fail("Unexpected JSONException during test", e);
+			}
+		}
 	}
 
 	@Test
@@ -156,10 +200,35 @@ public class CollectionsControllerIT extends BaseIT {
 
 	private String doCollectionRequest(String path) {
 		ResponseEntity<String> rtn = restTemplate.getForEntity(path, String.class);
-		assertEquals(rtn.getStatusCode().value(), HttpStatus.OK.value());
+		assertEquals(HttpStatus.OK.value(), rtn.getStatusCode().value());
 		assertNotNull(rtn);
 
 		return rtn.getBody();
+	}
+
+	private List<String> getCollectionFeatureIds(String collectionId) {
+		List<String> ids = List.of("");
+		if ("AHS".equals(collectionId)) {
+			ids = AHS_FEATURE_IDS;
+		} else if ("monitoring-locations".equals(collectionId)) {
+			ids = MONLOC_FEATURE_IDS;
+		}
+
+		return ids;
+	}
+
+	private long getTimeStampMillis(String timestamp) {
+		TimeZone utc = TimeZone.getTimeZone("UTC");
+		SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		sourceFormat.setTimeZone(utc);
+		Date convertedDate = null;
+		try {
+			convertedDate = sourceFormat.parse(timestamp);
+		} catch (ParseException e) {
+			fail("Error parsing timestamp json value: " + timestamp, e);
+		}
+
+		return convertedDate.getTime();
 	}
 
 }

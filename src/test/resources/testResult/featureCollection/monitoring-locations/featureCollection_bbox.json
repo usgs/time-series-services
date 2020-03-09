@@ -1,0 +1,129 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          -93.0154556,
+          34.5345341
+        ],
+        "type": "Point"
+      },
+      "links": [
+        {
+          "rel": "self",
+          "href": "https://unittest/api/observations/collections/monitoring-locations/items/USGS-000003?f=json",
+          "type": "application/geo+json",
+          "title": "This document as GeoJSON"
+        },
+        {
+          "rel": "collection",
+          "href": "https://unittest/api/observations/collections/monitoring-locations?f=json",
+          "type": "application/json",
+          "title": "NWIS Monitoring Locations"
+        }
+      ],
+      "id": "USGS-000003",
+      "type": "Feature",
+      "properties": {
+        "country": null,
+        "monitoringLocationAltitudeLandSurface": null,
+        "altitudeMethod": null,
+        "districtCode": null,
+        "holeDepthSource": null,
+        "county": null,
+        "monitoringLocationUrl": null,
+        "agencyCode": null,
+        "monitoringLocationType": null,
+        "monitoringLocationNumber": null,
+        "localAquiferType": null,
+        "altitudeDatum": null,
+        "wellDepth": null,
+        "hydrologicUnit": null,
+        "state": null,
+        "nationalAquifer": null,
+        "agency": null,
+        "altitudeAccuracy": null,
+        "countryFIPS": null,
+        "stateFIPS": null,
+        "holeDepth": null,
+        "countyFIPS": null,
+        "district": null,
+        "localAquifer": null,
+        "monitoringLocationName": "monitoringLocationName000003"
+      }
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -100.3706884,
+          35.935042
+        ],
+        "type": "Point"
+      },
+      "links": [
+        {
+          "rel": "self",
+          "href": "https://unittest/api/observations/collections/monitoring-locations/items/USGS-000010?f=json",
+          "type": "application/geo+json",
+          "title": "This document as GeoJSON"
+        },
+        {
+          "rel": "collection",
+          "href": "https://unittest/api/observations/collections/monitoring-locations?f=json",
+          "type": "application/json",
+          "title": "NWIS Monitoring Locations"
+        }
+      ],
+      "id": "USGS-000010",
+      "type": "Feature",
+      "properties": {
+        "country": null,
+        "monitoringLocationAltitudeLandSurface": null,
+        "altitudeMethod": null,
+        "districtCode": null,
+        "holeDepthSource": null,
+        "county": null,
+        "monitoringLocationUrl": null,
+        "agencyCode": null,
+        "monitoringLocationType": null,
+        "monitoringLocationNumber": null,
+        "localAquiferType": null,
+        "altitudeDatum": null,
+        "wellDepth": null,
+        "hydrologicUnit": null,
+        "state": null,
+        "nationalAquifer": null,
+        "agency": null,
+        "altitudeAccuracy": null,
+        "countryFIPS": null,
+        "stateFIPS": null,
+        "holeDepth": null,
+        "countyFIPS": null,
+        "district": null,
+        "localAquifer": null,
+        "monitoringLocationName": "monitoringLocationName000010"
+      }
+    }
+  ],
+  "links": [
+    {
+      "rel": "canonical",
+      "href": "https://waterdata.usgs.gov",
+      "type": "text/html",
+      "title": "information"
+    },
+    {
+      "rel": "self",
+      "href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=0&limit=10000",
+      "type": "application/geo+json",
+      "title": "This document as GeoJSON"
+    },
+    {
+      "rel": "collection",
+      "href": "https://unittest/api/observations/collections/monitoring-locations?f=json",
+      "type": "application/json",
+      "title": "NWIS Monitoring Locations"
+    }
+  ]
+}

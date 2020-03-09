@@ -1,5 +1,7 @@
 package gov.usgs.wma.waterdata.collections;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,7 @@ public class CollectionsController {
 	public String getOgcCollections(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			HttpServletResponse response) {
 
-		return collectionsDao.getCollectionsJson(collectionsParams.getParameters(null));
+		return collectionsDao.getCollectionsJson(collectionsParams.buildParams(null));
 	}
 
 	@Operation(
@@ -68,9 +70,47 @@ public class CollectionsController {
 	public String getOgcCollection(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
 
-		String rtn = collectionsDao.getCollectionJson(collectionsParams.getParameters(collectionId));
+		String rtn = collectionsDao.getCollectionJson(collectionsParams.buildParams(collectionId));
 		if (null == rtn) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
+		}
+
+		return rtn;
+	}
+
+	@Operation(
+			description = "Return GeoJSON Data specific to the features in the requested Collection.",
+			responses = {
+					@ApiResponse(
+							responseCode = "200",
+							description = "GeoJSON representation of the Feature.",
+							content = @Content(schema = @Schema(implementation = FeatureGeoJSON.class))),
+					@ApiResponse(
+							responseCode = "404",
+							description = "The requested collection feature was not found.",
+							content=@Content())
+			},
+			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_feature_")
+			)
+	@GetMapping(value = "collections/{collectionId}/items", produces = MediaType.APPLICATION_JSON_VALUE)
+	public String getOgcCollectionFeatures(
+			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
+			@RequestParam(value = "limit", required = false, defaultValue = "10000") int limit,
+			@RequestParam(value = "startIndex", required = false, defaultValue = "0") int startIndex,
+			@RequestParam(value = "bbox", required = false) List<String> bbox,
+			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
+
+		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
+
+		String rtn = null;
+		if (limit == 0 || startIndex >= count) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+		} else {
+			rtn = collectionsDao.getCollectionFeaturesJson(
+					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count));
+			if (rtn == null) {
+				response.setStatus(HttpStatus.NOT_FOUND.value());
+			}
 		}
 
 		return rtn;
@@ -96,12 +136,9 @@ public class CollectionsController {
 			@PathVariable(value = "collectionId") String collectionId,
 			@PathVariable(value = "featureId") String featureId, HttpServletResponse response) {
 
-		String rtn = getOgcCollection(mimeType, collectionId, response);
-		if (response.getStatus() == HttpServletResponse.SC_OK) {
-			rtn = collectionsDao.getCollectionFeatureJson(collectionsParams.getParameters(collectionId, featureId));
-			if (rtn == null) {
-				response.setStatus(HttpStatus.NOT_FOUND.value());
-			}
+		String rtn = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId));
+		if (rtn == null) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
 
 		return rtn;
