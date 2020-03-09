@@ -132,18 +132,19 @@
                'title', collection_title,
                'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || collection_id || '?f=json'
              )
-          ) links
+          ) links,
+          collection_title
      </sql>
 
      <select id="getCollectionFeaturesJson" parameterType="map" resultType="String">
-       with title as (select distinct collection_title from (<include refid="selectFeaturesQuery"/>) as collection_title)
        select case
          when coalesce(count(features),0) = 0
          then null
          else
            json_build_object(
               'type', 'FeatureCollection',
-               'features', json_agg(features),
+               'features', json_agg(json_build_object('type',features.type, 'id', features.id, 'geometry', features.geometry,
+                                    'properties', features.properties, 'links', features.links)),
                'links' , json_build_array(
                    json_build_object(
                         'type', 'text/html',
@@ -161,7 +162,7 @@
                    json_build_object(
                         'type', 'application/json',
                          'rel',  'collection',
-                         'title', title.collection_title,
+                         'title', collection_title,
                          'href',  #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR} || '?f=json'
                    )
                    <if test="prevStartIndex != null">
@@ -187,12 +188,13 @@
        from (
            select <include refid="featureColumnsToJson"/>
                from (<include refid="selectFeaturesQuery"/>) as cols
-       ) as features, title
-       group by title.collection_title
+       ) as features
+       group by collection_title
     </select>
 
     <select id="getCollectionFeatureJson" parameterType="map" resultType="String">
-      select row_to_json(feature)
+      select json_build_object('type',feature.type, 'id', feature.id, 'geometry', feature.geometry,
+                               'properties', feature.properties, 'links', feature.links)
         from (
             select <include refid="featureColumnsToJson"/>
                 from (<include refid="selectFeaturesQuery"/>) as cols
