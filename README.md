@@ -32,7 +32,7 @@ This project contains JUnit tests. Maven can be used to run them (in addition to
 A named Docker Network is needed to run the automated tests via maven. The following is a sample command for creating your own local network. In this example the name is wqp and the ip addresses will be 172.25.0.x
 
 ```.sh
-docker network create --subnet=172.25.0.0/16 wqp
+docker network create --subnet=172.25.0.0/16 wdfn
 ```
 
 ### Unit Testing
@@ -47,4 +47,17 @@ To additionally start up a Docker database and run the integration tests of the 
 
 ```.sh
 mvn verify -DTESTING_DATABASE_PORT=5437 -DTESTING_DATABASE_ADDRESS=localhost -DTESTING_DATABASE_NETWORK=wdfn
+```
+
+### Maven DOCKER_HOST Error
+
+If maven verify returns an error like this "... no DOCKER_HOST environment variable ..."
+then the user running mvn command has not been granted rights to the docker group.
+
+The following commands will ensure the docker group exists and assign it to the current user.
+
+```.sh
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
 ```
