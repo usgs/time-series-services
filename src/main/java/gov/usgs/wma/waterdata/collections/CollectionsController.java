@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +30,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Observations - OGC api", description = "Feature Collections")
 @RestController
 public class CollectionsController {
+	private static final Logger log = LoggerFactory.getLogger(CollectionsController.class);
+	
 	protected CollectionsDao collectionsDao;
 
 	protected CollectionParams collectionsParams;
@@ -78,8 +82,8 @@ public class CollectionsController {
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
 
 		
-		return doIfResponseOk(response, 
-				()->collectionsDao.getCollectionJson(collectionsParams.buildParams(collectionId)));
+		return resultOr404(response, 
+				collectionsDao.getCollectionJson(collectionsParams.buildParams(collectionId)));
 	}
 
 	@Operation(
@@ -113,7 +117,7 @@ public class CollectionsController {
 			int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
 			// verify the start index is within the feature count
 			resultOr404(response, startIndex<count  ?"Good" :null);
-			rtn = doIfResponseOk(response, ()->collectionsDao.getCollectionFeaturesJson(
+			rtn = resultOr404(response, collectionsDao.getCollectionFeaturesJson(
 					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count)));
 		}
 		return rtn;
@@ -139,10 +143,8 @@ public class CollectionsController {
 			@PathVariable(value = "collectionId") String collectionId,
 			@PathVariable(value = "featureId") String featureId, HttpServletResponse response) {
 
-		// verify the collection exist before fetching the feature
-		getOgcCollection(mimeType, collectionId, response);
-		return doIfResponseOk(response, 
-				()->collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId)));
+		return resultOr404(response, 
+				collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId)));
 	}
 
 	@Operation(
@@ -167,22 +169,9 @@ public class CollectionsController {
 			HttpServletResponse response) {
 		
 		// verify the collection and feature exist before fetching the time series
-		getOgcCollectionFeature("json", collectionId, featureId, response);
-		return doIfResponseOk(response, ()->timeSeriesDao.getTimeSeries(featureId, timeSeriesId));
+		return resultOr404(response, timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId));
 	}
 
-	/**
-	 * Helper method to perform a call to ensure higher level entities exist.
-	 * @param response the instance of the response for the request provided by spring
-	 * @param lambda an action to do to respond to the request that returns a string upon success
-	 * @return on a successful response it will be the string provided by the lambda.
-	 */
-	protected String doIfResponseOk(HttpServletResponse response, Supplier<String> lambda) {
-		if (response.getStatus() == HttpServletResponse.SC_OK) {
-			return resultOr404(response, lambda.get());
-		}
-		return null; // TODO should we return the empty string?
-	}
 	
 	/**
 	 * Helper method to set the response to 404 if there is no result from the request.
