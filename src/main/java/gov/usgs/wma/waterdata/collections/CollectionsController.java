@@ -51,7 +51,7 @@ public class CollectionsController {
 							content = @Content(schema = @Schema(implementation = CollectionsGeoJSON.class)))
 			},
 			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_collections_")
-			)
+		)
 	@GetMapping(value = "collections", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollections(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			HttpServletResponse response) {
@@ -72,7 +72,7 @@ public class CollectionsController {
 							content=@Content())
 			},
 			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_collection_")
-			)
+		)
 	@GetMapping(value = "collections/{collectionId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollection(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
@@ -95,7 +95,7 @@ public class CollectionsController {
 							content=@Content())
 			},
 			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_feature_")
-			)
+		)
 	@GetMapping(value = "collections/{collectionId}/items", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollectionFeatures(
 			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
@@ -105,6 +105,7 @@ public class CollectionsController {
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
 
 
+		String rtn = null;
 		// requesting less than one is a non-starter
 		resultOr404(response, limit>0 ?"Good" :null);
 		if (response.getStatus() == HttpServletResponse.SC_OK) {
@@ -112,9 +113,10 @@ public class CollectionsController {
 			int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
 			// verify the start index is within the feature count
 			resultOr404(response, startIndex<count  ?"Good" :null);
+			rtn = doIfResponseOk(response, ()->collectionsDao.getCollectionFeaturesJson(
+					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count)));
 		}
-		return doIfResponseOk(response, ()->collectionsDao.getCollectionFeaturesJson(
-						collectionsParams.buildParams(collectionId)));
+		return rtn;
 	}
 
 	@Operation(
@@ -130,7 +132,7 @@ public class CollectionsController {
 							content=@Content())
 			},
 			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_feature_")
-			)
+		)
 	@GetMapping(value = "collections/{collectionId}/items/{featureId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollectionFeature(
 			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
@@ -156,7 +158,7 @@ public class CollectionsController {
 							content=@Content())
 			},
 			externalDocs=@ExternalDocumentation(url="https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json")
-			)
+		)
 	@GetMapping(value="collections/{collectionId}/items/{featureId}/time-series/{timeSeriesId}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public String getTimeSeries(
 			@PathVariable(value="collectionId") String collectionId, // ex: networkId,
