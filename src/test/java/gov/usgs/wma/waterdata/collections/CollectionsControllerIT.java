@@ -239,8 +239,8 @@ public class CollectionsControllerIT extends BaseIT {
 
 	@Test
 	public void foundTimeSeriesTest() throws Exception {
-		
-		ResponseEntity<String> response = restTemplate.getForEntity("/collections/monitoring-locations/items/USGS-07227448/time-series/e6a4cc2de5bf437e83efe0107cf026ac", String.class);
+		String url = "/collections/monitoring-locations/items/USGS-07227448/time-series/e6a4cc2de5bf437e83efe0107cf026ac";
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.OK));
@@ -248,6 +248,24 @@ public class CollectionsControllerIT extends BaseIT {
 		String expectResponseJSON = getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac.json");
 		String actualResponseJSON = response.getBody();
 		assertThat(new JSONObject(actualResponseJSON), sameJSONObjectAs(new JSONObject(expectResponseJSON)));
+	}
+	@Test
+	public void timeSeriesNotInCollectionTest() throws Exception {
+		String url = "/collections/SOME-COLLECTION/items/USGS-07227448/time-series/e6a4cc2de5bf437e83efe0107cf026ac";
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		
+		HttpStatus actualStatusCode = response.getStatusCode();
+		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
+		assertNull(response.getBody());
+	}
+	@Test
+	public void timeSeriesNotInFeatureTest() throws Exception {
+		String url = "/collections/monitoring-locations/items/OTHER-07227448/time-series/e6a4cc2de5bf437e83efe0107cf026ac";
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		
+		HttpStatus actualStatusCode = response.getStatusCode();
+		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
+		assertNull(response.getBody());
 	}
 
 	@Test
