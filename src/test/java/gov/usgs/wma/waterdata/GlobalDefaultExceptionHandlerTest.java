@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.context.request.WebRequest;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 
 @SpringBootTest
 public class GlobalDefaultExceptionHandlerTest {
@@ -75,10 +79,14 @@ public class GlobalDefaultExceptionHandlerTest {
 
 	@Test
 	public void handleUncaughtExceptionTest() throws IOException {
+		Logger root = (Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+		Level level = root.getLevel();
+		root.setLevel(ch.qos.logback.classic.Level.OFF);
 		HttpServletResponse response = new MockHttpServletResponse();
 		String expected = "Unexpected error occurred. Contact us with Reference Number: ";
 		Map<String, String> actual = controller.handleUncaughtException(new RuntimeException(), request, response);
 		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.ERROR_MESSAGE_KEY).substring(0, expected.length()));
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+		root.setLevel(level);
 	}
 }
