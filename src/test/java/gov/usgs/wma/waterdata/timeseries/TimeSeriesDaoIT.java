@@ -28,7 +28,7 @@ public class TimeSeriesDaoIT extends BaseIT {
 	@Test
 	public void foundTest() {
 		try {
-			assertEquals(getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac.txt"), timeSeriesDao.getTimeSeries("USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac"));
+			assertEquals(getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac.txt"), timeSeriesDao.getTimeSeries("e6a4cc2de5bf437e83efe0107cf026ac"));
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);
 		}
@@ -36,13 +36,13 @@ public class TimeSeriesDaoIT extends BaseIT {
 
 	@Test
 	public void notFoundTest() {
-		String geoJSON = timeSeriesDao.getTimeSeries("USGS-12345678", "216d009de8914147a0f9e5237da77854");
+		String geoJSON = timeSeriesDao.getTimeSeries("216d009de8914147a0f9e5237da77854");
 		assertNull(geoJSON);
 	}
 
 	@Test
 	public void noGeomTest() {
-		String geoJSON = timeSeriesDao.getTimeSeries("USGS-04028090", "41a5ff887b744b84a271b65e48d78074");
+		String geoJSON = timeSeriesDao.getTimeSeries("41a5ff887b744b84a271b65e48d78074");
 		assertNull(geoJSON);
 	}
 }

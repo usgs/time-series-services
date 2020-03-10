@@ -47,7 +47,7 @@ public class TimeSeriesController {
 			@PathVariable(value="monitoringLocationId") String monitoringLocationId,
 			@PathVariable(value="timeSeriesId") String timeSeriesId,
 			HttpServletResponse response) {
-		String rtn = timeSeriesDao.getTimeSeries(monitoringLocationId, timeSeriesId);
+		String rtn = timeSeriesDao.getTimeSeries(timeSeriesId);
 		if (null == rtn) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
