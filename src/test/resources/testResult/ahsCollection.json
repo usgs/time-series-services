@@ -19,6 +19,10 @@
     },
     "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS83"
   },
+  "properties": {
+    "contactName": "contact name for AHS",
+    "contactEmail": "contact email for AHS"
+  },
   "links": [
     {
       "type": "text/html",
