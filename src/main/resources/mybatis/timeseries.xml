@@ -67,7 +67,8 @@
           join nwis.monitoring_location
             on gw_daily_value.monitoring_location_id = monitoring_location.monitoring_location_id
          where geom is not null
-           and exists (
+           and ('monitoring-locations' = #{collectionId,jdbcType=VARCHAR}
+            or exists (
                    select 1 
                      from nwis.network
                      join nwis.network_sites 
@@ -79,7 +80,7 @@
                     where nwis.network.network_code = #{collectionId,jdbcType=VARCHAR}
                       and nwis.groundwater_daily_value.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
                       and nwis.groundwater_daily_value.time_series_unique_id = #{timeseriesId,jdbcType=VARCHAR}
-           )
+           ))
     </select>
 
 </mapper>
