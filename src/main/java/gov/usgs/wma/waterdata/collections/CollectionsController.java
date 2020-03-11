@@ -180,6 +180,12 @@ public class CollectionsController {
 	 * @return on a successful response it will be the string provided by the lambda.
 	 */
 	protected String resultOr404(HttpServletResponse response, String result) {
+		// Ensure the response code it set only once. Some impls might prevent multiple settings.
+		// Testing revealed that the response code is preset to 200 (not null)
+		if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
+			return result;
+		}
+		// set the response code to 404 if no results are found.
 		if (null == result) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
