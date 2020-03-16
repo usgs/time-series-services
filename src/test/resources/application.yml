@@ -41,5 +41,5 @@ collections:
   monitoring-locations:
     title: NWIS Monitoring Locations
     description: USGS water monitoring locations managed in the National Water Information System
-    contactName: ${MONLOC_CONTACT_NAME:""}
-    contactEmail: ${MONLOC_CONTACT_EMAIL:""}
+    contactName: Internet of Water Product Owners
+    contactEmail: GS-W-iow_product_owners@usgs.gov

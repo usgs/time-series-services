@@ -158,8 +158,6 @@
                     <environmentVariables>
                         <ROOT_LOG_LEVEL>INFO</ROOT_LOG_LEVEL>
                         <SITE_URL_BASE>https://unittest/api/observations/</SITE_URL_BASE>
-                        <MONLOC_CONTACT_NAME>Internet of Water Product Owners</MONLOC_CONTACT_NAME>
-                        <MONLOC_CONTACT_EMAIL>GS-W-iow_product_owners@usgs.gov</MONLOC_CONTACT_EMAIL>
                         <WDFN_DATABASE_ADDRESS>${TESTING_DATABASE_ADDRESS}</WDFN_DATABASE_ADDRESS>
                         <WDFN_DATABASE_PORT>${TESTING_DATABASE_PORT}</WDFN_DATABASE_PORT>
                         <WDFN_DATABASE_NAME>wqp_db</WDFN_DATABASE_NAME>
