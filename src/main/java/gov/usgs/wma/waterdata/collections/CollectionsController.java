@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.usgs.wma.waterdata.collections.geojson.CollectionGeoJSON;
 import gov.usgs.wma.waterdata.collections.geojson.CollectionsGeoJSON;
 import gov.usgs.wma.waterdata.collections.geojson.FeatureGeoJSON;
+import gov.usgs.wma.waterdata.collections.observations.ObservationsJSON;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -139,6 +140,27 @@ public class CollectionsController {
 		String rtn = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId));
 		if (rtn == null) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
+		}
+
+		return rtn;
+	}
+
+	@Operation(description = "Return data sets available at the monitoring location.", responses = {
+			@ApiResponse(responseCode = "200", description = "available datasets.", content = @Content(schema = @Schema(implementation = ObservationsJSON.class))),
+			@ApiResponse(responseCode = "404", description = "The specified collection monitoring location was not found.", content = @Content()) })
+	@GetMapping(value = "collections/{collectionId}/items/{monitoring-location-identifier}/observations", produces = MediaType.APPLICATION_JSON_VALUE)
+	public String getObservationTypes(
+			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
+			@PathVariable(value = "collectionId") String collectionId,
+			@PathVariable(value = "monitoring-location-identifier") String monLocIdentifer,
+			HttpServletResponse response) {
+
+		String rtn = collectionsDao
+				.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, monLocIdentifer));
+		if (rtn == null) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+		} else {
+			rtn = collectionsDao.getObsverationsJson(collectionsParams.buildParams(collectionId, monLocIdentifer));
 		}
 
 		return rtn;
