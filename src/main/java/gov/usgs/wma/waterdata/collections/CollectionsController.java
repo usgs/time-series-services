@@ -176,7 +176,7 @@ public class CollectionsController {
 	
 	/**
 	 * Helper method to set the response to 404 if there is no result from the request.
-	 * @param lambda an action to do to respond to the request that returns a string upon success
+	 * @param response the HTTP response object that will be updated with 404 if no (null) result.
 	 * @param result the string response from any request
 	 * @return on a successful response it will be the string provided by the lambda.
 	 */
