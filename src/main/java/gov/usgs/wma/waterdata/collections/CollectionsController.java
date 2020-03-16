@@ -178,7 +178,7 @@ public class CollectionsController {
 	 * Helper method to set the response to 404 if there is no result from the request.
 	 * @param response the HTTP response object that will be updated with 404 if no (null) result.
 	 * @param result the string response from any request
-	 * @return on a successful response it will be the string provided by the lambda.
+	 * @return on a successful response it will be the string provided by the result.
 	 */
 	protected String resultOr404(HttpServletResponse response, String result) {
 		// set the response code to 404 if no results are found.
