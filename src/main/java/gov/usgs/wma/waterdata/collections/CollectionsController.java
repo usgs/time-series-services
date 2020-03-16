@@ -108,18 +108,19 @@ public class CollectionsController {
 			@RequestParam(value = "bbox", required = false) List<String> bbox,
 			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
 
+		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
 
 		String rtn = null;
-		// requesting less than one is a non-starter
-		resultOr404(response, limit>0 ?"Good" :null);
-		if (response.getStatus() == HttpServletResponse.SC_OK) {
-			// check the collection feature count
-			int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
-			// verify the start index is within the feature count
-			resultOr404(response, startIndex<count  ?"Good" :null);
-			rtn = resultOr404(response, collectionsDao.getCollectionFeaturesJson(
-					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count)));
+		if (limit == 0 || startIndex >= count) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+		} else {
+			rtn = collectionsDao.getCollectionFeaturesJson(
+					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count));
+			if (rtn == null) {
+				response.setStatus(HttpStatus.NOT_FOUND.value());
+			}
 		}
+
 		return rtn;
 	}
 
@@ -180,11 +181,6 @@ public class CollectionsController {
 	 * @return on a successful response it will be the string provided by the lambda.
 	 */
 	protected String resultOr404(HttpServletResponse response, String result) {
-		// Ensure the response code it set only once. Some impls might prevent multiple settings.
-		// Testing revealed that the response code is preset to 200 (not null)
-		if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
-			return result;
-		}
 		// set the response code to 404 if no results are found.
 		if (null == result) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
