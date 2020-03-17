@@ -21,7 +21,7 @@ public class TimeSeriesDao extends SqlSessionDaoSupport {
 	}
 
 	public String getTimeSeries(String timeSeriesId) {
-		return getSqlSession().selectOne("groundwaterDailyValue.getGeoJson", timeSeriesId);
+		return getTimeSeries("monitoring-locations", null, timeSeriesId);
 	}
 
 	public String getTimeSeries(String collectionId, String featureId, String timeSeriesId) {
@@ -29,7 +29,7 @@ public class TimeSeriesDao extends SqlSessionDaoSupport {
 		params.put(COLLECTION_KEY, collectionId);
 		params.put(FEATURE_KEY, featureId);
 		params.put(TIMESERIES_KEY, timeSeriesId);
-		return getSqlSession().selectOne("timeseries.getGeoJson", params);
+		return getSqlSession().selectOne("groundwaterDailyValue.getGeoJson", params);
 	}
 
 }
