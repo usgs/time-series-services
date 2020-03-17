@@ -16,6 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.http.MockHttpInputMessage;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -25,6 +28,8 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
 @SpringBootTest
+@DirtiesContext
+@TestExecutionListeners(DirtiesContextTestExecutionListener.class)
 public class GlobalDefaultExceptionHandlerTest {
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(GlobalDefaultExceptionHandlerTest.class);
 	
@@ -81,16 +86,22 @@ public class GlobalDefaultExceptionHandlerTest {
 
 	@Test
 	public void handleUncaughtExceptionTest() throws IOException {
-		log.info("turning logging off -- for clean log and no exceptions in none broken events.");
+		// capture logging state prior to turning it off
 		Logger root = (Logger)LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 		Level level = root.getLevel();
-		root.setLevel(OFF);
-		HttpServletResponse response = new MockHttpServletResponse();
-		String expected = "Unexpected error occurred. Contact us with Reference Number: ";
-		Map<String, String> actual = controller.handleUncaughtException(new RuntimeException(), request, response);
-		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.ERROR_MESSAGE_KEY).substring(0, expected.length()));
-		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
-		root.setLevel(level);
-		log.info("turning logging back on --");
+		
+		try {
+			log.info("turning logging off -- for clean log and no exceptions in none broken events.");
+			root.setLevel(OFF);
+
+			HttpServletResponse response = new MockHttpServletResponse();
+			String expected = "Unexpected error occurred. Contact us with Reference Number: ";
+			Map<String, String> actual = controller.handleUncaughtException(new RuntimeException(), request, response);
+			assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.ERROR_MESSAGE_KEY).substring(0, expected.length()));
+			assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+		} finally {
+			log.info("turning logging back on --");
+			root.setLevel(level);
+		}
 	}
 }
