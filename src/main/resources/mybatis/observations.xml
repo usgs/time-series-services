@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="observations">
+
+    <select id="getObsverationsJson" parameterType="map" resultType="String">
+       select json_build_object('observationTypes', 
+          json_build_array(json_build_object(
+               'name', 'statistical-time-series',
+               'url', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR} || '/items/'  
+                  || #{featureId,jdbcType=VARCHAR} || '/observations/statistical-time-series'
+              )
+          )
+       ) where (#{collectionId,jdbcType=VARCHAR} = 'monitoring-locations'
+                  and exists (select monitoring_location_identifier from monitoring_location
+                  where geom is not null and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}))
+          or exists (select monitoring_location_identifier from nwis.network
+                  join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
+                  join nwis.monitoring_location on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
+                  where geom is not null and network_code = #{collectionId,jdbcType=VARCHAR}
+                     and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR})
+    </select>
+
+</mapper>

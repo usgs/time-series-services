@@ -29,7 +29,7 @@ import gov.usgs.wma.waterdata.springinit.BaseIT;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/featuresParams/")
-public class FeaturesParamsIT extends BaseIT {
+public class FeaturesParamsIT extends BaseCollectionsIT  {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
@@ -138,18 +138,6 @@ public class FeaturesParamsIT extends BaseIT {
 		assertTrue(featureCollection.get("features") instanceof JSONArray);
 		assertTrue(featureCollection.get("links") instanceof JSONArray);
 		assertNotNull(featureCollection.getString("timeStamp"));
-	}
-
-	private String doCollectionRequest(String path, int expectedStatus) {
-		ResponseEntity<String> rtn = restTemplate.getForEntity(path, String.class);
-		assertEquals(expectedStatus, rtn.getStatusCode().value());
-		if (expectedStatus == HttpStatus.OK.value()) {
-			assertNotNull(rtn);
-			return rtn.getBody();
-		} else {
-			assertNull(rtn.getBody());
-			return null;
-		}
 	}
 
 }
