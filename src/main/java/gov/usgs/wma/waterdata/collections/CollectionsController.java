@@ -1,7 +1,6 @@
 package gov.usgs.wma.waterdata.collections;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -168,7 +167,7 @@ public class CollectionsController {
 			@PathVariable(value="featureId") String featureId, // ex: monitoringLocationId
 			@PathVariable(value="timeSeriesId") String timeSeriesId, //ex: USGS-123456
 			HttpServletResponse response) {
-		
+		log.trace("Growndwater time series request");
 		// verify the collection and feature exist before fetching the time series
 		return resultOr404(response, timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId));
 	}
