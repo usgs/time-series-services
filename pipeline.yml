@@ -6,7 +6,7 @@ repoPath: "USGS/time-series-services.git"
 gitRepoUrl: "https://github.com/USGS/time-series-services.git"
 gitRepoCredentialsId: "Jenkins-GitHub-Read-Write-Token"
 deployJobName: "time-series-services-deploy"
-projectName: "iow-allegemein"
+projectName: "iow-allgemein"
 memory: 512
 applicationName: "time-series-services"
 # integer representing the order of precedence of the ALB rule.

@@ -1,2 +1,2 @@
-network_id,network_code,network_name,description
-42,"AHS","Arkansas Hot Springs National Park Network","description of AHS"
+network_id,network_code,network_name,description,contact_info
+42,"AHS","Arkansas Hot Springs National Park Network","description of AHS","{\"contactName\": \"contact name for AHS\",\"contactEmail\":\"contact email for AHS\"}"

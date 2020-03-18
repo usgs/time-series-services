@@ -35,8 +35,7 @@ import gov.usgs.wma.waterdata.springinit.BaseIT;
 
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
-@DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
-public class CollectionsControllerIT extends BaseIT {
+public class CollectionsControllerIT extends BaseCollectionsIT {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
@@ -194,20 +193,6 @@ public class CollectionsControllerIT extends BaseIT {
 		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/AHS/items/USGS-07227448", String.class);
 		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
 		assertNull(rtn.getBody());
-	}
-
-	private void doGetCollectionTest(String path, String resultFile) throws IOException {
-		String actual = doCollectionRequest(path);
-		String expected = getCompareFile(resultFile);
-		assertJsonEquals(expected, actual);
-	}
-
-	private String doCollectionRequest(String path) {
-		ResponseEntity<String> rtn = restTemplate.getForEntity(path, String.class);
-		assertEquals(HttpStatus.OK.value(), rtn.getStatusCode().value());
-		assertNotNull(rtn);
-
-		return rtn.getBody();
 	}
 
 	private List<String> getCollectionFeatureIds(String collectionId) {

@@ -19,6 +19,10 @@
     },
     "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS83"
   },
+  "properties": {
+    "contactName": "Internet of Water Product Owners",
+    "contactEmail": "GS-W-iow_product_owners@usgs.gov"
+  },
   "links": [
     {
       "type": "text/html",

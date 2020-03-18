@@ -15,6 +15,12 @@ public class ConfigurationService {
 	@Value("${collections.monitoring-locations.description}")
 	private String monLocDescription;
 
+	@Value("${collections.monitoring-locations.contactName}")
+	private String monLocContactName;
+
+	@Value("${collections.monitoring-locations.contactEmail}")
+	private String monLocContactEmail;
+
 	public String getServerUrl() {
 		return serverUrl;
 	}
@@ -37,6 +43,22 @@ public class ConfigurationService {
 
 	public void setMonLocDescription(String monLocDescription) {
 		this.monLocDescription = monLocDescription;
+	}
+
+	public String getMonLocContactName() {
+		return monLocContactName;
+	}
+
+	public void setMonLocContactName(String monLocContactName) {
+		this.monLocContactName = monLocContactName;
+	}
+
+	public String getMonLocContactEmail() {
+		return monLocContactEmail;
+	}
+
+	public void setMonLocContactEmail(String monLocContactEmail) {
+		this.monLocContactEmail = monLocContactEmail;
 	}
 
 }

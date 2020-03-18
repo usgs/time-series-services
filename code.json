@@ -3,7 +3,7 @@
     "name": "Time Series Services",
     "organization": "U.S. Geological Survey",
     "description": "Time series services - contains services for time series data",
-    "version": "0.3.0-SNAPSHOT",
+    "version": "0.5.0-SNAPSHOT",
     "status": "Development",
 
     "permissions": {

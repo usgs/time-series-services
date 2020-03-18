@@ -18,10 +18,7 @@ public class CollectionParams {
 	public static final int MAX_LIMIT = 100000;
 
 	public Map<String, Object> buildParams(String collectionId) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("serverUrl", configurationService.getServerUrl());
-		params.put("monLocTitle", configurationService.getMonLocTitle());
-		params.put("monLocDescription", configurationService.getMonLocDescription());
+		Map<String, Object> params = buildCommonParams();
 		if (collectionId != null) {
 			params.put("collectionId", collectionId);
 		}
@@ -30,10 +27,7 @@ public class CollectionParams {
 	}
 
 	public Map<String, Object> buildParams(String collectionId, String featureId) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("serverUrl", configurationService.getServerUrl());
-		params.put("monLocTitle", configurationService.getMonLocTitle());
-		params.put("monLocDescription", configurationService.getMonLocDescription());
+		Map<String, Object> params = buildCommonParams();
 		if (collectionId != null) {
 			params.put("collectionId", collectionId);
 		}
@@ -46,10 +40,7 @@ public class CollectionParams {
 
 	public Map<String, Object> buildParams(String collectionId, int limit, int startIndex,
 			List<String> bbox, int count) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("serverUrl", configurationService.getServerUrl());
-		params.put("monLocTitle", configurationService.getMonLocTitle());
-		params.put("monLocDescription", configurationService.getMonLocDescription());
+		Map<String, Object> params = buildCommonParams();
 		if (collectionId != null) {
 			params.put("collectionId", collectionId);
 		}
@@ -76,6 +67,17 @@ public class CollectionParams {
 		if (nextStartIndex <= count - 1) {
 			params.put("nextStartIndex", String.format("&startIndex=%d&limit=%d", nextStartIndex, limit));
 		}
+
+		return params;
+	}
+
+	private Map<String, Object> buildCommonParams() {
+		Map<String, Object> params = new HashMap<>();
+		params.put("serverUrl", configurationService.getServerUrl());
+		params.put("monLocTitle", configurationService.getMonLocTitle());
+		params.put("monLocDescription", configurationService.getMonLocDescription());
+		params.put("monLocContactName", configurationService.getMonLocContactName());
+		params.put("monLocContactEmail", configurationService.getMonLocContactEmail());
 
 		return params;
 	}
