@@ -20,8 +20,8 @@ public class TimeSeriesDao extends SqlSessionDaoSupport {
 		setSqlSessionFactory(sqlSessionFactory);
 	}
 
-	public String getTimeSeries(String timeSeriesId) {
-		return getTimeSeries("monitoring-locations", null, timeSeriesId);
+	public String getTimeSeries(String featureId, String timeSeriesId) {
+		return getTimeSeries("monitoring-locations", featureId, timeSeriesId);
 	}
 
 	public String getTimeSeries(String collectionId, String featureId, String timeSeriesId) {
