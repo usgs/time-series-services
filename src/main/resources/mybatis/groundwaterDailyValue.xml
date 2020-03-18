@@ -23,15 +23,16 @@
                        json_agg(qualifiers) qualifiers_agg,
                        json_agg(grades) grades_agg
                   from nwis.groundwater_daily_value
-                 where time_series_unique_id = #{value,jdbcType=VARCHAR}
-                     group by groundwater_daily_value_identifier,
-                              monitoring_location_id,
-                              observered_property_name,
-                              observered_property_reference,
-                              statistic,
-                              statistic_reference,
-                              unit_of_measure,
-                              unit_of_measure_reference
+                 where time_series_unique_id = #{timeseriesId,jdbcType=VARCHAR}
+                   and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                 group by groundwater_daily_value_identifier,
+                          monitoring_location_id,
+                          observered_property_name,
+                          observered_property_reference,
+                          statistic,
+                          statistic_reference,
+                          unit_of_measure,
+                          unit_of_measure_reference
             )
         select json_build_object(
                                  'type', 'Feature',
@@ -63,9 +64,19 @@
                                                                  )
                                 )
           from gw_daily_value
-               join nwis.monitoring_location
-                 on gw_daily_value.monitoring_location_id = monitoring_location.monitoring_location_id
-         where geom is not null
+          join nwis.monitoring_location
+            on gw_daily_value.monitoring_location_id = monitoring_location.monitoring_location_id
+         where (geom is not null
+           and nwis.monitoring_location.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR})
+           and ('monitoring-locations' = #{collectionId,jdbcType=VARCHAR}
+            or exists (
+                   select 1
+                     from nwis.network
+                     join nwis.network_sites
+                       on nwis.network.network_id = nwis.network_sites.network_id
+                    where nwis.network.network_code = #{collectionId,jdbcType=VARCHAR}
+                      and nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
+           ))
     </select>
 
 </mapper>

@@ -44,10 +44,10 @@ public class TimeSeriesController {
 			)
 	@GetMapping(value="monitoring-location/{monitoringLocationId}/time-series/{timeSeriesId}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public String getMonitoringLocation(
-			@PathVariable(value="monitoringLocationId") String monitoringLocationId,
+			@PathVariable(value="monitoringLocationId") String featureId,
 			@PathVariable(value="timeSeriesId") String timeSeriesId,
 			HttpServletResponse response) {
-		String rtn = timeSeriesDao.getTimeSeries(monitoringLocationId, timeSeriesId);
+		String rtn = timeSeriesDao.getTimeSeries(featureId, timeSeriesId);
 		if (null == rtn) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}

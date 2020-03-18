@@ -1,11 +1,14 @@
 package gov.usgs.wma.waterdata.collections;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -28,10 +31,10 @@ import org.springframework.http.ResponseEntity;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
-import gov.usgs.wma.waterdata.springinit.BaseIT;
 
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
+@DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
 public class CollectionsControllerIT extends BaseCollectionsIT {
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -215,6 +218,52 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 		}
 
 		return convertedDate.getTime();
+	}
+
+
+	@Test
+	public void foundTimeSeriesTest() throws Exception {
+		String url = "/collections/monitoring-locations/items/USGS-07227448/time-series/e6a4cc2de5bf437e83efe0107cf026ac";
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		
+		HttpStatus actualStatusCode = response.getStatusCode();
+		assertThat(actualStatusCode, equalTo(HttpStatus.OK));
+
+		String expectResponseJSON = getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac.json");
+		String actualResponseJSON = response.getBody();
+		assertThat(new JSONObject(actualResponseJSON), sameJSONObjectAs(new JSONObject(expectResponseJSON)));
+	}
+	@Test
+	public void timeSeriesNotInCollectionTest() throws Exception {
+		String url = "/collections/SOME-COLLECTION/items/USGS-07227448/time-series/e6a4cc2de5bf437e83efe0107cf026ac";
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		
+		HttpStatus actualStatusCode = response.getStatusCode();
+		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
+		assertNull(response.getBody());
+	}
+	@Test
+	public void timeSeriesNotInFeatureTest() throws Exception {
+		String url = "/collections/monitoring-locations/items/OTHER-07227448/time-series/e6a4cc2de5bf437e83efe0107cf026ac";
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+		
+		HttpStatus actualStatusCode = response.getStatusCode();
+		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
+		assertNull(response.getBody());
+	}
+
+	@Test
+	public void notFoundTimeSeriesTest() {
+		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items/USGS-12345678/time-series/216d009de8914147a0f9e5237da77854", String.class);
+		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+		assertNull(rtn.getBody());
+	}
+
+	@Test
+	public void noGeomTimeSeriesTest() {
+		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items/USGS-04028090/time-series/41a5ff887b744b84a271b65e48d78074", String.class);
+		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+		assertNull(rtn.getBody());
 	}
 
 }
