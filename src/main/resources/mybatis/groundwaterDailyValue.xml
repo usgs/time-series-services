@@ -24,9 +24,7 @@
                        json_agg(grades) grades_agg
                   from nwis.groundwater_daily_value
                  where time_series_unique_id = #{timeseriesId,jdbcType=VARCHAR}
-                 <if test="featureId != null">
                    and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-                 </if>
                  group by groundwater_daily_value_identifier,
                           monitoring_location_id,
                           observered_property_name,
@@ -68,20 +66,16 @@
           from gw_daily_value
           join nwis.monitoring_location
             on gw_daily_value.monitoring_location_id = monitoring_location.monitoring_location_id
-         where geom is not null
-         <if test="featureId != null">
-           and nwis.monitoring_location.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-         </if>
+         where (geom is not null
+           and nwis.monitoring_location.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR})
            and ('monitoring-locations' = #{collectionId,jdbcType=VARCHAR}
             or exists (
                    select 1
                      from nwis.network
                      join nwis.network_sites
                        on nwis.network.network_id = nwis.network_sites.network_id
-                     join nwis.monitoring_location
-                       on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
                     where nwis.network.network_code = #{collectionId,jdbcType=VARCHAR}
-                      and nwis.monitoring_location.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                      and nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
            ))
     </select>
 
