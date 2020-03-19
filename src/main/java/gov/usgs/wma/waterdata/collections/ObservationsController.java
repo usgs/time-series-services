@@ -20,16 +20,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Observations Datasets", description = "Feature Observations")
 @RestController
 public class ObservationsController {
+	
 	protected CollectionsDao collectionsDao;
 
 	protected CollectionParams collectionsParams;
-
+	
 	@Autowired
 	public ObservationsController(CollectionsDao collectionsDao, CollectionParams collectionsParams) {
 		this.collectionsDao = collectionsDao;
 		this.collectionsParams = collectionsParams;
 	}
 
+	
 	@Operation(description = "Return data sets available at the monitoring location.", responses = {
 			@ApiResponse(responseCode = "200", description = "available datasets.", content = @Content(schema = @Schema(implementation = ObservationsJSON.class))),
 			@ApiResponse(responseCode = "404", description = "The specified collection monitoring location was not found.", content = @Content()) })
@@ -47,5 +49,4 @@ public class ObservationsController {
 
 		return rtn;
 	}
-
 }
