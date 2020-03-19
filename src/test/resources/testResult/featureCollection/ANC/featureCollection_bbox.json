@@ -17,6 +17,12 @@
           "title": "This document as GeoJSON"
         },
         {
+          "href": "https://unittest/api/observations/collections/monitoring-locations?f=json",
+          "rel": "collection",
+          "title": "NWIS Monitoring Locations",
+          "type": "application/json"
+        },
+        {
           "rel": "collection",
           "href": "https://unittest/api/observations/collections/ANC?f=json",
           "type": "application/json",
@@ -67,6 +73,12 @@
           "href": "https://unittest/api/observations/collections/ANC/items/USGS-000010?f=json",
           "type": "application/geo+json",
           "title": "This document as GeoJSON"
+        },
+        {
+          "href": "https://unittest/api/observations/collections/monitoring-locations?f=json",
+          "rel": "collection",
+          "title": "NWIS Monitoring Locations",
+          "type": "application/json"
         },
         {
           "rel": "collection",

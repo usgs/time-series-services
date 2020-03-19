@@ -50,6 +50,12 @@
           "type": "application/json",
           "title": "NWIS Monitoring Locations",
           "href": "https://unittest/api/observations/collections/monitoring-locations?f=json"
+        },
+        {
+          "rel": "collection",
+           "href": "https://unittest/api/observations/collections/ANC?f=json",
+           "type": "application/json",
+           "title": "Arkansas Natural Resources Commission Groundwater Network"
         }
       ]
     },
@@ -102,6 +108,12 @@
           "type": "application/json",
           "title": "NWIS Monitoring Locations",
           "href": "https://unittest/api/observations/collections/monitoring-locations?f=json"
+        },
+        {
+          "rel": "collection",
+           "href": "https://unittest/api/observations/collections/ANC?f=json",
+           "type": "application/json",
+           "title": "Arkansas Natural Resources Commission Groundwater Network"
         }
       ]
     }

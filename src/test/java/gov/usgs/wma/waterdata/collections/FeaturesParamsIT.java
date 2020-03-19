@@ -25,8 +25,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
-import gov.usgs.wma.waterdata.springinit.BaseIT;
-
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/featuresParams/")
 public class FeaturesParamsIT extends BaseCollectionsIT  {
