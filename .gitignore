@@ -8,3 +8,4 @@ time-series-services.iml
 /.classpath
 /.attach_*
 /application-it.yml
+*-dju*
