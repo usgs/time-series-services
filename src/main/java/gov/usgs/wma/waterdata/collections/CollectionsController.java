@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import gov.usgs.wma.waterdata.collections.geojson.CollectionGeoJSON;
 import gov.usgs.wma.waterdata.collections.geojson.CollectionsGeoJSON;
 import gov.usgs.wma.waterdata.collections.geojson.FeatureGeoJSON;
-import gov.usgs.wma.waterdata.timeseries.TimeSeriesDao;
-import gov.usgs.wma.waterdata.timeseries.geojson.TimeSeriesGeoJSON;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,20 +25,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Observations - OGC api", description = "Feature Collections")
 @RestController
 public class CollectionsController {
-	private static final Logger log = LoggerFactory.getLogger(CollectionsController.class);
 	
 	protected CollectionsDao collectionsDao;
 
 	protected CollectionParams collectionsParams;
 	
-	protected TimeSeriesDao timeSeriesDao;
-
 
 	@Autowired
-	public CollectionsController(CollectionsDao collectionsDao, CollectionParams collectionsParams, TimeSeriesDao timeSeriesDao) {
+	public CollectionsController(CollectionsDao collectionsDao, CollectionParams collectionsParams) {
 		this.collectionsDao = collectionsDao;
 		this.collectionsParams = collectionsParams;
-		this.timeSeriesDao = timeSeriesDao;
 	}
 
 	@Operation(
@@ -146,32 +138,6 @@ public class CollectionsController {
 		return resultOr404(response, 
 				collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId)));
 	}
-
-	@Operation(
-			description="Return GeoJSON Data specific to the requested Monitoring Location and Time Series.",
-			responses= {
-					@ApiResponse(
-							responseCode="200",
-							description="GeoJSON representation of the Time Series.",
-							content=@Content(schema=@Schema(implementation=TimeSeriesGeoJSON.class))),
-					@ApiResponse(
-							responseCode="404",
-							description="The requested Time Series was not found.",
-							content=@Content())
-			},
-			externalDocs=@ExternalDocumentation(url="https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json")
-		)
-	@GetMapping(value="collections/{collectionId}/items/{featureId}/time-series/{timeSeriesId}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public String getTimeSeries(
-			@PathVariable(value="collectionId") String collectionId, // ex: networkId,
-			@PathVariable(value="featureId") String featureId, // ex: monitoringLocationId
-			@PathVariable(value="timeSeriesId") String timeSeriesId, //ex: USGS-123456
-			HttpServletResponse response) {
-		log.trace("Growndwater time series request");
-		// verify the collection and feature exist before fetching the time series
-		return resultOr404(response, timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId));
-	}
-
 	
 	/**
 	 * Helper method to set the response to 404 if there is no result from the request.

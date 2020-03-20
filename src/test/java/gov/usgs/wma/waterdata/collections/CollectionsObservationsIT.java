@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -15,7 +16,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
-public class ObservationsIT extends BaseCollectionsIT {
+public class CollectionsObservationsIT extends BaseCollectionsIT {
 	@Test
 	public void getObservationsTest() {
 		try {
@@ -44,5 +45,4 @@ public class ObservationsIT extends BaseCollectionsIT {
 		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
 		assertNull(rtn.getBody());
 	}
-
 }
