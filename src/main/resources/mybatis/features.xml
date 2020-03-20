@@ -37,43 +37,10 @@
      <sql id="selectFeatureCollections">
             select
                monitoring_location_identifier feature_id, 'collection' rel, 'application/json' link_type, network_name title,
-               #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json' href,
-               #{collectionId} collection_id
-            from nwis.monitoring_location
-            left outer join nwis.network_sites on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-            left outer join nwis.network on nwis.network.network_id = nwis.network_sites.network_id
-            where geom is not null
-            <choose>
-              <when test="featureId != null">
-                and monitoring_location_identifier = #{featureId}
-              </when>
-              <when test="collectionId == 'monitoring-locations'">
-                and monitoring_location_identifier in (select monitoring_location_identifier from nwis.monitoring_location
-                    where geom is not null
-                    order by monitoring_location_identifier
-                    <if test="limit != null">
-                      limit #{limit}
-                    </if>
-                    <if test="startIndex != null">
-                      offset #{startIndex}
-                    </if>
-                )
-              </when>
-              <otherwise>
-                and monitoring_location_identifier in (select monitoring_location_identifier from nwis.network
-                    join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
-                    join nwis.monitoring_location on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-                    where geom is not null and network_code = #{collectionId,jdbcType=VARCHAR}
-                    order by monitoring_location_identifier
-                    <if test="limit != null">
-                      limit #{limit}
-                    </if>
-                    <if test="startIndex != null">
-                      offset #{startIndex}
-                    </if>
-                )
-              </otherwise>
-            </choose>
+               #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json' href
+            from nwis.network
+            join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
+            join nwis.monitoring_location on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
      </sql>
 
      <sql id="buildCollectionLinks">
@@ -102,8 +69,11 @@
                #{monLocTitle} collection_title,
                <include refid="buildCollectionLinks"/> collection_links, <include refid="featureCols"/>
             from nwis.monitoring_location
-            join collections on collections.feature_id = monitoring_location.monitoring_location_identifier
+            left outer join collections on monitoring_location.monitoring_location_identifier = collections.feature_id
             where geom is not null
+            <if test="featureId != null">
+                and monitoring_location_identifier = #{featureId}
+            </if>
             <if test="pointLowLeft != null and pointUpRight != null">
               and ST_Intersects(ST_SetSRID(ST_MakeBox2D(
                                          ST_GeomFromText(#{pointLowLeft},4326),
@@ -111,7 +81,13 @@
                   ST_setSRID(geom,4326))
             </if>
             group by collections.feature_id, <include refid="featuresGroupBy"/>
-            ORDER BY collections.feature_id
+            ORDER BY feature_id
+            <if test="limit != null">
+              limit #{limit}
+            </if>
+            <if test="startIndex != null">
+              offset #{startIndex}
+            </if>
          </when>
          <otherwise>
            with collections as (<include refid="selectFeatureCollections"/>)
@@ -121,8 +97,11 @@
           from nwis.network
           join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
           join nwis.monitoring_location on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-          join collections on collections.feature_id = monitoring_location.monitoring_location_identifier
-          where geom is not null and network_code = #{collectionId,jdbcType=VARCHAR}
+          left outer join collections on monitoring_location.monitoring_location_identifier = collections.feature_id
+          where geom is not null and network_code = #{collectionId}
+          <if test="featureId != null">
+             and monitoring_location_identifier = #{featureId}
+          </if>
           <if test="pointLowLeft != null and pointUpRight != null">
              and ST_Intersects(ST_SetSRID(ST_MakeBox2D(
                                          ST_GeomFromText(#{pointLowLeft},4326),
@@ -130,7 +109,13 @@
                  ST_setSRID(geom,4326))
           </if>
           group by collections.feature_id, network_name, <include refid="featuresGroupBy"/>
-          ORDER BY collections.feature_id
+          ORDER BY feature_id
+          <if test="limit != null">
+            limit #{limit}
+          </if>
+          <if test="startIndex != null">
+            offset #{startIndex}
+          </if>
          </otherwise>
        </choose>
      </sql>
