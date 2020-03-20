@@ -1,10 +1,14 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static uk.co.datumedge.hamcrest.json.SameJSONAs.*;
-import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.*;
+import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.DEFAULT_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.URL_PARAM_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.URL_PARAM_FEATURE_ID;
+import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.URL_PARAM_TIME_SERIES_ID;
+import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.URL_STATISTICAL_TIME_SERIES;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -21,7 +25,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	
 	
-	String makeURL(String collectionId, String featureId, String guid) {
+	protected String makeURL(String collectionId, String featureId, String guid) {
 		String url = URL_STATISTICAL_TIME_SERIES.replace(URL_PARAM_COLLECTION_ID, collectionId);
 		url = url.replace(URL_PARAM_FEATURE_ID, featureId);
 		url = url.replace(URL_PARAM_TIME_SERIES_ID, guid);

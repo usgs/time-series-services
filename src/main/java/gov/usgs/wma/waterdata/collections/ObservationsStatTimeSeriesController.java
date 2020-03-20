@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Observations Datasets", description = "Feature Observations")
+@Tag(name = "Statistical Observations Datasets", description = "Feature Observations")
 @RestController
 public class ObservationsStatTimeSeriesController {
 	private static final Logger log = LoggerFactory.getLogger(ObservationsStatTimeSeriesController.class);
