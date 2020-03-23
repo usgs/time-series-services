@@ -1,0 +1,23 @@
+{
+    "type": "Feature",
+    "id": "USGS-04028090",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -102.480479,
+            35.667543
+        ]
+    },
+    "properties": {
+        "samplingFeatureName": "FOO"
+    },
+    "timeSeries": [
+        {
+            "id": "USGS-04028090-41a5ff887b744b84a271b65e48d78074",
+            "description": "Depth to water level, ft below land surface, DAILY MAXIMUM VALUES",
+            "parameterCode": "1",
+            "statisticCode": "00001",
+            "url": "https://unittest/api/observations/monitoring-location/USGS-04028090/observations/statistical-time-series/41a5ff887b744b84a271b65e48d78074"
+        }
+    ]
+}

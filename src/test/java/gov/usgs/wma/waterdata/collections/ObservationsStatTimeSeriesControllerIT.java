@@ -1,8 +1,8 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.DEFAULT_COLLECTION_ID;
-import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.URL_PARAM_COLLECTION_ID;
-import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.URL_PARAM_FEATURE_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionsDao.DEFAULT_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_FEATURE_ID;
 import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.URL_PARAM_TIME_SERIES_ID;
 import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.URL_STATISTICAL_TIME_SERIES;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -71,7 +71,7 @@ public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	@Test
 	public void notFoundTimeSeriesTest() {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-12345678", "216d009de8914147a0f9e5237da77854");
-//		ResponseEntity<String> response = restTemplate.getForEntity("/collections/monitoring-locations/items/USGS-12345678/time-series/216d009de8914147a0f9e5237da77854", String.class);
+//		String url = "/collections/monitoring-locations/items/USGS-12345678/time-series/216d009de8914147a0f9e5237da77854", String.class);
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertNull(response.getBody());
@@ -80,7 +80,7 @@ public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	@Test
 	public void noGeomTimeSeriesTest() {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-04028090", "41a5ff887b744b84a271b65e48d78074");
-//		ResponseEntity<String> response = restTemplate.getForEntity("/collections/monitoring-locations/items/USGS-04028090/time-series/41a5ff887b744b84a271b65e48d78074", String.class);
+//		String url = "/collections/monitoring-locations/items/USGS-04028090/time-series/41a5ff887b744b84a271b65e48d78074", String.class);
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertNull(response.getBody());

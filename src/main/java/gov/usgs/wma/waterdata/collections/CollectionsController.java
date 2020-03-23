@@ -25,6 +25,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Observations - OGC api", description = "Feature Collections")
 @RestController
 public class CollectionsController {
+	public static final String URL_PARAM_COLLECTION_ID = "collectionId";
+	public static final String URL_PARAM_FEATURE_ID = "featureId";
 	
 	protected CollectionsDao collectionsDao;
 
@@ -70,7 +72,7 @@ public class CollectionsController {
 		)
 	@GetMapping(value = "collections/{collectionId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollection(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
-			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
+			@PathVariable(value = URL_PARAM_COLLECTION_ID) String collectionId, HttpServletResponse response) {
 
 		
 		return resultOr404(response, 
@@ -97,7 +99,7 @@ public class CollectionsController {
 			@RequestParam(value = "limit", required = false, defaultValue = "10000") int limit,
 			@RequestParam(value = "startIndex", required = false, defaultValue = "0") int startIndex,
 			@RequestParam(value = "bbox", required = false) List<String> bbox,
-			@PathVariable(value = "collectionId") String collectionId, HttpServletResponse response) {
+			@PathVariable(value = URL_PARAM_COLLECTION_ID) String collectionId, HttpServletResponse response) {
 
 		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
 
@@ -132,8 +134,8 @@ public class CollectionsController {
 	@GetMapping(value = "collections/{collectionId}/items/{featureId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollectionFeature(
 			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
-			@PathVariable(value = "collectionId") String collectionId,
-			@PathVariable(value = "featureId") String featureId, HttpServletResponse response) {
+			@PathVariable(value = URL_PARAM_COLLECTION_ID) String collectionId,
+			@PathVariable(value = URL_PARAM_FEATURE_ID) String featureId, HttpServletResponse response) {
 
 		return resultOr404(response, 
 				collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId)));

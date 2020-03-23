@@ -66,8 +66,8 @@
           from gw_daily_value
           join nwis.monitoring_location
             on gw_daily_value.monitoring_location_id = monitoring_location.monitoring_location_id
-         where (geom is not null
-           and nwis.monitoring_location.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR})
+         where geom is not null
+           and nwis.monitoring_location.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
            and ('monitoring-locations' = #{collectionId,jdbcType=VARCHAR}
             or exists (
                    select 1
