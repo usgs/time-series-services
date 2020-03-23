@@ -11,8 +11,6 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
@@ -25,9 +23,6 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
 public class CollectionsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(CollectionsStatTimeSeriesControllerIT.class);
-	
-	private static final int IDX = 0;
 	
 	protected String makeURL(String collectionId, String featureId) {
 		String url = URL_STATISTICAL_TIME_SERIES_COLLECTION.replace(URL_PARAM_COLLECTION_ID, collectionId);
