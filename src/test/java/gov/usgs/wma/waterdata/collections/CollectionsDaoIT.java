@@ -1,11 +1,15 @@
 package gov.usgs.wma.waterdata.collections;
 
+import static gov.usgs.wma.waterdata.collections.CollectionsDao.DEFAULT_COLLECTION_ID;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
 
 import java.io.IOException;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -121,4 +125,30 @@ public class CollectionsDaoIT extends BaseIT {
 		assertNull(featureJson);
 	}
 
+	
+	@Test
+	public void featureTimeSeriesCollectionTest() throws Exception {
+		String actualJSON  = collectionsDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "USGS-07227448");
+		String expectJSON = getCompareFile("usgs-07227448-obs-list.json");
+		assertThat(new JSONObject(actualJSON), sameJSONObjectAs(new JSONObject(expectJSON)));
+	}
+
+	@Test
+	public void collectionMissingTest() throws Exception {
+		String actualJSON  = collectionsDao.getStatisticalTimeSeries("SOME-COLLECTION", "USGS-07227448");
+		assertNull(actualJSON);
+	}
+
+	@Test
+	public void featureNotFoundTest() {
+		String actualJSON  = collectionsDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "SOME-FEATURE");
+		assertNull(actualJSON);
+	}
+
+	@Test
+	public void notFoundNoGeomTest() throws Exception {
+		String actualJSON  = collectionsDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "USGS-04028090");
+		assertNull(actualJSON);
+	}
+	
 }
