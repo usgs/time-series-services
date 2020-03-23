@@ -2,7 +2,6 @@ package gov.usgs.wma.waterdata.collections;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
-import gov.usgs.wma.waterdata.springinit.BaseIT;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/featuresParams/")
