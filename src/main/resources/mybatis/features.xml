@@ -45,7 +45,7 @@
 
      <sql id="buildCollectionLinks">
        case when count(collections.href) = 0 then
-           null
+           jsonb_build_array()
          else
            jsonb_agg(json_build_object('rel', collections.rel, 'type', collections.link_type,
                            'title', collections.title, 'href', collections.href))
@@ -61,7 +61,7 @@
          county_fips, country_fips, hydrologic_unit, monitoring_location_url
      </sql>
 
-     <sql id="selectFeaturesQuery">
+     <sql id="selectFeaturesQueryWithCollectionLinks">
        <choose>
          <when test="collectionId == 'monitoring-locations'">
            with collections as (<include refid="selectFeatureCollections"/>)
@@ -120,6 +120,70 @@
        </choose>
      </sql>
 
+     <sql id="selectFeaturesQueryNoCollectionLinks">
+       <choose>
+         <when test="collectionId == 'monitoring-locations'">
+           select
+               #{monLocTitle} collection_title,
+               jsonb_build_array() collection_links, <include refid="featureCols"/>
+            from nwis.monitoring_location
+            where geom is not null
+            <if test="featureId != null">
+                and monitoring_location_identifier = #{featureId}
+            </if>
+            <if test="pointLowLeft != null and pointUpRight != null">
+              and ST_Intersects(ST_SetSRID(ST_MakeBox2D(
+                                         ST_GeomFromText(#{pointLowLeft},4326),
+                                         ST_GeomFromText(#{pointUpRight},4326)), 4326),
+                  ST_setSRID(geom,4326))
+            </if>
+            ORDER BY feature_id
+            <if test="limit != null">
+              limit #{limit}
+            </if>
+            <if test="startIndex != null">
+              offset #{startIndex}
+            </if>
+         </when>
+         <otherwise>
+           select
+             network_name collection_title,
+             jsonb_build_array() collection_links, <include refid="featureCols"/>
+          from nwis.network
+          join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
+          join nwis.monitoring_location on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
+          where geom is not null and network_code = #{collectionId}
+          <if test="featureId != null">
+             and monitoring_location_identifier = #{featureId}
+          </if>
+          <if test="pointLowLeft != null and pointUpRight != null">
+             and ST_Intersects(ST_SetSRID(ST_MakeBox2D(
+                                         ST_GeomFromText(#{pointLowLeft},4326),
+                                         ST_GeomFromText(#{pointUpRight},4326)), 4326),
+                 ST_setSRID(geom,4326))
+          </if>
+          ORDER BY feature_id
+          <if test="limit != null">
+            limit #{limit}
+          </if>
+          <if test="startIndex != null">
+            offset #{startIndex}
+          </if>
+         </otherwise>
+       </choose>
+     </sql>
+
+     <sql id="selectFeaturesQuery">
+        <choose>
+           <when test="featureId == null">
+             <include refid="selectFeaturesQueryNoCollectionLinks"/>
+           </when>
+           <otherwise>
+             <include refid="selectFeaturesQueryWithCollectionLinks"/>
+           </otherwise>
+        </choose>
+     </sql>
+
     <sql id="featureColumnsToJson">
           item_type "type",
           feature_id id,
@@ -165,7 +229,7 @@
               'title', #{monLocTitle,jdbcType=VARCHAR},
               'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || 'monitoring-locations' || '?f=json'
              )
-          ) || coalesce(collection_links, jsonb_build_array()) links,
+          ) || collection_links links,
           collection_title
      </sql>
 
