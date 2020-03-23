@@ -16,7 +16,8 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 	public static final String COLLECTION_KEY = "collectionId"; // network ID
 	public static final String FEATURE_KEY    = "featureId";    // location ID
 	public static final String SERVER_URL_KEY = "serverBaseURL";    // http://server:port/base/path
-	
+	public static final String NULL_TIME_SERIES = "\"timeSeries\":null";
+	public static final String EMPTY_TIME_SERIES= "\"timeSeries\":[]";
 
 	protected ConfigurationService configurationService;
 	
@@ -56,6 +57,10 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 		params.put(COLLECTION_KEY, collectionId);
 		params.put(FEATURE_KEY, featureId);
 		params.put(SERVER_URL_KEY, configurationService.getServerUrl());
-		return getSqlSession().selectOne("collections.getStatisticalTimeSeriesJson", params);
+		String json = getSqlSession().selectOne("collections.getStatisticalTimeSeriesJson", params);
+		if (json != null && json.contains(NULL_TIME_SERIES)) {
+			json = json.replace(NULL_TIME_SERIES, EMPTY_TIME_SERIES);
+		}
+		return json;
 	}
 }
