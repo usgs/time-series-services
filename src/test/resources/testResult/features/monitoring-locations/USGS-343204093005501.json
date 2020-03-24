@@ -49,6 +49,12 @@
             "type": "application/json",
             "title": "NWIS Monitoring Locations",
             "href": "https://unittest/api/observations/collections/monitoring-locations?f=json"
+        },
+        {
+            "rel": "collection",
+            "type": "application/json",
+            "title": "Arkansas Hot Springs National Park Network",
+            "href": "https://unittest/api/observations/collections/AHS?f=json"
         }
     ]
 
