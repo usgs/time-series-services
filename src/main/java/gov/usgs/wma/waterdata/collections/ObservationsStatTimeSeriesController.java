@@ -6,8 +6,6 @@ import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,7 +25,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Statistical Observations Datasets", description = "Feature Statistical Time Series Observations, such as min, max, or median.")
 @RestController
 public class ObservationsStatTimeSeriesController {
-	private static final Logger log = LoggerFactory.getLogger(ObservationsStatTimeSeriesController.class);
 	
 	protected static final String URL_PARAM_TIME_SERIES_ID = "timeSeriesId";
 	
@@ -67,8 +64,6 @@ public class ObservationsStatTimeSeriesController {
 			@PathVariable(value=URL_PARAM_FEATURE_ID) String featureId, // ex: monitoringLocationId
 			@PathVariable(value=URL_PARAM_TIME_SERIES_ID) String timeSeriesId, //ex: USGS-123456
 			HttpServletResponse response) {
-		
-		log.trace("Growndwater time series request");
 		
 		// verify the collection and feature exist before fetching the time series
 		String json = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
