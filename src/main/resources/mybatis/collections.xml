@@ -103,7 +103,7 @@
     </select>
 
 
-    <select id="getStatisticalTimeSeriesJson" parameterType="String" resultType="String">
+    <select id="getStatisticalTimeSeriesJson" parameterType="java.util.Map" resultType="String">
         select row_to_json(fsts)
           from ( select 'Feature' as "type",
                           ml.monitoring_location_identifier as "id",
