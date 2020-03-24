@@ -104,6 +104,8 @@
 
 
     <select id="getStatisticalTimeSeriesJson" parameterType="java.util.Map" resultType="String">
+        <!-- The aliases in this query are used for the JSON key names and some are intentionally mixed case -->
+        <!-- The inner select distinct is necessary until we have a top level table with this information -->
         select row_to_json(fsts)
           from ( select 'Feature' as "type",
                           ml.monitoring_location_identifier as "id",
