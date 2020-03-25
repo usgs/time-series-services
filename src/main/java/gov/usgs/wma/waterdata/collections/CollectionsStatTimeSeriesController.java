@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.usgs.wma.waterdata.timeseries.geojson.TimeSeriesGeoJSON;
+import gov.usgs.wma.waterdata.collections.observations.StatisticalFeatureGeoJSON;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,28 +23,28 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Statistical Observations Datasets", description = "Feature Statistical Time Series Observations, such as min, max, or median.")
 @RestController
 public class CollectionsStatTimeSeriesController {
-		
-	protected static final String URL_STATISTICAL_TIME_SERIES_COLLECTION 
+
+	protected static final String URL_STATISTICAL_TIME_SERIES_COLLECTION
 		= "collections/{"+PARAM_COLLECTION_ID+"}/items/{"+PARAM_FEATURE_ID+"}/observations/statistical-time-series";
-	
+
 	protected CollectionsDao collectionsDao;
 
-	
+
 	@Autowired
 	public CollectionsStatTimeSeriesController(CollectionsDao collectionsDao) {
 		this.collectionsDao = collectionsDao;
 	}
 
 	@Operation(
-			description="Return JSON Data list of statistical time series specific to the requested Monitoring Location.",
+			description="Return JSON Data list of statistical time series available for the requested Monitoring Location.",
 			responses= {
 					@ApiResponse(
 							responseCode="200",
 							description="GeoJSON representation of the Statistical Time Series list.",
-							content=@Content(schema=@Schema(implementation=TimeSeriesGeoJSON.class))),
+							content=@Content(schema=@Schema(implementation=StatisticalFeatureGeoJSON.class))),
 					@ApiResponse(
 							responseCode="404",
-							description="The requested collection or feature was not found.",
+							description="The requested collection and feature combination was not found.",
 							content=@Content())
 			},
 			externalDocs=@ExternalDocumentation(url="https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json")
@@ -54,10 +54,10 @@ public class CollectionsStatTimeSeriesController {
 			@PathVariable(value=PARAM_COLLECTION_ID) String collectionId, // ex: networkId,
 			@PathVariable(value=PARAM_FEATURE_ID) String featureId, // ex: monitoringLocationId
 			HttpServletResponse response) {
-		
+
 		// verify the collection and feature exist before fetching the time series
 		String json = collectionsDao.getStatisticalTimeSeries(collectionId, featureId);
-		
+
 		if (null == json) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
