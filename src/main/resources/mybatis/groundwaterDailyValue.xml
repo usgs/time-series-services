@@ -23,7 +23,7 @@
                        json_agg(qualifiers) qualifiers_agg,
                        json_agg(grades) grades_agg
                   from nwis.groundwater_daily_value
-                 where time_series_unique_id = #{timeseriesId,jdbcType=VARCHAR}
+                 where time_series_unique_id = #{timeSeriesId,jdbcType=VARCHAR}
                    and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
                  group by groundwater_daily_value_identifier,
                           monitoring_location_id,

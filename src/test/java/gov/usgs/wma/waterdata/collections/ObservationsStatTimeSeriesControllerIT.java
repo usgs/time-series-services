@@ -24,14 +24,13 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
 public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
-	
-	
+
+
 	protected String makeURL(String collectionId, String featureId, String guid) {
 		String url = URL_STATISTICAL_TIME_SERIES.replace(PARAM_COLLECTION_ID, collectionId);
 		url = url.replace(PARAM_FEATURE_ID, featureId);
 		url = url.replace(PARAM_TIME_SERIES_ID, guid);
 		url = "/" + url.replaceAll("[{}]", "");
-		System.out.println(url);
 		return url;
 	}
 
@@ -39,7 +38,7 @@ public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	public void foundTimeSeriesTest() throws Exception {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		
+
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.OK));
 
@@ -51,7 +50,7 @@ public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	public void timeSeriesNotInCollectionTest() throws Exception {
 		String url = makeURL("SOME-COLLECTION", "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		
+
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
 		assertNull(response.getBody());
@@ -60,7 +59,7 @@ public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	public void timeSeriesNotInFeatureTest() throws Exception {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "OTHER-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		
+
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
 		assertNull(response.getBody());

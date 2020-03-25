@@ -23,21 +23,20 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
 public class CollectionsStatTimeSeriesControllerIT extends BaseCollectionsIT {
-	
-	
+
+
 	protected String makeURL(String collectionId, String featureId) {
 		String url = URL_STATISTICAL_TIME_SERIES_COLLECTION.replace(PARAM_COLLECTION_ID, collectionId);
 		url = url.replace(PARAM_FEATURE_ID, featureId);
 		url = "/" + url.replaceAll("[{}]", "");
-		System.out.println(url);
 		return url;
 	}
-	
+
 	@Test
 	public void featureTimeSeriesCollectionTest() throws Exception {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-07227448"); //USGS-07227448 has two test time series
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		
+
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.OK));
 
@@ -50,7 +49,7 @@ public class CollectionsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	public void collectionMissingTest() throws Exception {
 		String url = makeURL("SOME-COLLECTION", "USGS-07227448");
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		
+
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
 		assertNull(response.getBody());
@@ -60,7 +59,7 @@ public class CollectionsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	public void featureNotFoundTest() {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-12345678");
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		
+
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertNull(response.getBody());
 	}
@@ -69,7 +68,7 @@ public class CollectionsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	public void notFoundNoGeomTest() throws Exception {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-04028090"); //USGS-04028090 has one test time series
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		
+
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
 	}
