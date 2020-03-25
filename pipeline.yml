@@ -22,5 +22,5 @@ configCredentialsId: "wma-eto-eb-rsa"
 urlRules:
   - type: forward
     conditions:
-      - "/api/observations/**"
+      - "/api/observations/*"
     priority: 302
