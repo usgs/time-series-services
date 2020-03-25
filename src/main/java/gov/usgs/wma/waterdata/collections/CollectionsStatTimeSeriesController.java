@@ -1,7 +1,7 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_COLLECTION_ID;
-import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_FEATURE_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,17 +25,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class CollectionsStatTimeSeriesController {
 		
 	protected static final String URL_STATISTICAL_TIME_SERIES_COLLECTION 
-		= "collections/{"+URL_PARAM_COLLECTION_ID+"}/items/{"+URL_PARAM_FEATURE_ID+"}/observations/statistical-time-series";
+		= "collections/{"+PARAM_COLLECTION_ID+"}/items/{"+PARAM_FEATURE_ID+"}/observations/statistical-time-series";
 	
 	protected CollectionsDao collectionsDao;
 
-	protected CollectionParams collectionsParams;
-
 	
 	@Autowired
-	public CollectionsStatTimeSeriesController(CollectionsDao collectionsDao, CollectionParams collectionsParams) {
+	public CollectionsStatTimeSeriesController(CollectionsDao collectionsDao) {
 		this.collectionsDao = collectionsDao;
-		this.collectionsParams = collectionsParams;
 	}
 
 	@Operation(
@@ -54,8 +51,8 @@ public class CollectionsStatTimeSeriesController {
 		)
 	@GetMapping(value=URL_STATISTICAL_TIME_SERIES_COLLECTION, produces=MediaType.APPLICATION_JSON_VALUE)
 	public String getTimeSeries(
-			@PathVariable(value=URL_PARAM_COLLECTION_ID) String collectionId, // ex: networkId,
-			@PathVariable(value=URL_PARAM_FEATURE_ID) String featureId, // ex: monitoringLocationId
+			@PathVariable(value=PARAM_COLLECTION_ID) String collectionId, // ex: networkId,
+			@PathVariable(value=PARAM_FEATURE_ID) String featureId, // ex: monitoringLocationId
 			HttpServletResponse response) {
 		
 		// verify the collection and feature exist before fetching the time series

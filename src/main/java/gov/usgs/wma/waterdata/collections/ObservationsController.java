@@ -1,7 +1,7 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_COLLECTION_ID;
-import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_FEATURE_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,8 +41,8 @@ public class ObservationsController {
 	@GetMapping(value = "collections/{collectionId}/items/{featureId}/observations", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getObservationTypes(
 			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
-			@PathVariable(value = URL_PARAM_COLLECTION_ID) String collectionId,
-			@PathVariable(value = URL_PARAM_FEATURE_ID) String featureId,
+			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
+			@PathVariable(value = PARAM_FEATURE_ID) String featureId,
 			HttpServletResponse response) {
 
 		String 	rtn = collectionsDao.getObsverationsJson(collectionsParams.buildParams(collectionId, featureId));

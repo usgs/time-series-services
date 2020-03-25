@@ -1,6 +1,5 @@
 package gov.usgs.wma.waterdata.timeseries;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -8,27 +7,26 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import gov.usgs.wma.waterdata.collections.CollectionsDao;
+import gov.usgs.wma.waterdata.collections.CollectionParams;
 
 @Repository
 public class TimeSeriesDao extends SqlSessionDaoSupport {
 
-	public static final String TIMESERIES_KEY = "timeseriesId"; // GUID
+	private CollectionParams collectionsParams;
 
 	@Autowired
-	public TimeSeriesDao(SqlSessionFactory sqlSessionFactory) {
+	public TimeSeriesDao(SqlSessionFactory sqlSessionFactory, CollectionParams collectionsParams) {
 		setSqlSessionFactory(sqlSessionFactory);
+		this.collectionsParams = collectionsParams;
 	}
 
 	public String getTimeSeries(String featureId, String timeSeriesId) {
-		return getTimeSeries("monitoring-locations", featureId, timeSeriesId);
+		return getTimeSeries(CollectionParams.DEFAULT_COLLECTION_ID, featureId, timeSeriesId);
 	}
 
-	public String getTimeSeries(String collectionId, String featureId, String timeSeriesId) {
-		Map<String,String> params = new HashMap<>();
-		params.put(CollectionsDao.COLLECTION_KEY, collectionId);
-		params.put(CollectionsDao.FEATURE_KEY, featureId);
-		params.put(TIMESERIES_KEY, timeSeriesId);
+	public String getTimeSeries(String collectionId, String featureId, String timeSeriesId) {		
+		Map<String,Object> params = collectionsParams.buildParams(collectionId, featureId, timeSeriesId);
+		
 		return getSqlSession().selectOne("groundwaterDailyValue.getGeoJson", params);
 	}
 

@@ -17,11 +17,14 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
+import gov.usgs.wma.waterdata.ConfigurationService;
+import gov.usgs.wma.waterdata.collections.CollectionParams;
+import gov.usgs.wma.waterdata.collections.CollectionsDao;
 import gov.usgs.wma.waterdata.springinit.BaseIT;
 import gov.usgs.wma.waterdata.springinit.DBTestConfig;
 
 @SpringBootTest(webEnvironment=WebEnvironment.NONE,
-	classes={DBTestConfig.class, TimeSeriesDao.class})
+	classes={DBTestConfig.class, TimeSeriesDao.class, CollectionParams.class, ConfigurationService.class})
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
 public class TimeSeriesDaoIT extends BaseIT {

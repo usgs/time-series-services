@@ -2,6 +2,7 @@ package gov.usgs.wma.waterdata.collections.geojson;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import gov.usgs.wma.waterdata.collections.CollectionParams;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder(value={"id","itemType","title","description", "keywords", "extent", "links"})
@@ -10,7 +11,7 @@ public class CollectionGeoJSON {
 	public static final String EXAMPLE_TITLE = "NWIS Monitoring Locations";
 	public static final String EXAMPLE_DESC = "USGS water monitoring locations managed in the National Water Information System";
 
-	@Schema(description="Collection Identifier.", example="monitoring-locations")
+	@Schema(description="Collection Identifier.", example=CollectionParams.DEFAULT_COLLECTION_ID)
 	public String getId() {
 		return null;
 	}

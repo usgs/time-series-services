@@ -1,8 +1,8 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_COLLECTION_ID;
-import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_FEATURE_ID;
-
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SERIES_ID;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,21 +26,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 public class ObservationsStatTimeSeriesController {
 	
-	protected static final String URL_PARAM_TIME_SERIES_ID = "timeSeriesId";
-	
 	protected static final String URL_STATISTICAL_TIME_SERIES 
-		= "collections/{"+URL_PARAM_COLLECTION_ID+"}/items/{"+URL_PARAM_FEATURE_ID+"}/observations/statistical-time-series/{"+URL_PARAM_TIME_SERIES_ID+"}";
-	
-	protected CollectionsDao collectionsDao;
-
-	protected CollectionParams collectionsParams;
+		= "collections/{"+PARAM_COLLECTION_ID+"}/items/{"+PARAM_FEATURE_ID+"}/observations/statistical-time-series/{"+PARAM_TIME_SERIES_ID+"}";
 	
 	protected TimeSeriesDao timeSeriesDao;
 
 	@Autowired
-	public ObservationsStatTimeSeriesController(CollectionsDao collectionsDao, CollectionParams collectionsParams, TimeSeriesDao timeSeriesDao) {
-		this.collectionsDao = collectionsDao;
-		this.collectionsParams = collectionsParams;
+	public ObservationsStatTimeSeriesController(TimeSeriesDao timeSeriesDao) {
 		this.timeSeriesDao = timeSeriesDao;
 	}
 
@@ -60,9 +52,9 @@ public class ObservationsStatTimeSeriesController {
 		)
 	@GetMapping(value=URL_STATISTICAL_TIME_SERIES, produces=MediaType.APPLICATION_JSON_VALUE)
 	public String getTimeSeries(
-			@PathVariable(value=URL_PARAM_COLLECTION_ID) String collectionId, // ex: networkId,
-			@PathVariable(value=URL_PARAM_FEATURE_ID) String featureId, // ex: monitoringLocationId
-			@PathVariable(value=URL_PARAM_TIME_SERIES_ID) String timeSeriesId, //ex: USGS-123456
+			@PathVariable(value=PARAM_COLLECTION_ID) String collectionId, // ex: networkId,
+			@PathVariable(value=PARAM_FEATURE_ID) String featureId, // ex: monitoringLocationId
+			@PathVariable(value=PARAM_TIME_SERIES_ID) String timeSeriesId, //ex: USGS-123456
 			HttpServletResponse response) {
 		
 		// verify the collection and feature exist before fetching the time series

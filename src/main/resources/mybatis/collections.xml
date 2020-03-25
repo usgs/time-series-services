@@ -123,7 +123,7 @@
                                             observered_property_name||', '||statistic as "description",
                                             observered_property_id as "parameterCode",
                                             statistic_id as "statisticCode",
-                                            #{serverBaseURL,jdbcType=VARCHAR}
+                                            #{serverUrl,jdbcType=VARCHAR}
                                                 ||'collections/monitoring-locations/items/'
                                                 ||monitoring_location_identifier
                                                 ||'/observations/statistical-time-series/'

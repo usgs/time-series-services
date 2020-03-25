@@ -1,8 +1,8 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static gov.usgs.wma.waterdata.collections.CollectionsDao.DEFAULT_COLLECTION_ID;
-import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_COLLECTION_ID;
-import static gov.usgs.wma.waterdata.collections.CollectionsController.URL_PARAM_FEATURE_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.DEFAULT_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionsStatTimeSeriesController.URL_STATISTICAL_TIME_SERIES_COLLECTION;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
+
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
@@ -25,8 +26,8 @@ public class CollectionsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	
 	
 	protected String makeURL(String collectionId, String featureId) {
-		String url = URL_STATISTICAL_TIME_SERIES_COLLECTION.replace(URL_PARAM_COLLECTION_ID, collectionId);
-		url = url.replace(URL_PARAM_FEATURE_ID, featureId);
+		String url = URL_STATISTICAL_TIME_SERIES_COLLECTION.replace(PARAM_COLLECTION_ID, collectionId);
+		url = url.replace(PARAM_FEATURE_ID, featureId);
 		url = "/" + url.replaceAll("[{}]", "");
 		System.out.println(url);
 		return url;
