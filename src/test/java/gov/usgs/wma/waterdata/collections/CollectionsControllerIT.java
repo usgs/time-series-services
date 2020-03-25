@@ -108,6 +108,7 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 				assertEquals(4, featuresJson.names().length());
 				assertEquals("FeatureCollection",featuresJson.getString("type"));
 				assertTrue(featuresJson.get("features") instanceof JSONArray);
+				assertTrue(featuresJson.get("links") instanceof JSONArray);
 				JSONArray features = (JSONArray) featuresJson.get("features");
 				ArrayList<String> returnedFeatureIds = new ArrayList<>();
 				List<String> featureIds = getCollectionFeatureIds(collectionId);
@@ -123,7 +124,8 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 					assertEquals(featureIds.get(i), featureId, String.format(
 							"featureId '%s' returned at index %d, expected '%s'", featureId, i, featureIds.get(i)));
 					String returnedFeature = doCollectionRequest("/collections/" + collectionId + "/items/" + featureId);
-					assertJsonEquals(featureJson.toString(), returnedFeature);
+					String expectedFeature = getCompareFile(String.format("/features/%s/%s.json",collectionId,featureId));
+					assertJsonEquals(expectedFeature, returnedFeature);
 					returnedFeatureIds.add(featureId);
 				}
 				String timeStamp = featuresJson.getString("timeStamp");
@@ -132,6 +134,8 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 				assertTrue(timestampMillis >= 0);
 			} catch (JSONException e) {
 				fail("Unexpected JSONException during test", e);
+			} catch (IOException e) {
+				fail("Unexpected IOException during test", e);
 			}
 		}
 	}
