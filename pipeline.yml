@@ -1,6 +1,5 @@
  # docker image path in artifactory
 artifactoryPath: "wdfn"
-gitlabPath: "wma/docker/wdfn/time-series-services"
 dockerImageName: "time-series-services"
 repoPath: "USGS/time-series-services.git"
 gitRepoUrl: "https://github.com/USGS/time-series-services.git"
