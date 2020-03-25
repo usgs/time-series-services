@@ -19,3 +19,8 @@ healthCheck: "/api/observations/about/health"
 contextPath: "/api/observations/*"
 configRepoPath: "wma/docker/wdfn/time-series-services"
 configCredentialsId: "wma-eto-eb-rsa"
+urlRules:
+  - type: forward
+    conditions:
+      - "/api/observations/**"
+    priority: 302
