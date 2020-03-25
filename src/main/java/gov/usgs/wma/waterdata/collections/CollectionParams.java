@@ -11,8 +11,6 @@ import gov.usgs.wma.waterdata.ConfigurationService;
 
 @Component
 public class CollectionParams {
-	@Autowired
-	protected ConfigurationService configurationService;
 
 	public static final String  PARAM_COLLECTION_ID   = "collectionId";
 	public static final String  PARAM_FEATURE_ID      = "featureId";
@@ -23,6 +21,13 @@ public class CollectionParams {
 	public static final Integer DEFAULT_START_INDEX   = 0;
 	public static final Integer MAX_LIMIT     = 100000;
 
+	protected ConfigurationService configurationService;
+
+	
+	@Autowired
+	public CollectionParams(ConfigurationService configurationService) {
+		this.configurationService = configurationService;
+	}
 	
 	public Map<String, Object> buildParams(String collectionId) {
 		Map<String, Object> params = buildCommonParams();
@@ -93,6 +98,6 @@ public class CollectionParams {
 		Map<String, Object> params = buildParams(collectionId, featureId);
 		params.put(PARAM_TIME_SERIES_ID, timeSeriesId);
 		
-		return null;
+		return params;
 	}
 }
