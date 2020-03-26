@@ -35,12 +35,21 @@
      </sql>
 
      <sql id="selectFeatureCollections">
-            select
-               monitoring_location_identifier feature_id, 'collection' rel, 'application/json' link_type, network_name title,
-               #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json' href
-            from nwis.network
-            join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
-            join nwis.monitoring_location on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
+        select monitoring_location_identifier feature_id,
+               jsonb_agg(
+                         json_build_object(
+                                           'rel', 'collection',
+                                           'type', 'application/json',
+                                           'title', network_name,
+                                           'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json'
+                                          )
+                        ) collection_links
+          from nwis.network
+               join nwis.network_sites
+                 on nwis.network.network_id = nwis.network_sites.network_id
+               join nwis.monitoring_location
+                 on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
+            group by monitoring_location_identifier
      </sql>
 
      <sql id="buildCollectionLinks">
@@ -67,7 +76,7 @@
            with collections as (<include refid="selectFeatureCollections"/>)
            select
                #{monLocTitle} collection_title,
-               <include refid="buildCollectionLinks"/> collection_links, <include refid="featureCols"/>
+               collection_links, <include refid="featureCols"/>
             from nwis.monitoring_location
             left outer join collections on monitoring_location.monitoring_location_identifier = collections.feature_id
             where geom is not null
@@ -80,7 +89,6 @@
                                          ST_GeomFromText(#{pointUpRight},4326)), 4326),
                   ST_setSRID(geom,4326))
             </if>
-            group by collections.feature_id, <include refid="featuresGroupBy"/>
             ORDER BY feature_id
             <if test="limit != null">
               limit #{limit}
@@ -93,7 +101,7 @@
            with collections as (<include refid="selectFeatureCollections"/>)
            select
              network_name collection_title,
-             <include refid="buildCollectionLinks"/> collection_links, <include refid="featureCols"/>
+             collection_links, <include refid="featureCols"/>
           from nwis.network
           join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
           join nwis.monitoring_location on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
@@ -108,7 +116,6 @@
                                          ST_GeomFromText(#{pointUpRight},4326)), 4326),
                  ST_setSRID(geom,4326))
           </if>
-          group by collections.feature_id, network_name, <include refid="featuresGroupBy"/>
           ORDER BY feature_id
           <if test="limit != null">
             limit #{limit}
