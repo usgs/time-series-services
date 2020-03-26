@@ -5,8 +5,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html). (Patch version X.Y.0 is implied if not specified.)
 
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.4.0...master)
-### Changed
--   Sending artifacts to chs artifactory rather than eros artifactory or gitlab container registry
 
 ## [0.4.0](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.2.0...0.4.0)
 ### Added
