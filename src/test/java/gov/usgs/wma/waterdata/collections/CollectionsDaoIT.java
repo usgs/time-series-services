@@ -125,11 +125,18 @@ public class CollectionsDaoIT extends BaseIT {
 		assertNull(featureJson);
 	}
 
-	
+
 	@Test
 	public void featureTimeSeriesCollectionTest() throws Exception {
 		String actualJSON  = collectionsDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "USGS-07227448");
-		String expectJSON = getCompareFile("usgs-07227448-obs-list.json");
+		String expectJSON = getCompareFile("features/monitoring-locations/usgs-07227448-obs-list.json");
+		assertThat(new JSONObject(actualJSON), sameJSONObjectAs(new JSONObject(expectJSON)));
+	}
+
+	@Test
+	public void featureTimeSeriesCollectionEmptyTest() throws Exception {
+		String actualJSON  = collectionsDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "USGS-04027940");
+		String expectJSON = getCompareFile("features/monitoring-locations/usgs-04027940-obs-list.json");
 		assertThat(new JSONObject(actualJSON), sameJSONObjectAs(new JSONObject(expectJSON)));
 	}
 
@@ -150,5 +157,5 @@ public class CollectionsDaoIT extends BaseIT {
 		String actualJSON  = collectionsDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "USGS-04028090");
 		assertNull(actualJSON);
 	}
-	
+
 }

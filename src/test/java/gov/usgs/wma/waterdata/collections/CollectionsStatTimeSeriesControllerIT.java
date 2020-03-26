@@ -40,7 +40,7 @@ public class CollectionsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.OK));
 
-		String expectResponseJSON = getCompareFile("usgs-07227448-obs-list.json");
+		String expectResponseJSON = getCompareFile("features/monitoring-locations/usgs-07227448-obs-list.json");
 		String actualResponseJSON = response.getBody();
 		assertThat(new JSONObject(actualResponseJSON), sameJSONObjectAs(new JSONObject(expectResponseJSON)));
 	}
