@@ -3,7 +3,6 @@ package gov.usgs.wma.waterdata.collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -94,8 +93,9 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 	@Test
 	public void collectionNotFoundTest() {
 		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/xyz", String.class);
+		assertNotNull(rtn);
 		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
-		assertNull(rtn.getBody());
+		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
 	@Test
@@ -169,30 +169,26 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 
 	@Test
 	public void collectionNotFoundItemsTest() {
-		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/xyz/items/USGS-07227448", String.class);
-		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
-		assertNull(rtn.getBody());
+		String rtn = doCollectionRequest("/collections/xyz/items/USGS-07227448", HttpStatus.NOT_FOUND.value());
+		assertEquals(ogc404Payload, rtn);
 	}
 
 	@Test
 	public void featureNotFoundTest() {
-		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/AHS/items/xyz", String.class);
-		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
-		assertNull(rtn.getBody());
+		String rtn = doCollectionRequest("/collections/AHS/items/xyz", HttpStatus.NOT_FOUND.value());
+		assertEquals(ogc404Payload, rtn);
 	}
 
 	@Test
 	public void featureNotFoundNoGeomTest() {
-		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items/USGS-0402809", String.class);
-		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
-		assertNull(rtn.getBody());
+		String rtn = doCollectionRequest("/collections/monitoring-locations/items/USGS-0402809", HttpStatus.NOT_FOUND.value());
+		assertEquals(ogc404Payload, rtn);
 	}
 
 	@Test
 	public void featureExistsInAnotherCollectionTest() {
-		ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/AHS/items/USGS-07227448", String.class);
-		assertEquals(HttpStatus.NOT_FOUND.value(), rtn.getStatusCode().value());
-		assertNull(rtn.getBody());
+		String rtn = doCollectionRequest("/collections/AHS/items/USGS-07227448", HttpStatus.NOT_FOUND.value());
+		assertEquals(ogc404Payload, rtn);
 	}
 
 	private List<String> getCollectionFeatureIds(String collectionId) {

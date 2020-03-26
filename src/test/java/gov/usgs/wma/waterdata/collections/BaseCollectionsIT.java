@@ -2,7 +2,6 @@ package gov.usgs.wma.waterdata.collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
 
@@ -16,33 +15,26 @@ import gov.usgs.wma.waterdata.springinit.BaseIT;
 public abstract class BaseCollectionsIT extends BaseIT {
 	@Autowired
 	protected TestRestTemplate restTemplate;
+
+	protected String ogc404Payload = "{\"code\":\"404\", \"description\":\"Requested data not found\"}";
 	
 	protected void doGetCollectionTest(String path, String resultFile) throws IOException {
 		String actual = doCollectionRequest(path);
 		String expected = getCompareFile(resultFile);
-		System.out.println("expected = " + expected);
-		System.out.println("actual = " + actual);
 		assertJsonEquals(expected, actual);
 	}
-	
-	protected String doCollectionRequest(String path) {
-		ResponseEntity<String> rtn = restTemplate.getForEntity(path, String.class);
-		assertEquals(HttpStatus.OK.value(), rtn.getStatusCode().value());
-		assertNotNull(rtn);
 
-		return rtn.getBody();
+	protected String doCollectionRequest(String path) {
+		return doCollectionRequest(path, HttpStatus.OK.value());
 	}
 
 	protected String doCollectionRequest(String path, int expectedStatus) {
 		ResponseEntity<String> rtn = restTemplate.getForEntity(path, String.class);
+		assertNotNull(rtn);
 		assertEquals(expectedStatus, rtn.getStatusCode().value());
-		if (expectedStatus == HttpStatus.OK.value()) {
-			assertNotNull(rtn);
-			return rtn.getBody();
-		} else {
-			assertNull(rtn.getBody());
-			return null;
-		}
+		assertNotNull(rtn.getBody());
+
+		return rtn.getBody();
 	}
 
 }

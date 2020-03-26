@@ -1,13 +1,13 @@
 package gov.usgs.wma.waterdata.collections;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import gov.usgs.wma.waterdata.ConfigurationService;
+import gov.usgs.wma.waterdata.parameter.BoundingBox;
 
 @Component
 public class CollectionParams {
@@ -19,7 +19,7 @@ public class CollectionParams {
 
 	public static final String  DEFAULT_COLLECTION_ID = "monitoring-locations";
 	public static final Integer DEFAULT_START_INDEX   = 0;
-	public static final Integer MAX_LIMIT     = 100000;
+	public static final Integer MAX_LIMIT     = 10000;
 
 	protected ConfigurationService configurationService;
 
@@ -51,7 +51,7 @@ public class CollectionParams {
 	}
 
 	public Map<String, Object> buildParams(String collectionId, int limit, int startIndex,
-			List<String> bbox, int count) {
+			BoundingBox bbox, int count) {
 		Map<String, Object> params = buildCommonParams();
 		if (collectionId != null) {
 			params.put(PARAM_COLLECTION_ID, collectionId);
@@ -65,9 +65,9 @@ public class CollectionParams {
 		 * a bounding box with four numbers: latitude Lower left corner, longitude Lower left
 		 * corner, latitude Upper right corner, longitude Upper right corner, latitude
 		 */
-		if (bbox != null && bbox.size() == 4) {
-			params.put("pointLowLeft", String.format("Point(%s %s)", bbox.get(0), bbox.get(1)));
-			params.put("pointUpRight", String.format("Point(%s %s)", bbox.get(2), bbox.get(3)));
+		if (bbox != null) {
+			params.put("pointLowLeft", String.format("Point(%s %s)", bbox.getWest(), bbox.getSouth()));
+			params.put("pointUpRight", String.format("Point(%s %s)", bbox.getEast(), bbox.getNorth()));
 		}
 		params.put("startIndex", startIndex);
 		if (startIndex > 0) {

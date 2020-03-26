@@ -7,7 +7,6 @@ import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SER
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +23,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Statistical Observations Datasets", description = "Feature Statistical Time Series Observations, such as min, max, or median.")
 @RestController
-public class ObservationsStatTimeSeriesController {
-	
+public class ObservationsStatTimeSeriesController extends BaseController {
+
 	protected static final String URL_STATISTICAL_TIME_SERIES 
 		= "collections/{"+PARAM_COLLECTION_ID+"}/items/{"+PARAM_FEATURE_ID+"}/observations/statistical-time-series/{"+PARAM_TIME_SERIES_ID+"}";
 	
@@ -58,11 +57,6 @@ public class ObservationsStatTimeSeriesController {
 			HttpServletResponse response) {
 		
 		// verify the collection and feature exist before fetching the time series
-		String json = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
-		
-		if (null == json) {
-			response.setStatus(HttpStatus.NOT_FOUND.value());
-		}
-		return json;
+		return resultOr404(response, timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId));
 	}
 }
