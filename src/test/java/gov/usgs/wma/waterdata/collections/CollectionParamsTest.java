@@ -23,13 +23,14 @@ class CollectionParamsTest {
 	private String expectedFeatureId = "aFeatureId";
 	private String expectedTimeSeriesId = "aGUID";
 
-	private ConfigurationService config;
 	private CollectionParams builder;
 	private Map<String,Object> params;
 
 	@BeforeEach
 	public void before() {
-		config = new ConfigurationService();
+		// codacy wanted instance definition moved here. The construction was here.
+		// if access is needed in future tests it will have to be moved back out to instance scope.
+		ConfigurationService config = new ConfigurationService();
 		config.setServerUrl(TEST_SERVER_URL);
 
 		builder = new CollectionParams(config);
@@ -48,24 +49,24 @@ class CollectionParamsTest {
 	}
 
 	@Test
-	void testNotNull() {
+	public void testNotNull() {
 		assertNotNull(builder);
 	}
 
 	@Test
-	void testCollectionAndCommon() {
+	public void testCollectionAndCommon() {
 		params = builder.buildParams(expectedCollectionId);
 		assertTrue(commonAsserts());
 	}
 
 	@Test
-	void testCollectionFeature() {
+	public void testCollectionFeature() {
 		params = builder.buildParams(expectedCollectionId, expectedFeatureId);
 		assertTrue(featureAsserts());
 	}
 
 	@Test
-	void testCollectionFeatureTimeSeries() {
+	public void testCollectionFeatureTimeSeries() {
 		params = builder.buildParams(expectedCollectionId, expectedFeatureId, expectedTimeSeriesId);
 		featureAsserts();
 		assertEquals(expectedTimeSeriesId, params.get(PARAM_TIME_SERIES_ID));
