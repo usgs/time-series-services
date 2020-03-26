@@ -11,12 +11,24 @@ import gov.usgs.wma.waterdata.ConfigurationService;
 
 @Component
 public class CollectionParams {
-	@Autowired
+
+	public static final String  PARAM_COLLECTION_ID   = "collectionId";
+	public static final String  PARAM_FEATURE_ID      = "featureId";
+	public static final String  PARAM_TIME_SERIES_ID  = "timeSeriesId";
+	public static final String  PARAM_SERVER_URL      = "serverUrl";
+
+	public static final String  DEFAULT_COLLECTION_ID = "monitoring-locations";
+	public static final Integer DEFAULT_START_INDEX   = 0;
+	public static final Integer MAX_LIMIT     = 100000;
+
 	protected ConfigurationService configurationService;
 
-	public static final int START_INDEX_DEFAULT = 0;
-	public static final int MAX_LIMIT = 100000;
-
+	
+	@Autowired
+	public CollectionParams(ConfigurationService configurationService) {
+		this.configurationService = configurationService;
+	}
+	
 	public Map<String, Object> buildParams(String collectionId) {
 		Map<String, Object> params = buildCommonParams();
 		if (collectionId != null) {
@@ -29,10 +41,10 @@ public class CollectionParams {
 	public Map<String, Object> buildParams(String collectionId, String featureId) {
 		Map<String, Object> params = buildCommonParams();
 		if (collectionId != null) {
-			params.put("collectionId", collectionId);
+			params.put(PARAM_COLLECTION_ID, collectionId);
 		}
 		if (featureId != null) {
-			params.put("featureId", featureId);
+			params.put(PARAM_FEATURE_ID, featureId);
 		}
 
 		return params;
@@ -42,7 +54,7 @@ public class CollectionParams {
 			List<String> bbox, int count) {
 		Map<String, Object> params = buildCommonParams();
 		if (collectionId != null) {
-			params.put("collectionId", collectionId);
+			params.put(PARAM_COLLECTION_ID, collectionId);
 		}
 		int limitParam = limit;
 		if (limit > MAX_LIMIT) {
@@ -73,12 +85,19 @@ public class CollectionParams {
 
 	private Map<String, Object> buildCommonParams() {
 		Map<String, Object> params = new HashMap<>();
-		params.put("serverUrl", configurationService.getServerUrl());
+		params.put(PARAM_SERVER_URL, configurationService.getServerUrl());
 		params.put("monLocTitle", configurationService.getMonLocTitle());
 		params.put("monLocDescription", configurationService.getMonLocDescription());
 		params.put("monLocContactName", configurationService.getMonLocContactName());
 		params.put("monLocContactEmail", configurationService.getMonLocContactEmail());
 
+		return params;
+	}
+
+	public Map<String, Object> buildParams(String collectionId, String featureId, String timeSeriesId) {
+		Map<String, Object> params = buildParams(collectionId, featureId);
+		params.put(PARAM_TIME_SERIES_ID, timeSeriesId);
+		
 		return params;
 	}
 }

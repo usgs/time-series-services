@@ -7,12 +7,19 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 public class CollectionsDao extends SqlSessionDaoSupport {
+	public static final String NULL_TIME_SERIES = "\"timeSeries\":null";
+	public static final String EMPTY_TIME_SERIES= "\"timeSeries\":[]";
 
+	private CollectionParams collectionsParams;
+	
+	
 	@Autowired
-	public CollectionsDao(SqlSessionFactory sqlSessionFactory) {
+	public CollectionsDao(SqlSessionFactory sqlSessionFactory, CollectionParams collectionsParams) {
 		setSqlSessionFactory(sqlSessionFactory);
+		this.collectionsParams = collectionsParams;
 	}
 
 	public String getCollectionsJson(Map<String, Object> params) {
@@ -37,5 +44,16 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 
 	public String getObsverationsJson(Map<String, Object> params) {
 		return getSqlSession().selectOne("observations.getObsverationsJson", params);
+	}
+
+	public String getStatisticalTimeSeries(String collectionId, String featureId) {
+		Map<String,Object> params = collectionsParams.buildParams(collectionId, featureId);
+		
+		String json = getSqlSession().selectOne("collections.getStatisticalTimeSeriesJson", params);
+		
+		if (json != null && json.contains(NULL_TIME_SERIES)) {
+			json = json.replace(NULL_TIME_SERIES, EMPTY_TIME_SERIES);
+		}
+		return json;
 	}
 }
