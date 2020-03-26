@@ -19,7 +19,6 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 import gov.usgs.wma.waterdata.ConfigurationService;
 import gov.usgs.wma.waterdata.collections.CollectionParams;
-import gov.usgs.wma.waterdata.collections.CollectionsDao;
 import gov.usgs.wma.waterdata.springinit.BaseIT;
 import gov.usgs.wma.waterdata.springinit.DBTestConfig;
 
@@ -52,13 +51,13 @@ public class TimeSeriesDaoIT extends BaseIT {
 		String geoJSON = timeSeriesDao.getTimeSeries("USGS-04028090", "41a5ff887b744b84a271b65e48d78074");
 		assertNull(geoJSON);
 	}
-	
-	
+
+
 	@Test
 	public void foundTimeSeriesTest() throws Exception {
 		String geoJSON = timeSeriesDao.getTimeSeries("monitoring-locations", "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
 		assertNotNull(geoJSON);
-		
+
 		String expectedJSON = getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac.json");
 		assertThat(new JSONObject(geoJSON), sameJSONObjectAs(new JSONObject(expectedJSON)));
 	}
@@ -84,6 +83,6 @@ public class TimeSeriesDaoIT extends BaseIT {
 		String geoJSON = timeSeriesDao.getTimeSeries("monitoring-locations", "USGS-04028090", "41a5ff887b744b84a271b65e48d78074");
 		assertNull(geoJSON);
 	}
-	
-	
+
+
 }

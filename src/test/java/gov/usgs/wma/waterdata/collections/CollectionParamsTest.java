@@ -1,12 +1,18 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static gov.usgs.wma.waterdata.collections.CollectionParams.*;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_SERVER_URL;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SERIES_ID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import gov.usgs.wma.waterdata.ConfigurationService;
 
 class CollectionParamsTest {
