@@ -35,14 +35,16 @@ class CollectionParamsTest {
 		builder = new CollectionParams(config);
 	}
 
-	private void commonAsserts() {
+	private boolean commonAsserts() {
 		assertNotNull(params);
 		assertEquals(TEST_SERVER_URL, params.get(PARAM_SERVER_URL));
 		assertEquals(expectedCollectionId, params.get(PARAM_COLLECTION_ID));
+		return true;
 	}
-	private void featureAsserts() {
+	private boolean featureAsserts() {
 		commonAsserts();
 		assertEquals(expectedFeatureId, params.get(PARAM_FEATURE_ID));
+		return true;
 	}
 
 	@Test
@@ -53,13 +55,13 @@ class CollectionParamsTest {
 	@Test
 	void testCollectionAndCommon() {
 		params = builder.buildParams(expectedCollectionId);
-		commonAsserts();
+		assertTrue(commonAsserts());
 	}
 
 	@Test
 	void testCollectionFeature() {
 		params = builder.buildParams(expectedCollectionId, expectedFeatureId);
-		featureAsserts();
+		assertTrue(featureAsserts());
 	}
 
 	@Test
