@@ -169,25 +169,25 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 
 	@Test
 	public void collectionNotFoundItemsTest() {
-		String rtn = doCollectionRequest("/collections/xyz/items/USGS-07227448", HttpStatus.NOT_FOUND.value());
+		String rtn = doCollectionRequest("/collections/xyz/items/USGS-07227448", HttpStatus.NOT_FOUND);
 		assertEquals(ogc404Payload, rtn);
 	}
 
 	@Test
 	public void featureNotFoundTest() {
-		String rtn = doCollectionRequest("/collections/AHS/items/xyz", HttpStatus.NOT_FOUND.value());
+		String rtn = doCollectionRequest("/collections/AHS/items/xyz", HttpStatus.NOT_FOUND);
 		assertEquals(ogc404Payload, rtn);
 	}
 
 	@Test
 	public void featureNotFoundNoGeomTest() {
-		String rtn = doCollectionRequest("/collections/monitoring-locations/items/USGS-0402809", HttpStatus.NOT_FOUND.value());
+		String rtn = doCollectionRequest("/collections/monitoring-locations/items/USGS-0402809", HttpStatus.NOT_FOUND);
 		assertEquals(ogc404Payload, rtn);
 	}
 
 	@Test
 	public void featureExistsInAnotherCollectionTest() {
-		String rtn = doCollectionRequest("/collections/AHS/items/USGS-07227448", HttpStatus.NOT_FOUND.value());
+		String rtn = doCollectionRequest("/collections/AHS/items/USGS-07227448", HttpStatus.NOT_FOUND);
 		assertEquals(ogc404Payload, rtn);
 	}
 

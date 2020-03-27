@@ -5,11 +5,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ch.qos.logback.classic.Level.OFF;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -92,6 +98,47 @@ public class GlobalDefaultExceptionHandlerTest {
 		assertTrue(actual.size() == 2);
 		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
 		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+	}
+
+	@Test
+	public void handleConstraintViolationNoMessageException() throws IOException {
+		HttpServletResponse response = new MockHttpServletResponse();
+		String expected = "Constraint Violation: [No message available]";
+		ConstraintViolationException ce = new ConstraintViolationException(null);
+		Map<String, String> actual = controller.handleUncaughtException(ce, request, response);
+		assertTrue(actual.size() == 2);
+		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()),
+				actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+
+		ce = new ConstraintViolationException(Collections.emptySet());
+		actual = controller.handleUncaughtException(ce, request, response);
+		assertTrue(actual.size() == 2);
+		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()),
+				actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+	}
+
+	@Test
+	public void handleConstraintViolationException() throws IOException {
+		ConstraintViolation<?> constraintViolation = Mockito.mock(ConstraintViolation.class);
+		Set<ConstraintViolation<?>> constraintViolations = new HashSet<>();
+		String expected = "Some message saying what the violation was";
+
+		constraintViolations.add(constraintViolation);
+		ConstraintViolationException violationException = Mockito.mock(ConstraintViolationException.class);
+		Mockito.when(violationException.getConstraintViolations()).thenReturn(constraintViolations);
+		Mockito.when(violationException.getConstraintViolations().iterator().next().getMessage()).thenReturn(expected);
+
+		HttpServletResponse response = new MockHttpServletResponse();
+		Map<String, String> actual = controller.handleUncaughtException(violationException, request, response);
+		assertTrue(actual.size() == 2);
+		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()),
+				actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
 		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 	}
 

@@ -38,7 +38,7 @@ public class GlobalDefaultExceptionHandler {
 			response.setStatus(HttpStatus.BAD_REQUEST.value());
 			responseMap.put(CODE_KEY, Integer.toString(HttpStatus.BAD_REQUEST.value()));
 			ConstraintViolationException ce = (ConstraintViolationException) ex;
-			String message = ce.getConstraintViolations().isEmpty() ? "No message available."
+			String message = ce.getConstraintViolations() == null || ce.getConstraintViolations().isEmpty() ? "Constraint Violation: [No message available]"
 					: ce.getConstraintViolations().iterator().next().getMessage();
 			responseMap.put(DESCRIPTION_KEY, message);
 		} else if (ex instanceof HttpMessageNotReadableException) {

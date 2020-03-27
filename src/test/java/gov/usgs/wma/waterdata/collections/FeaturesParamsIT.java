@@ -89,11 +89,11 @@ public class FeaturesParamsIT extends BaseCollectionsIT  {
 	public void paramBoundsTest() {
 		for (String collectionId : COLLECTION_IDS) {
 			String rtn = doCollectionRequest("/collections/" + collectionId + "/items?startIndex=-1",
-					HttpStatus.NOT_FOUND.value());
+					HttpStatus.NOT_FOUND);
 			assertEquals(ogc404Payload, rtn);
 
 			rtn = doCollectionRequest("/collections/" + collectionId + "/items?startIndex=" + MONLOC_COUNT,
-					HttpStatus.NOT_FOUND.value());
+					HttpStatus.NOT_FOUND);
 			assertEquals(ogc404Payload, rtn);
 		}
 	}

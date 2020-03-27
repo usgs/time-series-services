@@ -25,13 +25,13 @@ public abstract class BaseCollectionsIT extends BaseIT {
 	}
 
 	protected String doCollectionRequest(String path) {
-		return doCollectionRequest(path, HttpStatus.OK.value());
+		return doCollectionRequest(path, HttpStatus.OK);
 	}
 
-	protected String doCollectionRequest(String path, int expectedStatus) {
+	protected String doCollectionRequest(String path, HttpStatus expectedStatus) {
 		ResponseEntity<String> rtn = restTemplate.getForEntity(path, String.class);
 		assertNotNull(rtn);
-		assertEquals(expectedStatus, rtn.getStatusCode().value());
+		assertEquals(expectedStatus, rtn.getStatusCode());
 		assertNotNull(rtn.getBody());
 
 		return rtn.getBody();

@@ -33,7 +33,7 @@ public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	@Test
 	public void foundTimeSeriesTest() throws Exception {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
-		String rtn = doCollectionRequest(url, HttpStatus.OK.value());
+		String rtn = doCollectionRequest(url, HttpStatus.OK);
 		String expectResponseJSON = getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac.json");
 		assertThat(new JSONObject(rtn), sameJSONObjectAs(new JSONObject(expectResponseJSON)));
 	}
@@ -41,28 +41,28 @@ public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	@Test
 	public void timeSeriesNotInCollectionTest() {
 		String url = makeURL("SOME-COLLECTION", "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
-		String rtn = doCollectionRequest(url, HttpStatus.NOT_FOUND.value());
+		String rtn = doCollectionRequest(url, HttpStatus.NOT_FOUND);
 		assertEquals(ogc404Payload, rtn);
 	}
 
 	@Test
 	public void timeSeriesNotInFeatureTest() {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "OTHER-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
-		String rtn = doCollectionRequest(url, HttpStatus.NOT_FOUND.value());
+		String rtn = doCollectionRequest(url, HttpStatus.NOT_FOUND);
 		assertEquals(ogc404Payload, rtn);
 	}
 
 	@Test
 	public void notFoundTimeSeriesTest() {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-12345678", "216d009de8914147a0f9e5237da77854");
-		String rtn = doCollectionRequest(url, HttpStatus.NOT_FOUND.value());
+		String rtn = doCollectionRequest(url, HttpStatus.NOT_FOUND);
 		assertEquals(ogc404Payload, rtn);
 	}
 
 	@Test
 	public void noGeomTimeSeriesTest() {
 		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-04028090", "41a5ff887b744b84a271b65e48d78074");
-		String rtn = doCollectionRequest(url, HttpStatus.NOT_FOUND.value());
+		String rtn = doCollectionRequest(url, HttpStatus.NOT_FOUND);
 		assertEquals(ogc404Payload, rtn);
 	}
 }
