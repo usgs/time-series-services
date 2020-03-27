@@ -83,22 +83,38 @@ public class ParamValidationIT extends BaseCollectionsIT {
 
 	@Test
 	public void bboxValuesMinTest() {
-	    String path = "/collections/monitoring-locations/items?bbox=-180.1,-90,180,90";
+		String path = "/collections/monitoring-locations/items?bbox=-180.1,-90,-180,-90";
 		String rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
 		assertJsonEquals(ogcBbox400Payload, rtn);
 
-	    path = "/collections/monitoring-locations/items?bbox=-180,-90.1,180,90";
+		path = "/collections/monitoring-locations/items?bbox=-180,-90.1,-180,-90";
+		rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
+		assertJsonEquals(ogcBbox400Payload, rtn);
+
+		path = "/collections/monitoring-locations/items?bbox=-180,-90,-180.1,-90";
+		rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
+		assertJsonEquals(ogcBbox400Payload, rtn);
+
+		path = "/collections/monitoring-locations/items?bbox=-180,-90,-180,-90.1";
 		rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
 		assertJsonEquals(ogcBbox400Payload, rtn);
 	}
 
 	@Test
 	public void bboxValuesMaxTest() {
-	    String path = "/collections/monitoring-locations/items?bbox=-180,-90,180.1,90";
+		String path = "/collections/monitoring-locations/items?bbox=180.1,90,180,90";
 		String rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
 		assertJsonEquals(ogcBbox400Payload, rtn);
 
-	    path = "/collections/monitoring-locations/items?bbox=-180,-90.1,180,90.1";
+		path = "/collections/monitoring-locations/items?bbox=180,90.1,180,90";
+		rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
+		assertJsonEquals(ogcBbox400Payload, rtn);
+
+		path = "/collections/monitoring-locations/items?bbox=180,90,180.1,90";
+		rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
+		assertJsonEquals(ogcBbox400Payload, rtn);
+
+		path = "/collections/monitoring-locations/items?bbox=180,90,180,180.1";
 		rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
 		assertJsonEquals(ogcBbox400Payload, rtn);
 	}

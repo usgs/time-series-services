@@ -4,8 +4,15 @@ import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTI
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_SERVER_URL;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SERIES_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_LIMIT;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_POINT_LOW_lEFT;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_POINT_UP_RIGHT;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_PREV_START_INDEX;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_NEXT_START_INDEX;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
@@ -14,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import gov.usgs.wma.waterdata.ConfigurationService;
+import gov.usgs.wma.waterdata.parameter.BoundingBox;
 
 class CollectionParamsTest {
 
@@ -63,6 +71,29 @@ class CollectionParamsTest {
 	public void testCollectionFeature() {
 		params = builder.buildParams(expectedCollectionId, expectedFeatureId);
 		assertTrue(featureAsserts());
+	}
+
+	@Test
+	public void testCollectionFeatureParms() {
+		BoundingBox bbox = new BoundingBox("-180,-90,180,90");
+		params = builder.buildParams(expectedCollectionId, 10001, 10, bbox, 15000);
+		assertTrue(commonAsserts());
+		assertEquals(10000, params.get(PARAM_LIMIT));
+		assertEquals("Point(-180 -90)", params.get(PARAM_POINT_LOW_lEFT));
+		assertEquals("Point(180 90)", params.get(PARAM_POINT_UP_RIGHT));
+		assertEquals("&startIndex=0&limit=10000", params.get(PARAM_PREV_START_INDEX));
+		assertEquals("&startIndex=10010&limit=10000", params.get(PARAM_NEXT_START_INDEX));
+	}
+
+	@Test
+	public void testCollectionFeatureParmsNoLinks() {
+		params = builder.buildParams(expectedCollectionId, 100, 0, null, 100);
+		assertTrue(commonAsserts());
+		assertEquals(100, params.get(PARAM_LIMIT));
+		assertNull(params.get(PARAM_POINT_LOW_lEFT));
+		assertNull(params.get(PARAM_POINT_UP_RIGHT));
+		assertNull(params.get(PARAM_PREV_START_INDEX));
+		assertNull(params.get(PARAM_NEXT_START_INDEX));
 	}
 
 	@Test

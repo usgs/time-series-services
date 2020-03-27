@@ -16,6 +16,12 @@ public class CollectionParams {
 	public static final String  PARAM_FEATURE_ID      = "featureId";
 	public static final String  PARAM_TIME_SERIES_ID  = "timeSeriesId";
 	public static final String  PARAM_SERVER_URL      = "serverUrl";
+	public static final String  PARAM_LIMIT      = "limit";
+	public static final String  PARAM_START_INDEX      = "startIndex";
+	public static final String  PARAM_POINT_LOW_lEFT      = "pointLowLeft";
+	public static final String  PARAM_POINT_UP_RIGHT      = "pointUpRight";
+	public static final String  PARAM_PREV_START_INDEX      = "prevStartIndex";
+	public static final String  PARAM_NEXT_START_INDEX      = "nextStartIndex";
 
 	public static final String  DEFAULT_COLLECTION_ID = "monitoring-locations";
 	public static final Integer DEFAULT_START_INDEX   = 0;
@@ -60,24 +66,24 @@ public class CollectionParams {
 		if (limit > MAX_LIMIT) {
 			limitParam = MAX_LIMIT;
 		}
-		params.put("limit", limitParam);
+		params.put(PARAM_LIMIT, limitParam);
 		/*
 		 * a bounding box with four numbers: latitude Lower left corner, longitude Lower left
 		 * corner, latitude Upper right corner, longitude Upper right corner, latitude
 		 */
 		if (bbox != null) {
-			params.put("pointLowLeft", String.format("Point(%s %s)", bbox.getWest(), bbox.getSouth()));
-			params.put("pointUpRight", String.format("Point(%s %s)", bbox.getEast(), bbox.getNorth()));
+			params.put(PARAM_POINT_LOW_lEFT, String.format("Point(%s %s)", bbox.getWest(), bbox.getSouth()));
+			params.put(PARAM_POINT_UP_RIGHT, String.format("Point(%s %s)", bbox.getEast(), bbox.getNorth()));
 		}
-		params.put("startIndex", startIndex);
+		params.put(PARAM_START_INDEX, startIndex);
 		if (startIndex > 0) {
-			int prevStartIndex = Math.max(0, startIndex - limit);
-			params.put("prevStartIndex", String.format("&startIndex=%d&limit=%d", prevStartIndex, limit));
+			int prevStartIndex = Math.max(0, startIndex - limitParam);
+			params.put(PARAM_PREV_START_INDEX, String.format("&startIndex=%d&limit=%d", prevStartIndex, limitParam));
 		}
 
-		int nextStartIndex = startIndex + limit;
+		int nextStartIndex = startIndex + limitParam;
 		if (nextStartIndex <= count - 1) {
-			params.put("nextStartIndex", String.format("&startIndex=%d&limit=%d", nextStartIndex, limit));
+			params.put(PARAM_NEXT_START_INDEX, String.format("&startIndex=%d&limit=%d", nextStartIndex, limitParam));
 		}
 
 		return params;
