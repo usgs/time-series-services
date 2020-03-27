@@ -3,8 +3,7 @@ package gov.usgs.wma.waterdata.collections;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.DEFAULT_COLLECTION_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
-import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SERIES_ID;
-import static gov.usgs.wma.waterdata.collections.ObservationsStatTimeSeriesController.URL_STATISTICAL_TIME_SERIES;
+import static gov.usgs.wma.waterdata.collections.CollectionsStatTimeSeriesController.URL_STATISTICAL_TIME_SERIES_COLLECTION;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -23,41 +22,32 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
-public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
+public class CollectionsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 
 
-	protected String makeURL(String collectionId, String featureId, String guid) {
-		String url = URL_STATISTICAL_TIME_SERIES.replace(PARAM_COLLECTION_ID, collectionId);
+	protected String makeURL(String collectionId, String featureId) {
+		String url = URL_STATISTICAL_TIME_SERIES_COLLECTION.replace(PARAM_COLLECTION_ID, collectionId);
 		url = url.replace(PARAM_FEATURE_ID, featureId);
-		url = url.replace(PARAM_TIME_SERIES_ID, guid);
 		url = "/" + url.replaceAll("[{}]", "");
 		return url;
 	}
 
 	@Test
-	public void foundTimeSeriesTest() throws Exception {
-		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
+	public void featureTimeSeriesCollectionTest() throws Exception {
+		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-07227448"); //USGS-07227448 has two test time series
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.OK));
 
-		String expectResponseJSON = getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac.json");
+		String expectResponseJSON = getCompareFile("features/monitoring-locations/usgs-07227448-obs-list.json");
 		String actualResponseJSON = response.getBody();
 		assertThat(new JSONObject(actualResponseJSON), sameJSONObjectAs(new JSONObject(expectResponseJSON)));
 	}
-	@Test
-	public void timeSeriesNotInCollectionTest() throws Exception {
-		String url = makeURL("SOME-COLLECTION", "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-		HttpStatus actualStatusCode = response.getStatusCode();
-		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
-		assertNull(response.getBody());
-	}
 	@Test
-	public void timeSeriesNotInFeatureTest() throws Exception {
-		String url = makeURL(DEFAULT_COLLECTION_ID, "OTHER-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
+	public void collectionMissingTest() throws Exception {
+		String url = makeURL("SOME-COLLECTION", "USGS-07227448");
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
 		HttpStatus actualStatusCode = response.getStatusCode();
@@ -66,18 +56,20 @@ public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 	}
 
 	@Test
-	public void notFoundTimeSeriesTest() {
-		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-12345678", "216d009de8914147a0f9e5237da77854");
+	public void featureNotFoundTest() {
+		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-12345678");
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertNull(response.getBody());
 	}
 
 	@Test
-	public void noGeomTimeSeriesTest() {
-		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-04028090", "41a5ff887b744b84a271b65e48d78074");
+	public void notFoundNoGeomTest() throws Exception {
+		String url = makeURL(DEFAULT_COLLECTION_ID, "USGS-04028090"); //USGS-04028090 has one test time series
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-		assertNull(response.getBody());
+
+		HttpStatus actualStatusCode = response.getStatusCode();
+		assertThat(actualStatusCode, equalTo(HttpStatus.NOT_FOUND));
 	}
 }
