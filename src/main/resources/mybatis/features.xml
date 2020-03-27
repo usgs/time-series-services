@@ -3,309 +3,101 @@
 
 <mapper namespace="features">
 
-    <select id="getCollectionFeaturesJson" parameterType="map" resultType="String">
-        select case
-                 when coalesce(count(feature),0) = 0
-                   then null
-                 else
-                   json_build_object(
-                                     'type', 'FeatureCollection',
-                                     'features', json_agg(feature.json),
-                                     'links', json_build_array(
-                                                               json_build_object(
-                                                                                 'type', 'text/html',
-                                                                                 'rel', 'canonical',
-                                                                                 'title', 'information',
-                                                                                 'href', 'https://waterdata.usgs.gov'
-                                                                                ),
-                                                               json_build_object(
-                                                                                 'type', 'application/geo+json',
-                                                                                 'rel', 'self',
-                                                                                 'title', 'This document as GeoJSON',
-                                                                                 'href', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
-                                                                                         || '/items?f=json' || '&amp;startIndex=' || #{startIndex}
-                                                                                         || '&amp;limit=' || #{limit}
-                                                                                ),
-                                                               json_build_object(
-                                                                                 'type', 'application/json',
-                                                                                 'rel', 'collection',
-                                                                                 'title', collection_title,
-                                                                                 'href',  #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
-                                                                                          || '?f=json'
-                                                                                )
-        <if test="prevStartIndex != null">,
-                                                               json_build_object(
-                                                                                 'type', 'application/geo+json',
-                                                                                 'rel', 'prev',
-                                                                                 'title', 'items (prev)',
-                                                                                 'href', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
-                                                                                          || '/items?f=json'  || #{prevStartIndex}
-                                                                                )
-        </if>
-        <if test="nextStartIndex != null">,
-                                                               json_build_object(
-                                                                                 'type', 'application/geo+json',
-                                                                                 'rel', 'next',
-                                                                                 'title', 'items (next)',
-                                                                                 'href', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
-                                                                                         || '/items?f=json'  || #{nextStartIndex}
-                                                                                )
-        </if>
-                                                              ),
-                                     'timeStamp', to_char(now()::timestamp at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')
-                                    )
-               end
-          from (
-                with
-                    collections as (
-                        select monitoring_location_identifier,
-                               jsonb_agg(
-                                         json_build_object(
-                                                           'rel', 'collection',
-                                                           'type', 'application/json',
-                                                           'title', network_name,
-                                                           'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json'
-                                                          )
-                                        ) collection_links
-                          from nwis.network
-                               join nwis.network_sites
-                                 on nwis.network.network_id = nwis.network_sites.network_id
-                               join nwis.monitoring_location
-                                 on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-                            group by monitoring_location_identifier
-                    )
-                select json_build_object(
-                                         'type', 'Feature', 
-                                         'id', monitoring_location.monitoring_location_identifier,
-                       'geometry', json_build_object(
-                                         'type', 'Point',
-                                         'coordinates', json_build_array(
-                                                                         trunc(st_x(st_transform(geom, 4326))::numeric, 7),
-                                                                         trunc(st_y(st_transform(geom, 4326))::numeric, 7)
-                                                                        )
-                                        ),
-                       'properties', json_build_object(
-                                         'agency', agency,
-                                         'monitoringLocationNumber', site_identification_number,
-                                         'monitoringLocationName', site_name,
-                                         'monitoringLocationType', site_type,
-                                         'district', district,
-                                         'state', state,
-                                         'county', county,
-                                         'country', country,
-                                         'monitoringLocationAltitudeLandSurface', altitude_of_guage_land_surface,
-                                         'altitudeMethod', method_altitude_determined,
-                                         'altitudeAccuracy', altitude_accuracy,
-                                         'altitudeDatum', altitude_datum,
-                                         'nationalAquifer', national_aquifer,
-                                         'localAquifer', local_aquifer,
-                                         'localAquiferType', local_aquifer_type,
-                                         'wellDepth', well_depth,
-                                         'holeDepth', hole_depth,
-                                         'holeDepthSource', source_of_hole_depth,
-                                         'agencyCode', agency_cd,
-                                         'districtCode', district_cd,
-                                         'stateFIPS', country_cd || ':' || state_cd,
-                                         'countyFIPS', country_cd || ':' || state_cd || ':' || county_cd,
-                                         'countryFIPS', country_cd,
-                                         'hydrologicUnit', calculated_huc_12,
-                                         'monitoringLocationUrl', 'https://waterdata.usgs.gov/monitoring-location/' || site_identification_number
-                                        ),
-                       'links', jsonb_build_array(
-                                         json_build_object(
-                                                           'rel', 'self',
-                                                           'type', 'application/geo+json',
-                                                           'title', 'This document as GeoJSON',
-                                                           'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
-                                                                   || '/items/' || monitoring_location.monitoring_location_identifier || '?f=json'
-                                                          ),
-                                         json_build_object(
-                                                           'rel', 'collection',
-                                                           'type', 'application/json',
-                                                           'title', #{monLocTitle,jdbcType=VARCHAR},
-                                                           'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || 'monitoring-locations' || '?f=json'
-                                                          )
-                                        ) || coalesce(collection_links, jsonb_build_array())
-                       ) json
-        <choose>
-            <when test="collectionId == 'monitoring-locations'">,
-                       #{monLocTitle} collection_title
-                  from nwis.monitoring_location
-                       left join (
-                                  select monitoring_location_identifier,
-                                         jsonb_agg(
-                                                   json_build_object(
-                                                                     'rel', 'collection',
-                                                                     'type', 'application/json',
-                                                                     'title', network_name,
-                                                                     'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json'
-                                                                    )
-                                                  ) collection_links
-                                    from nwis.network
-                                         join nwis.network_sites
-                                           on nwis.network.network_id = nwis.network_sites.network_id
-                                         join nwis.monitoring_location
-                                           on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-                                      group by monitoring_location_identifier
-                                 ) collections
-                         on monitoring_location.monitoring_location_identifier = collections.monitoring_location_identifier
-                 where geom is not null
-            </when>
-            <otherwise>,
-                       network_name collection_title
-                  from nwis.network
-                       join nwis.network_sites
-                         on nwis.network.network_id = nwis.network_sites.network_id
-                       join nwis.monitoring_location
-                         on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-                       left join (
-                                  select monitoring_location_identifier,
-                                         jsonb_agg(
-                                                   json_build_object(
-                                                                     'rel', 'collection',
-                                                                     'type', 'application/json',
-                                                                     'title', network_name,
-                                                                     'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json'
-                                                                    )
-                                                  ) collection_links
-                                    from nwis.network
-                                         join nwis.network_sites
-                                           on nwis.network.network_id = nwis.network_sites.network_id
-                                         join nwis.monitoring_location
-                                           on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-                                      group by monitoring_location_identifier
-                                 ) collections
-                         on monitoring_location.monitoring_location_identifier = collections.monitoring_location_identifier
-                 where geom is not null and
-                       network_code = #{collectionId}
-            </otherwise>
-        </choose>
-        <if test="featureId != null">
-                   and monitoring_location.monitoring_location_identifier = #{featureId}
-        </if>
+    <sql id="bboxFilter">
         <if test="pointLowLeft != null and pointUpRight != null">
-                   and st_intersects(
-                                     st_setsrid(
-                                                st_makebox2d(
-                                                             st_geomfromtext(#{pointLowLeft}, 4326),
-                                                             st_geomfromtext(#{pointUpRight}, 4326)
-                                                            ),
-                                                4326),
-                                     st_setsrid(geom, 4326)
-                                    )
+            and st_intersects(
+                              st_setsrid(
+                                         st_makebox2d(
+                                                      st_geomfromtext(#{pointLowLeft}, 4326),
+                                                      st_geomfromtext(#{pointUpRight}, 4326)
+                                                     ),
+                                         4326),
+                              st_setsrid(geom, 4326)
+                             )
         </if>
-                 order by collection_title, monitoring_location.monitoring_location_identifier
-        <if test="limit != null">
-                 limit #{limit}
-        </if>
-        <if test="startIndex != null">
-                 offset #{startIndex}
-        </if>
-       ) as feature
-      group by collection_title
-    </select>
+    </sql>
 
-    <select id="getCollectionFeatureJson" parameterType="map" resultType="String">
+    <sql id="collectionsJoin">
+        left join (
+                   select monitoring_location_identifier,
+                          jsonb_agg(
+                                    json_build_object(
+                                                      'rel', 'collection',
+                                                      'type', 'application/json',
+                                                      'title', network_name,
+                                                      'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json'
+                                                     )
+                                   ) collection_links
+                      <include refid="common.networkSites"/>
+                        group by monitoring_location_identifier
+                  ) collections
+          on monitoring_location.monitoring_location_identifier = collections.monitoring_location_identifier
+    </sql>
+
+    <sql id="singleFeature">
         select json_build_object(
                                  'type', 'Feature',
                                  'id', monitoring_location.monitoring_location_identifier,
-                       'geometry', json_build_object(
-                                         'type', 'Point',
-                                         'coordinates', json_build_array(trunc(st_x(st_transform(geom, 4326))::numeric, 7),
-                                                                         trunc(st_y(st_transform(geom, 4326))::numeric, 7)
-                                                                        )
-                                        ),
-                       'properties', json_build_object(
-                                         'agency', agency,
-                                         'monitoringLocationNumber', site_identification_number,
-                                         'monitoringLocationName', site_name,
-                                         'monitoringLocationType', site_type,
-                                         'district', district,
-                                         'state', state,
-                                         'county', county,
-                                         'country', country,
-                                         'monitoringLocationAltitudeLandSurface', altitude_of_guage_land_surface,
-                                         'altitudeMethod',  method_altitude_determined,
-                                         'altitudeAccuracy', altitude_accuracy,
-                                         'altitudeDatum', altitude_datum,
-                                         'nationalAquifer', national_aquifer,
-                                         'localAquifer', local_aquifer,
-                                         'localAquiferType', local_aquifer_type,
-                                         'wellDepth', well_depth,
-                                         'holeDepth', hole_depth,
-                                         'holeDepthSource', source_of_hole_depth,
-                                         'agencyCode', agency_cd,
-                                         'districtCode', district_cd,
-                                         'stateFIPS', country_cd || ':' || state_cd,
-                                         'countyFIPS', country_cd || ':' || state_cd || ':' || county_cd,
-                                         'countryFIPS', country_cd,
-                                         'hydrologicUnit', calculated_huc_12,
-                                         'monitoringLocationUrl', 'https://waterdata.usgs.gov/monitoring-location/' || site_identification_number
-                                        ),
-                       'links', jsonb_build_array(
-                                         json_build_object(
-                                                           'rel', 'self',
-                                                           'type', 'application/geo+json',
-                                                           'title', 'This document as GeoJSON',
-                                                           'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
-                                                                   || '/items/' || monitoring_location.monitoring_location_identifier || '?f=json'
-                                                          ),
-                                         json_build_object(
-                                                           'rel', 'collection',
-                                                           'type', 'application/json',
-                                                           'title', #{monLocTitle,jdbcType=VARCHAR},
-                                                           'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || 'monitoring-locations' || '?f=json'
-                                                          )
-                                        ) || coalesce(collection_links, jsonb_build_array()) ) json
+                                 'geometry', json_build_object(
+                                                               'type', 'Point',
+                                                               'coordinates', json_build_array(
+                                                                                               trunc(st_x(st_transform(geom, 4326))::numeric, 7),
+                                                                                               trunc(st_y(st_transform(geom, 4326))::numeric, 7)
+                                                                                              )
+                                                              ),
+                                 'properties', json_build_object(
+                                                                 'agency', agency,
+                                                                 'monitoringLocationNumber', site_identification_number,
+                                                                 'monitoringLocationName', site_name,
+                                                                 'monitoringLocationType', site_type,
+                                                                 'district', district,
+                                                                 'state', state,
+                                                                 'county', county,
+                                                                 'country', country,
+                                                                 'monitoringLocationAltitudeLandSurface', altitude_of_guage_land_surface,
+                                                                 'altitudeMethod',  method_altitude_determined,
+                                                                 'altitudeAccuracy', altitude_accuracy,
+                                                                 'altitudeDatum', altitude_datum,
+                                                                 'nationalAquifer', national_aquifer,
+                                                                 'localAquifer', local_aquifer,
+                                                                 'localAquiferType', local_aquifer_type,
+                                                                 'wellDepth', well_depth,
+                                                                 'holeDepth', hole_depth,
+                                                                 'holeDepthSource', source_of_hole_depth,
+                                                                 'agencyCode', agency_cd,
+                                                                 'districtCode', district_cd,
+                                                                 'stateFIPS', country_cd || ':' || state_cd,
+                                                                 'countyFIPS', country_cd || ':' || state_cd || ':' || county_cd,
+                                                                 'countryFIPS', country_cd,
+                                                                 'hydrologicUnit', calculated_huc_12,
+                                                                 'monitoringLocationUrl', 'https://waterdata.usgs.gov/monitoring-location/' || site_identification_number
+                                                                ),
+                                 'links', jsonb_build_array(
+                                                            json_build_object(
+                                                                              'rel', 'self',
+                                                                              'type', 'application/geo+json',
+                                                                              'title', 'This document as GeoJSON',
+                                                                              'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
+                                                                                      || '/items/' || monitoring_location.monitoring_location_identifier || '?f=json'
+                                                                             ),
+                                                            json_build_object(
+                                                                              'rel', 'collection',
+                                                                              'type', 'application/json',
+                                                                              'title', #{monLocTitle,jdbcType=VARCHAR},
+                                                                              'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || 'monitoring-locations' || '?f=json'
+                                                                             )
+                                                           ) || coalesce(collection_links, jsonb_build_array()) ) json
         <choose>
             <when test="collectionId == 'monitoring-locations'">,
                        #{monLocTitle} collection_title
                   from nwis.monitoring_location
-                       left join (
-                                  select monitoring_location_identifier,
-                                         jsonb_agg(
-                                                   json_build_object(
-                                                                     'rel', 'collection',
-                                                                     'type', 'application/json',
-                                                                     'title', network_name,
-                                                                     'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json'
-                                                                    )
-                                                  ) collection_links
-                                    from nwis.network
-                                         join nwis.network_sites
-                                           on nwis.network.network_id = nwis.network_sites.network_id
-                                         join nwis.monitoring_location
-                                           on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-                                      group by monitoring_location_identifier
-                                 ) collections
-                         on monitoring_location.monitoring_location_identifier = collections.monitoring_location_identifier
+                  <include refid="collectionsJoin"/>
                  where geom is not null
             </when>
             <otherwise>,
                        network_name collection_title
-                  from nwis.network
-                       join nwis.network_sites
-                         on nwis.network.network_id = nwis.network_sites.network_id
-                       join nwis.monitoring_location
-                         on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-                       left join (
-                                  select monitoring_location_identifier,
-                                         jsonb_agg(
-                                                   json_build_object(
-                                                                     'rel', 'collection',
-                                                                     'type', 'application/json',
-                                                                     'title', network_name,
-                                                                     'href', #{serverUrl,jdbcType=VARCHAR} || 'collections/' || network_code || '?f=json'
-                                                                    )
-                                                  ) collection_links
-                                    from nwis.network
-                                         join nwis.network_sites
-                                           on nwis.network.network_id = nwis.network_sites.network_id
-                                         join nwis.monitoring_location
-                                           on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-                                      group by monitoring_location_identifier
-                                 ) collections
-                         on monitoring_location.monitoring_location_identifier = collections.monitoring_location_identifier
+                  <include refid="common.networkSites"/>
+                  <include refid="collectionsJoin"/>
                  where geom is not null and
                        network_code = #{collectionId}
             </otherwise>
@@ -313,17 +105,7 @@
         <if test="featureId != null">
                    and monitoring_location.monitoring_location_identifier = #{featureId}
         </if>
-        <if test="pointLowLeft != null and pointUpRight != null">
-                   and st_intersects(
-                                     st_setsrid(
-                                                st_makebox2d(
-                                                             st_geomfromtext(#{pointLowLeft}, 4326),
-                                                             st_geomfromtext(#{pointUpRight}, 4326)
-                                                            ),
-                                                4326),
-                                     st_setsrid(geom, 4326)
-                                    )
-        </if>
+        <include refid="bboxFilter"/>
                  order by collection_title, monitoring_location.monitoring_location_identifier
         <if test="limit != null">
                  limit #{limit}
@@ -331,39 +113,82 @@
         <if test="startIndex != null">
                  offset #{startIndex}
         </if>
+    </sql>
+
+    <select id="getCollectionFeaturesJson" parameterType="map" resultType="String">
+        select json_build_object(
+                                 'type', 'FeatureCollection',
+                                 'features', json_agg(feature.json),
+                                 'links', json_build_array(
+                                                           json_build_object(
+                                                                             'type', 'text/html',
+                                                                             'rel', 'canonical',
+                                                                             'title', 'information',
+                                                                             'href', 'https://waterdata.usgs.gov'
+                                                                             ),
+                                                           json_build_object(
+                                                                             'type', 'application/geo+json',
+                                                                             'rel', 'self',
+                                                                             'title', 'This document as GeoJSON',
+                                                                             'href', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
+                                                                                     || '/items?f=json' || '&amp;startIndex=' || #{startIndex}
+                                                                                     || '&amp;limit=' || #{limit}
+                                                                            ),
+                                                           json_build_object(
+                                                                             'type', 'application/json',
+                                                                             'rel', 'collection',
+                                                                             'title', collection_title,
+                                                                             'href',  #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
+                                                                                      || '?f=json'
+                                                                            )
+        <if test="prevStartIndex != null">,
+                                                           json_build_object(
+                                                                             'type', 'application/geo+json',
+                                                                             'rel', 'prev',
+                                                                             'title', 'items (prev)',
+                                                                             'href', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
+                                                                                     || '/items?f=json'  || #{prevStartIndex}
+                                                                            )
+        </if>
+        <if test="nextStartIndex != null">,
+                                                           json_build_object(
+                                                                             'type', 'application/geo+json',
+                                                                             'rel', 'next',
+                                                                             'title', 'items (next)',
+                                                                             'href', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
+                                                                                     || '/items?f=json'  || #{nextStartIndex}
+                                                                            )
+        </if>
+                                                          ),
+                                 'timeStamp', to_char(now()::timestamp at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')
+                                )
+          from (
+                <include refid="singleFeature"/>
+               ) as feature
+          group by collection_title
+    </select>
+
+    <select id="getCollectionFeatureJson" parameterType="map" resultType="String">
+        <include refid="singleFeature"/>
     </select>
 
     <select id="getCollectionFeatureCount" parameterType="map" resultType="int">
         select count(*)
         <choose>
             <when test="collectionId == 'monitoring-locations'">
-                from nwis.monitoring_location
-               where geom is not null
+                 from nwis.monitoring_location
+                where geom is not null
             </when>
             <otherwise>
-                from nwis.network
-                     join nwis.network_sites
-                       on nwis.network.network_id = nwis.network_sites.network_id
-                     join nwis.monitoring_location
-                       on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
-               where geom is not null and
-                     network_code = #{collectionId}
+                <include refid="common.networkSites"/>
+                where geom is not null and
+                      network_code = #{collectionId}
             </otherwise>
         </choose>
         <if test="featureId != null">
                  and monitoring_location_identifier = #{featureId}
         </if>
-        <if test="pointLowLeft != null and pointUpRight != null">
-                 and st_intersects(
-                                   st_setsrid(
-                                              st_makebox2d(
-                                                           st_geomfromtext(#{pointLowLeft}, 4326),
-                                                           st_geomfromtext(#{pointUpRight}, 4326)
-                                                          ),
-                                              4326),
-                                   st_setsrid(geom, 4326)
-                                  )
-        </if>
+        <include refid="bboxFilter"/>
     </select>
 
 </mapper>

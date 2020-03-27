@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="common">
+
+    <sql id="networkSites">
+        from nwis.network
+             join nwis.network_sites
+               on network.network_id = network_sites.network_id
+             join nwis.monitoring_location
+               on network_sites.monitoring_location_id = monitoring_location.monitoring_location_id
+    </sql>
+
+</mapper>
