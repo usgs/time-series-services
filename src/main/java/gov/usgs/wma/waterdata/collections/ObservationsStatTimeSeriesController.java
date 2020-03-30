@@ -7,6 +7,7 @@ import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SER
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,8 +56,13 @@ public class ObservationsStatTimeSeriesController extends BaseController {
 			@PathVariable(value=PARAM_FEATURE_ID) String featureId, // ex: monitoringLocationId
 			@PathVariable(value=PARAM_TIME_SERIES_ID) String timeSeriesId, //ex: USGS-123456
 			HttpServletResponse response) {
-		
-		// verify the collection and feature exist before fetching the time series
-		return resultOr404(response, timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId));
+
+		String rtn = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
+		if (rtn == null) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+			rtn = ogc404Payload;
+		}
+
+		return rtn;
 	}
 }

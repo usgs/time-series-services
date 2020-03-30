@@ -37,6 +37,7 @@ public class CollectionsController extends BaseController {
 	protected CollectionParams collectionsParams;
 
 	protected static final String LIMIT_VALIDATE_MESS = "limit must be greater than or equal to 1";
+	protected static final String START_INDEX_VALIDATE_MESS = "startIndex must be greater than or equal to 0";
 
 	@Autowired
 	public CollectionsController(CollectionsDao collectionsDao, CollectionParams collectionsParams) {
@@ -79,9 +80,13 @@ public class CollectionsController extends BaseController {
 	public String getOgcCollection(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId, HttpServletResponse response) {
 
-		
-		return resultOr404(response, 
-				collectionsDao.getCollectionJson(collectionsParams.buildParams(collectionId)));
+		String rtn = collectionsDao.getCollectionJson(collectionsParams.buildParams(collectionId));
+		if (rtn == null) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+			rtn = ogc404Payload;
+		}
+
+		return rtn;
 	}
 
 	@Operation(
@@ -102,18 +107,23 @@ public class CollectionsController extends BaseController {
 	public String getOgcCollectionFeatures(
 			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@Min(value=1, message = LIMIT_VALIDATE_MESS) @RequestParam(value = "limit", required = false, defaultValue = "10000") int limit,
-			@RequestParam(value = "startIndex", required = false, defaultValue = "0") int startIndex,
+			@Min(value=0, message = START_INDEX_VALIDATE_MESS) @RequestParam(value = "startIndex", required = false, defaultValue = "0") int startIndex,
 			@BBox @RequestParam(value = "bbox", required = false) BoundingBox bbox,
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId, HttpServletResponse response) {
 
 		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
 
-		String rtn = ogc404Payload;
-		if (startIndex < 0 || startIndex >= count) {
+		String rtn;
+		if (startIndex >= count) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
+			rtn = ogc404Payload;
 		} else {
-			rtn = resultOr404(response, collectionsDao.getCollectionFeaturesJson(
-					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count)));
+			rtn = collectionsDao.getCollectionFeaturesJson(
+					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count));
+			if (rtn == null) {
+				response.setStatus(HttpStatus.NOT_FOUND.value());
+				rtn = ogc404Payload;
+			}
 		}
 
 		return rtn;
@@ -139,8 +149,13 @@ public class CollectionsController extends BaseController {
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
 			@PathVariable(value = PARAM_FEATURE_ID) String featureId, HttpServletResponse response) {
 
-		return resultOr404(response, 
-				collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId)));
+		String rtn =collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId));
+			if (rtn == null) {
+				response.setStatus(HttpStatus.NOT_FOUND.value());
+				rtn = ogc404Payload;
+			}
+
+		return rtn;
 	}
 	
 }

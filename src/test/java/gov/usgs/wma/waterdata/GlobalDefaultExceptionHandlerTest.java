@@ -1,13 +1,12 @@
 package gov.usgs.wma.waterdata;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static ch.qos.logback.classic.Level.OFF;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -50,10 +49,10 @@ public class GlobalDefaultExceptionHandlerTest {
 	public void handleMissingServletRequestParameterException() throws IOException {
 		HttpServletResponse response = new MockHttpServletResponse();
 		String expected = "Required String parameter 'parm' is not present";
-		Map<String, String> actual = controller.handleUncaughtException(new MissingServletRequestParameterException("parm", "String"), request, response);
-		assertTrue(actual.size() == 2);
-		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
-		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		OgcException actual = controller.handleUncaughtException(new MissingServletRequestParameterException("parm", "String"), request, response);
+		assertNotNull(actual);
+		assertEquals(expected, actual.getDescription());
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.getCode());
 		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 	}
 
@@ -61,10 +60,10 @@ public class GlobalDefaultExceptionHandlerTest {
 	public void handleHttpMediaTypeNotSupportedException() throws IOException {
 		HttpServletResponse response = new MockHttpServletResponse();
 		String expected = "no way";
-		Map<String, String> actual = controller.handleUncaughtException(new HttpMediaTypeNotSupportedException(expected), request, response);
-		assertTrue(actual.size() == 2);
-		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
-		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		OgcException actual = controller.handleUncaughtException(new HttpMediaTypeNotSupportedException(expected), request, response);
+		assertNotNull(actual);
+		assertEquals(expected, actual.getDescription());
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.getCode());
 		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 	}
 
@@ -72,10 +71,10 @@ public class GlobalDefaultExceptionHandlerTest {
 	public void handleHttpMediaTypeNotAcceptableException() throws IOException {
 		HttpServletResponse response = new MockHttpServletResponse();
 		String expected = "no way";
-		Map<String, String> actual = controller.handleUncaughtException(new HttpMediaTypeNotAcceptableException(expected), request, response);
-		assertTrue(actual.size() == 2);
-		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
-		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		OgcException actual = controller.handleUncaughtException(new HttpMediaTypeNotAcceptableException(expected), request, response);
+		assertNotNull(actual);
+		assertEquals(expected, actual.getDescription());
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.getCode());
 		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 	}
 
@@ -83,10 +82,10 @@ public class GlobalDefaultExceptionHandlerTest {
 	public void handleHttpMessageNotReadableException() throws IOException {
 		HttpServletResponse response = new MockHttpServletResponse();
 		String expected = "Some123$Mes\tsage!!.";
-		Map<String, String> actual = controller.handleUncaughtException(new HttpMessageNotReadableException(expected, inputMessage), request, response);
-		assertTrue(actual.size() == 2);
-		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
-		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		OgcException actual = controller.handleUncaughtException(new HttpMessageNotReadableException(expected, inputMessage), request, response);
+		assertNotNull(actual);
+		assertEquals(expected, actual.getDescription());
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.getCode());
 		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 	}
 
@@ -94,10 +93,10 @@ public class GlobalDefaultExceptionHandlerTest {
 	public void handleMultilineHttpMessageNotReadableException() throws IOException {
 		HttpServletResponse response = new MockHttpServletResponse();
 		String expected = "ok to see";
-		Map<String, String> actual = controller.handleUncaughtException(new HttpMessageNotReadableException("ok to see\nhide this\nand this", inputMessage), request, response);
-		assertTrue(actual.size() == 2);
-		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
-		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		OgcException actual = controller.handleUncaughtException(new HttpMessageNotReadableException("ok to see\nhide this\nand this", inputMessage), request, response);
+		assertNotNull(actual);
+		assertEquals(expected, actual.getDescription());
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.getCode());
 		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 	}
 
@@ -106,19 +105,18 @@ public class GlobalDefaultExceptionHandlerTest {
 		HttpServletResponse response = new MockHttpServletResponse();
 		String expected = "Constraint Violation: [No message available]";
 		ConstraintViolationException ce = new ConstraintViolationException(null);
-		Map<String, String> actual = controller.handleUncaughtException(ce, request, response);
-		assertTrue(actual.size() == 2);
-		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
-		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()),
-				actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		OgcException actual = controller.handleUncaughtException(ce, request, response);
+		assertNotNull(actual);
+		assertEquals(expected, actual.getDescription());
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.getCode());
 		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 
+		response = new MockHttpServletResponse();
 		ce = new ConstraintViolationException(Collections.emptySet());
 		actual = controller.handleUncaughtException(ce, request, response);
-		assertTrue(actual.size() == 2);
-		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
-		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()),
-				actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		assertNotNull(actual);
+		assertEquals(expected, actual.getDescription());
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.getCode());
 		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 	}
 
@@ -134,11 +132,10 @@ public class GlobalDefaultExceptionHandlerTest {
 		Mockito.when(violationException.getConstraintViolations().iterator().next().getMessage()).thenReturn(expected);
 
 		HttpServletResponse response = new MockHttpServletResponse();
-		Map<String, String> actual = controller.handleUncaughtException(violationException, request, response);
-		assertTrue(actual.size() == 2);
-		assertEquals(expected, actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY));
-		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()),
-				actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+		OgcException actual = controller.handleUncaughtException(violationException, request, response);
+		assertNotNull(actual);
+		assertEquals(expected, actual.getDescription());
+		assertEquals(Integer.toString(HttpStatus.BAD_REQUEST.value()), actual.getCode());
 		assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 	}
 
@@ -154,12 +151,10 @@ public class GlobalDefaultExceptionHandlerTest {
 
 			HttpServletResponse response = new MockHttpServletResponse();
 			String expected = "Unexpected error occurred. Contact us with Reference Number: ";
-			Map<String, String> actual = controller.handleUncaughtException(new RuntimeException(), request, response);
-			assertTrue(actual.size() == 2);
-			assertEquals(expected,
-					actual.get(GlobalDefaultExceptionHandler.DESCRIPTION_KEY).substring(0, expected.length()));
-			assertEquals(Integer.toString(HttpStatus.INTERNAL_SERVER_ERROR.value()),
-					actual.get(GlobalDefaultExceptionHandler.CODE_KEY));
+			OgcException actual = controller.handleUncaughtException(new RuntimeException(), request, response);
+			assertNotNull(actual);
+			assertEquals(expected, actual.getDescription().substring(0, expected.length()));
+			assertEquals(Integer.toString(HttpStatus.INTERNAL_SERVER_ERROR.value()), actual.getCode());
 			assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
 		} finally {
 			log.info("turning logging back on --");

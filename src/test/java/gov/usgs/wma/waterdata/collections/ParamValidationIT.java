@@ -11,6 +11,8 @@ public class ParamValidationIT extends BaseCollectionsIT {
 			+ "\"description\":\"The Bbox query parameter is not valid\"}";
 	protected String ogcLimit400Payload = "{\"code\":\"400\","
 			+ "\"description\":\"limit must be greater than or equal to 1\"}";
+	protected String ogcStartIndex400Payload = "{\"code\":\"400\","
+			+ "\"description\":\"startIndex must be greater than or equal to 0\"}";
 
 	@Test
 	public void noBboxValues() {
@@ -150,6 +152,13 @@ public class ParamValidationIT extends BaseCollectionsIT {
 	    path = "/collections/monitoring-locations/items?limit=-1";
 		rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
 		assertJsonEquals(ogcLimit400Payload, rtn);
+	}
+
+	@Test
+	public void startIndexBoundsTest() {
+	    String path = "/collections/monitoring-locations/items?startIndex=-1";
+		String rtn = doCollectionRequest(path, HttpStatus.BAD_REQUEST);
+		assertJsonEquals(ogcStartIndex400Payload, rtn);
 	}
 
 }
