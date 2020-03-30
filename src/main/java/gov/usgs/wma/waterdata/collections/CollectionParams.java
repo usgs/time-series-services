@@ -22,6 +22,10 @@ public class CollectionParams {
 	public static final String  PARAM_POINT_UP_RIGHT      = "pointUpRight";
 	public static final String  PARAM_PREV_START_INDEX      = "prevStartIndex";
 	public static final String  PARAM_NEXT_START_INDEX      = "nextStartIndex";
+	public static final String  PARAM_MON_lOC_TITLE         = "monLocTitle";
+	public static final String  PARAM_MON_LOC_DESCRIPTION   = "monLocDescription";
+	public static final String  PARAM_MON_LOC_CONTACT_NAME  = "monLocContactName";
+	public static final String  PARAM_MON_LOC_CONTACT_EMAIL = "monLocContactEmail";
 
 	public static final String  DEFAULT_COLLECTION_ID = "monitoring-locations";
 	public static final Integer DEFAULT_START_INDEX   = 0;
@@ -29,12 +33,11 @@ public class CollectionParams {
 
 	protected ConfigurationService configurationService;
 
-	
 	@Autowired
 	public CollectionParams(ConfigurationService configurationService) {
 		this.configurationService = configurationService;
 	}
-	
+
 	public Map<String, Object> buildParams(String collectionId) {
 		Map<String, Object> params = buildCommonParams();
 		if (collectionId != null) {
@@ -92,10 +95,10 @@ public class CollectionParams {
 	private Map<String, Object> buildCommonParams() {
 		Map<String, Object> params = new HashMap<>();
 		params.put(PARAM_SERVER_URL, configurationService.getServerUrl());
-		params.put("monLocTitle", configurationService.getMonLocTitle());
-		params.put("monLocDescription", configurationService.getMonLocDescription());
-		params.put("monLocContactName", configurationService.getMonLocContactName());
-		params.put("monLocContactEmail", configurationService.getMonLocContactEmail());
+		params.put(PARAM_MON_lOC_TITLE, configurationService.getMonLocTitle());
+		params.put(PARAM_MON_LOC_DESCRIPTION, configurationService.getMonLocDescription());
+		params.put(PARAM_MON_LOC_CONTACT_NAME, configurationService.getMonLocContactName());
+		params.put(PARAM_MON_LOC_CONTACT_EMAIL, configurationService.getMonLocContactEmail());
 
 		return params;
 	}
