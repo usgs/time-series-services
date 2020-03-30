@@ -121,6 +121,17 @@ public class ParamValidationIT extends BaseCollectionsIT {
 
 	@Test
 	public void ogcBboxExampleTest() {
+		String rtn = doCollectionRequest("/collections/monitoring-locations/items?bbox=170,80,160,90",
+				HttpStatus.BAD_REQUEST);
+		assertJsonEquals(ogcBbox400Payload, rtn);
+
+		rtn = doCollectionRequest("/collections/monitoring-locations/items?bbox=160,90,170,80",
+				HttpStatus.BAD_REQUEST);
+		assertJsonEquals(ogcBbox400Payload, rtn);
+	}
+
+	@Test
+	public void boundingBoxValuesCrossCheckTest() {
 		String rtn = doCollectionRequest("/collections/monitoring-locations/items?bbox=160.6,160.0,-170,-25.89",
 				HttpStatus.BAD_REQUEST);
 		assertJsonEquals(ogcBbox400Payload, rtn);
