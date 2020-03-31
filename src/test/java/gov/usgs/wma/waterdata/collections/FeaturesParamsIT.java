@@ -2,8 +2,8 @@ package gov.usgs.wma.waterdata.collections;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
@@ -88,29 +88,59 @@ public class FeaturesParamsIT extends BaseCollectionsIT  {
 	@Test
 	public void paramBoundsTest() {
 		for (String collectionId : COLLECTION_IDS) {
-			String featuresJsonStr = doCollectionRequest("/collections/" + collectionId + "/items?limit=0",
-					HttpStatus.NOT_FOUND.value());
-			assertNull(featuresJsonStr);
-
-			featuresJsonStr = doCollectionRequest("/collections/" + collectionId + "/items?startIndex=" + MONLOC_COUNT,
-					HttpStatus.NOT_FOUND.value());
-			assertNull(featuresJsonStr);
+			String rtn = doCollectionRequest("/collections/" + collectionId + "/items?startIndex=" + MONLOC_COUNT,
+					HttpStatus.NOT_FOUND);
+			assertEquals(ogc404Payload, rtn);
 		}
 	}
 
 	@Test
 	public void featuresBboxTest() {
-		double lowerLeftLong = -90.0;
-		double lowerLeftLat = 33.0;
-		double upRightLong = -101.0;
-		double upRightLat = 36.0;
+		String lowerLeftLong = "-101.0";
+		String lowerLeftLat = "33.0";
+		String upRightLong = "-90.0";
+		String upRightLat = "36.0";
 
 		for (String collectionId : COLLECTION_IDS) {
-			String bboxUrlParams = String.format("bbox=%f,%f,%f,%f", lowerLeftLong, lowerLeftLat, upRightLong,
+			String bboxUrlParams = String.format("bbox=%s,%s,%s,%s", lowerLeftLong, lowerLeftLat, upRightLong,
 					upRightLat);
 			ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/" + collectionId + "/items?" + bboxUrlParams, String.class);
 			assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
 			String compareFile = "featureCollection/" + collectionId + "/featureCollection_bbox.json";
+			doJsonCompare(rtn, compareFile);
+		}
+	}
+
+	@Test
+	public void featuresSmallestBboxTest() {
+		String lowerLeftLong = "-100.3706884";
+		String lowerLeftLat ="35.935042";
+		String upRightLong = "-100.3706884";
+		String upRightLat = "35.935042";
+
+		for (String collectionId : COLLECTION_IDS) {
+			String bboxUrlParams = String.format("bbox=%s,%s,%s,%s", lowerLeftLong, lowerLeftLat, upRightLong,
+					upRightLat);
+			ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/" + collectionId + "/items?" + bboxUrlParams, String.class);
+			assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+			String compareFile = "featureCollection/" + collectionId + "/featureCollection_bbox_one.json";
+			doJsonCompare(rtn, compareFile);
+		}
+	}
+
+	@Test
+	public void featuresBiggestBboxTest() {
+		String lowerLeftLong = "-180";
+		String lowerLeftLat = "-90";
+		String upRightLong = "180";
+		String upRightLat = "90";
+
+		for (String collectionId : COLLECTION_IDS) {
+			String bboxUrlParams = String.format("bbox=%s,%s,%s,%s", lowerLeftLong, lowerLeftLat, upRightLong,
+					upRightLat);
+			ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/" + collectionId + "/items?" + bboxUrlParams, String.class);
+			assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+			String compareFile = "featureCollection/" + collectionId + "/featureCollection.json";
 			doJsonCompare(rtn, compareFile);
 		}
 	}

@@ -24,8 +24,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Statistical Observations Datasets", description = "Feature Statistical Time Series Observations, such as min, max, or median.")
 @RestController
-public class ObservationsStatTimeSeriesController {
-	
+public class ObservationsStatTimeSeriesController extends BaseController {
+
 	protected static final String URL_STATISTICAL_TIME_SERIES 
 		= "collections/{"+PARAM_COLLECTION_ID+"}/items/{"+PARAM_FEATURE_ID+"}/observations/statistical-time-series/{"+PARAM_TIME_SERIES_ID+"}";
 	
@@ -56,13 +56,13 @@ public class ObservationsStatTimeSeriesController {
 			@PathVariable(value=PARAM_FEATURE_ID) String featureId, // ex: monitoringLocationId
 			@PathVariable(value=PARAM_TIME_SERIES_ID) String timeSeriesId, //ex: USGS-123456
 			HttpServletResponse response) {
-		
-		// verify the collection and feature exist before fetching the time series
-		String json = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
-		
-		if (null == json) {
+
+		String rtn = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
+		if (rtn == null) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
+			rtn = ogc404Payload;
 		}
-		return json;
+
+		return rtn;
 	}
 }
