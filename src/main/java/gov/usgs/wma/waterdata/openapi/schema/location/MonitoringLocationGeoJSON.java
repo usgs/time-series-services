@@ -1,8 +1,8 @@
-package gov.usgs.wma.waterdata.location.geojson;
+package gov.usgs.wma.waterdata.openapi.schema.location;
 
-import gov.usgs.wma.waterdata.geojson.GeoJSON;
-import gov.usgs.wma.waterdata.geojson.Geometry;
-import gov.usgs.wma.waterdata.geojson.Properties;
+import gov.usgs.wma.waterdata.openapi.schema.geojson.GeoJSON;
+import gov.usgs.wma.waterdata.openapi.schema.geojson.Geometry;
+import gov.usgs.wma.waterdata.openapi.schema.geojson.Properties;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Monitoring Location MetaData in GeoJSON format.")
