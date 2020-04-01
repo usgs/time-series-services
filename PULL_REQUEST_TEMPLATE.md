@@ -3,6 +3,7 @@ Before making a pull request
 
 - [ ] Make sure all tests run
 - [ ] Update the changelog appropriately
+- [ ] Make sure the Swagger docs are accurate
 
 Title
 -----------
