@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import gov.usgs.wma.waterdata.parameter.BoundingBox;
 
-public class BBoxValidator implements ConstraintValidator<BBox, String> {
+public class BBoxValidator implements ConstraintValidator<BBox, BoundingBox> {
 
 	public static final BigDecimal MAX_LATITUDE = new BigDecimal(90);
 	public static final BigDecimal MIN_LATITUDE = new BigDecimal(-90);
@@ -15,15 +15,14 @@ public class BBoxValidator implements ConstraintValidator<BBox, String> {
 	public static final BigDecimal MIN_LONGITUDE = new BigDecimal(-180);
 
 	@Override
-	public boolean isValid(String bboxSingleValue, ConstraintValidatorContext context) {
+	public boolean isValid(BoundingBox value, ConstraintValidatorContext context) {
 		boolean valid = false;
-		if (null == bboxSingleValue) {
+		if (null == value) {
 			valid = true;
-		} else if (bboxSingleValue.split(",").length != 4) {
+		} else if (value.getSingle() == null || value.getSingle().split(",").length != 4) {
 			valid = false;
 		} else {
 			try {
-				BoundingBox value = new BoundingBox(bboxSingleValue);
 				BigDecimal north = new BigDecimal(value.getNorth());
 				BigDecimal south = new BigDecimal(value.getSouth());
 				BigDecimal east = new BigDecimal(value.getEast());

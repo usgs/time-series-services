@@ -24,7 +24,6 @@ import gov.usgs.wma.waterdata.validation.BBox;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -107,16 +106,15 @@ public class CollectionsController extends BaseController {
 			},
 			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_feature_")
 		)
-	@Parameter(name="bbox", in=ParameterIn.QUERY, description=BBOX_DESCRIPTION)
+	@Parameter(name = "bbox", description = BBOX_DESCRIPTION, schema = @Schema(implementation = String.class, type = "string"))
 	@GetMapping(value = "collections/{collectionId}/items", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollectionFeatures(
 			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@Min(value=1, message = LIMIT_VALIDATE_MESS) @RequestParam(value = "limit", required = false, defaultValue = "10000") int limit,
 			@Min(value=0, message = START_INDEX_VALIDATE_MESS) @RequestParam(value = "startIndex", required = false, defaultValue = "0") int startIndex,
-			@BBox @RequestParam(value = "bbox", required = false) String bbox,
+			@BBox @RequestParam(value = "bbox", required = false) BoundingBox bbox,
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId, HttpServletResponse response) {
 
-		BoundingBox boundingBox = bbox == null ? null : new BoundingBox(bbox);
 		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
 
 		String rtn;
@@ -125,7 +123,7 @@ public class CollectionsController extends BaseController {
 			rtn = ogc404Payload;
 		} else {
 			rtn = collectionsDao.getCollectionFeaturesJson(
-					collectionsParams.buildParams(collectionId, limit, startIndex, boundingBox, count));
+					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count));
 			if (rtn == null) {
 				response.setStatus(HttpStatus.NOT_FOUND.value());
 				rtn = ogc404Payload;

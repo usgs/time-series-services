@@ -1,8 +1,8 @@
 package gov.usgs.wma.waterdata.collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.validation.ConstraintValidatorContext;
 
@@ -91,10 +91,11 @@ class BoundingBoxTest {
 
 	@Test
 	public void boundingBoxValidatorNullSingleTest() {
+		BoundingBox bbox = new BoundingBox(null);
 		BBoxValidator validator = new BBoxValidator();
 		ConstraintValidatorContext context = Mockito.mock(ConstraintValidatorContext.class);
-		boolean valid = validator.isValid(null, context);
-		assertTrue(valid);
+		boolean valid = validator.isValid(bbox, context);
+		assertFalse(valid);
 	}
 
 }
