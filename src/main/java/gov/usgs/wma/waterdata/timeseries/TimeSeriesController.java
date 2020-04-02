@@ -17,12 +17,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 @Tag(name="Observations - Monitoring Location", description="Download osmf-json")
 @RestController
-public class TimeSeriesController implements WebMvcConfigurer {
+public class TimeSeriesController {
 
 	protected TimeSeriesDao timeSeriesDao;
 
@@ -55,14 +52,5 @@ public class TimeSeriesController implements WebMvcConfigurer {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
 		return rtn;
-	}
-
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		registry
-				.addMapping("/**")
-				.allowedOrigins("*")
-				.allowedMethods("GET", "OPTIONS")
-				.allowedHeaders("Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers");
 	}
 }
