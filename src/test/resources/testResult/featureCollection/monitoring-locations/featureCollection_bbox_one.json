@@ -23,10 +23,10 @@
           "type": "application/json"
         },
         {
-          "href": "https://unittest/api/observations/collections/ANC?f=json",
           "rel": "collection",
-          "title": "Arkansas Natural Resources Commission Groundwater Network",
-          "type": "application/json"
+          "href": "https://unittest/api/observations/collections/ANC?f=json",
+          "type": "application/json",
+          "title": "Arkansas Natural Resources Commission Groundwater Network"
         }
       ],
       "id": "USGS-000010",
