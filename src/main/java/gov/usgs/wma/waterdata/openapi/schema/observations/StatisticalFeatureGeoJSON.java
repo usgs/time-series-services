@@ -1,13 +1,14 @@
-package gov.usgs.wma.waterdata.collections.geojson;
+package gov.usgs.wma.waterdata.openapi.schema.observations;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import gov.usgs.wma.waterdata.geojson.Geometry;
+import gov.usgs.wma.waterdata.openapi.schema.geojson.Geometry;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@JsonPropertyOrder(value = { "type", "id", "geometry", "properties"})
-@Schema(description = "Feature MetaData in GeoJSON format.")
-public class FeatureGeoJSON {
+
+@JsonPropertyOrder(value={"type","id","geometry","properties","timeSeries"})
+@Schema(description="Statistical Time Series Observation datasets available for a feature.")
+public class StatisticalFeatureGeoJSON  {
 	@Schema(description="The type of this object - Currently only 'Feature' objects are produced.", example="Feature")
 	public String getType() {
 		return null;
@@ -21,8 +22,12 @@ public class FeatureGeoJSON {
 		return null;
 	}
 	@Schema(description="The properties associated with this Feature.")
-	public FeatureProperties getProperties() {
+	public StatisticalFeatureProperties getProperties() {
 		return null;
 	}
-	
+	@Schema(description="The statistical time series available for this Feature.")
+	public StatisticalTimeSeriesItem[] getTimesSeries() {
+		return null;
+	}
+
 }

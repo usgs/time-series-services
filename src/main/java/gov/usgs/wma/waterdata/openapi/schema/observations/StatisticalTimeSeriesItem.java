@@ -1,4 +1,4 @@
-package gov.usgs.wma.waterdata.collections.observations;
+package gov.usgs.wma.waterdata.openapi.schema.observations;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

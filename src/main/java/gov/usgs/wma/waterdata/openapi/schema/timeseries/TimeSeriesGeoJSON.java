@@ -1,7 +1,7 @@
-package gov.usgs.wma.waterdata.timeseries.geojson;
+package gov.usgs.wma.waterdata.openapi.schema.timeseries;
 
-import gov.usgs.wma.waterdata.geojson.GeoJSON;
-import gov.usgs.wma.waterdata.geojson.Geometry;
+import gov.usgs.wma.waterdata.openapi.schema.geojson.GeoJSON;
+import gov.usgs.wma.waterdata.openapi.schema.geojson.Geometry;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description="Timeseries Data in GeoJSON format.")

@@ -1,7 +1,6 @@
 ignore:
 # Classes used exclusively in defining the openapi
-  - "**/geojson"
-  - "**/observations"
+  - "**/schema"
   - "**/Version.java"
 # Spring Boot Application file - no testable logic
   - "**/Application.java"

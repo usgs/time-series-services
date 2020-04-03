@@ -1,4 +1,4 @@
-package gov.usgs.wma.waterdata.collections.geojson;
+package gov.usgs.wma.waterdata.openapi.schema.collections;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 

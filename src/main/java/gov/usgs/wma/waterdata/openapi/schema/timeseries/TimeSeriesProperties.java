@@ -1,10 +1,10 @@
-package gov.usgs.wma.waterdata.timeseries.geojson;
+package gov.usgs.wma.waterdata.openapi.schema.timeseries;
 
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import gov.usgs.wma.waterdata.geojson.Properties;
+import gov.usgs.wma.waterdata.openapi.schema.geojson.Properties;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder(value={"observationType","phenomenonTimeStart","phenomenonTimeEnd",
