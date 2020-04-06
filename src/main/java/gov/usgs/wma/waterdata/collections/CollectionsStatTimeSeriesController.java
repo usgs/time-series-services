@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.openapi.schema.observations.StatisticalFeatureGeoJSON;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Statistical Observations Datasets", description = "Feature Statistical Time Series Observations, such as min, max, or median.")
 @RestController
-public class CollectionsStatTimeSeriesController {
+public class CollectionsStatTimeSeriesController extends BaseController {
 
 	protected static final String URL_STATISTICAL_TIME_SERIES_COLLECTION
 		= "collections/{"+PARAM_COLLECTION_ID+"}/items/{"+PARAM_FEATURE_ID+"}/observations/statistical-time-series";
@@ -44,8 +45,12 @@ public class CollectionsStatTimeSeriesController {
 							content=@Content(schema=@Schema(implementation=StatisticalFeatureGeoJSON.class))),
 					@ApiResponse(
 							responseCode="404",
-							description="The requested collection and feature combination was not found.",
-							content=@Content())
+							description=HTTP_404_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class))),
+					@ApiResponse(
+							responseCode="500",
+							description=HTTP_500_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class)))
 			},
 			externalDocs=@ExternalDocumentation(url="https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json")
 		)

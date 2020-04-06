@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.openapi.schema.observations.ObservationsJSON;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Observations Datasets", description = "Feature Observations")
 @RestController
-public class ObservationsController {
+public class ObservationsController extends BaseController {
 	
 	protected CollectionsDao collectionsDao;
 
@@ -35,9 +36,22 @@ public class ObservationsController {
 	}
 
 	
-	@Operation(description = "Return data sets available at the monitoring location.", responses = {
-			@ApiResponse(responseCode = "200", description = "available datasets.", content = @Content(schema = @Schema(implementation = ObservationsJSON.class))),
-			@ApiResponse(responseCode = "404", description = "The specified collection monitoring location was not found.", content = @Content()) })
+	@Operation(description = "Return data sets available at the monitoring location.",
+			responses = {
+					@ApiResponse(
+							responseCode = "200",
+							description = "available datasets.",
+							content = @Content(schema = @Schema(implementation = ObservationsJSON.class))),
+					@ApiResponse(
+							responseCode = "404",
+							description = HTTP_404_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class))),
+					@ApiResponse(
+							responseCode = "500",
+							description = HTTP_500_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class)))
+					}
+		)
 	@GetMapping(value = "collections/{collectionId}/items/{featureId}/observations", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getObservationTypes(
 			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
