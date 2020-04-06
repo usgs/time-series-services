@@ -20,8 +20,8 @@ public class OpenApiConfig {
 		return new OpenAPI()
 				.addServersItem(new Server().url(serverUrl))
 				.components(new Components())
-				.info(new Info().title("WDFN Time Series Services API").description(
-						"Documentation for the Water Data for the Nation - Time Series Services API."));
+				.info(new Info().title("WDFN Observations Services API").description(
+						"Documentation for the Water Data for the Nation - Observations Services API."));
 
 	}
 }
