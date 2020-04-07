@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionGeoJSON;
 import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionsGeoJSON;
+import gov.usgs.wma.waterdata.openapi.schema.collections.FeatureCollectionGeoJSON;
 import gov.usgs.wma.waterdata.openapi.schema.collections.FeatureGeoJSON;
 import gov.usgs.wma.waterdata.parameter.BoundingBox;
 import gov.usgs.wma.waterdata.validation.BBox;
@@ -54,7 +56,11 @@ public class CollectionsController extends BaseController {
 					@ApiResponse(
 							responseCode = "200",
 							description = "GeoJSON representation of the Collections.",
-							content = @Content(schema = @Schema(implementation = CollectionsGeoJSON.class)))
+							content = @Content(schema = @Schema(implementation = CollectionsGeoJSON.class))),
+					@ApiResponse(
+							responseCode = "500",
+							description = HTTP_500_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class)))
 			},
 			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_collections_")
 		)
@@ -74,8 +80,12 @@ public class CollectionsController extends BaseController {
 							content = @Content(schema = @Schema(implementation = CollectionGeoJSON.class))),
 					@ApiResponse(
 							responseCode = "404",
-							description = "The requested collection was not found.",
-							content=@Content())
+							description = HTTP_404_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class))),
+					@ApiResponse(
+							responseCode = "500",
+							description = HTTP_500_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class)))
 			},
 			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_collection_")
 		)
@@ -97,12 +107,20 @@ public class CollectionsController extends BaseController {
 			responses = {
 					@ApiResponse(
 							responseCode = "200",
-							description = "GeoJSON representation of the Feature.",
-							content = @Content(schema = @Schema(implementation = FeatureGeoJSON.class))),
+							description = "GeoJSON representation of the Feature Collection.",
+							content = @Content(schema = @Schema(implementation = FeatureCollectionGeoJSON.class))),
+					@ApiResponse(
+							responseCode = "400",
+							description = HTTP_400_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class))),
 					@ApiResponse(
 							responseCode = "404",
-							description = "The requested collection feature was not found.",
-							content=@Content())
+							description = HTTP_404_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class))),
+					@ApiResponse(
+							responseCode = "500",
+							description = HTTP_500_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class)))
 			},
 			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_feature_")
 		)
@@ -142,8 +160,12 @@ public class CollectionsController extends BaseController {
 							content = @Content(schema = @Schema(implementation = FeatureGeoJSON.class))),
 					@ApiResponse(
 							responseCode = "404",
-							description = "The requested collection feature was not found.",
-							content=@Content())
+							description = HTTP_404_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class))),
+					@ApiResponse(
+							responseCode = "500",
+							description = HTTP_500_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class)))
 			},
 			externalDocs=@ExternalDocumentation(url="http://docs.opengeospatial.org/is/17-069r3/17-069r3.html#_feature_")
 		)

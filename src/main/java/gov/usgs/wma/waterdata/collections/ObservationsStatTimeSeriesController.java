@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.openapi.schema.timeseries.TimeSeriesGeoJSON;
 import gov.usgs.wma.waterdata.timeseries.TimeSeriesDao;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -45,8 +46,12 @@ public class ObservationsStatTimeSeriesController extends BaseController {
 							content=@Content(schema=@Schema(implementation=TimeSeriesGeoJSON.class))),
 					@ApiResponse(
 							responseCode="404",
-							description="The requested Time Series was not found.",
-							content=@Content())
+							description=HTTP_404_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class))),
+					@ApiResponse(
+							responseCode="500",
+							description=HTTP_500_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class)))
 			},
 			externalDocs=@ExternalDocumentation(url="https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json")
 		)
