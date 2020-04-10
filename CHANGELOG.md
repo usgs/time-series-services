@@ -8,13 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.5.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.4.0...time-series-services-0.5.0)
 ### Added
--  Feature Observations endpoint.
--  Properties field to collection.
--  Links to collections that a feature belongs to.
--  Query parameter validation per OGC standard.
+-   Feature Observations endpoint.
+-   Properties field to collection.
+-   Links to collections that a feature belongs to.
+-   Query parameter validation per OGC standard.
 ### Changed
--  Updated http exception handling to conform to OGC standard.
--  Readme.md and Swagger documentation cleanup.
+-   Updated http exception handling to conform to OGC standard.
+-   Readme.md and Swagger documentation cleanup.
 
 ## [0.4.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.2.0...time-series-services-0.4.0)
 ### Added
