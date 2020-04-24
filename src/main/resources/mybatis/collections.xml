@@ -17,7 +17,7 @@
             jsonb_build_object(
                 'contactName', #{monLocContactName,jdbcType=VARCHAR},
                 'contactEmail', #{monLocContactEmail,jdbcType=VARCHAR}
-            ) contact_info,
+            ) properties,
             <include refid="geomColumns"/>
          from nwis.monitoring_location
          where geom is not null
@@ -27,7 +27,7 @@
         )
       UNION
         select
-            network_code id, network_name title, description, contact_info,
+            network_code id, network_name title, description, properties,
             <include refid="geomColumns"/>
         from nwis.network
         join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
@@ -37,7 +37,7 @@
         <if test="collectionId != null">
             and network_code = #{collectionId,jdbcType=VARCHAR}
         </if>
-        group by id, title, description, contact_info
+        group by id, title, description, properties
       ORDER BY id
     </sql>
 
@@ -53,7 +53,7 @@
             ),
             'crs', 'http://www.opengis.net/def/crs/OGC/1.3/CRS83'
         ) extent,
-        contact_info properties,
+        coalesce(properties,'{}') properties,
         json_build_array(
             json_build_object(
                 'type', 'text/html',
