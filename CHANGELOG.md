@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html). (Patch version X.Y.0 is implied if not specified.)
 
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.5.0...master)
+### Changed
+-   Modified collections endpoint to populate properties field from properties column in network table.
 
 ## [0.5.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.4.0...time-series-services-0.5.0) - 2020-04-10
 ### Added
