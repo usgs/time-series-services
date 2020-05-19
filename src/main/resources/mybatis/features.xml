@@ -115,7 +115,7 @@
         </if>
     </sql>
 
-    <select id="getCollectionFeaturesJson" parameterType="map" resultType="String">
+    <select id="getFeaturesJson" parameterType="map" resultType="String">
         select json_build_object(
                                  'type', 'FeatureCollection',
                                  'features', json_agg(feature.json),
@@ -168,11 +168,11 @@
           group by collection_title
     </select>
 
-    <select id="getCollectionFeatureJson" parameterType="map" resultType="String">
+    <select id="getFeatureJson" parameterType="map" resultType="String">
         <include refid="singleFeature"/>
     </select>
 
-    <select id="getCollectionFeatureCount" parameterType="map" resultType="int">
+    <select id="getFeatureCount" parameterType="map" resultType="int">
         select count(*)
         <choose>
             <when test="collectionId == 'monitoring-locations'">

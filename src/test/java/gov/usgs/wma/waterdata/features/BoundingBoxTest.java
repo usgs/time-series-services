@@ -1,4 +1,4 @@
-package gov.usgs.wma.waterdata.collections;
+package gov.usgs.wma.waterdata.features;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

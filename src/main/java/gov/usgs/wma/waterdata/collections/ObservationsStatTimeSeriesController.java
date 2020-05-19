@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import gov.usgs.wma.waterdata.BaseController;
 import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.openapi.schema.timeseries.TimeSeriesGeoJSON;
 import gov.usgs.wma.waterdata.timeseries.TimeSeriesDao;
