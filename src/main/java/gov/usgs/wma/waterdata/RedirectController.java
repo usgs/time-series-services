@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,10 +16,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name="Application Version", description="Display")
 @RestController
-public class VersionController {
+public class RedirectController {
 
 	@Value("${site.url.base}")
 	private String serverUrl;
+
+	@Value("${swagger.apiDocsUrl}")
+	private String swaggerApiDocsUrl;
 
 	@Operation(
 			description="Return the web service version information.",
@@ -30,6 +34,12 @@ public class VersionController {
 			produces=MediaType.APPLICATION_JSON_VALUE
 	)
 	public RedirectView getVersion(RedirectAttributes attributes) {
-		return new RedirectView(serverUrl + "about/info", true, true);
+		return new RedirectView(serverUrl + "about/info", false, true);
+	}
+
+	@GetMapping(value="swagger")
+	@Hidden
+	public RedirectView getSwagger() {
+		return new RedirectView(serverUrl + "swagger-ui/index.html?url=" + swaggerApiDocsUrl, false, true);
 	}
 }
