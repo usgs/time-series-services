@@ -9,6 +9,11 @@
                'name', 'statistical-time-series',
                'url', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR} || '/items/'  
                   || #{featureId,jdbcType=VARCHAR} || '/observations/statistical-time-series'
+              ),
+              json_build_object(
+               'name', 'discrete-data',
+               'url', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR} || '/items/'
+                  || #{featureId,jdbcType=VARCHAR} || '/observations/discrete-data'
               )
           )
        ) where (#{collectionId,jdbcType=VARCHAR} = 'monitoring-locations'
