@@ -3,6 +3,10 @@
         {
             "name": "statistical-time-series",
             "url": "https://unittest/api/observations/collections/monitoring-locations/items/USGS-07227448/observations/statistical-time-series"
+        },
+        {
+            "name": "discrete-data",
+            "url": "https://unittest/api/observations/collections/monitoring-locations/items/USGS-07227448/observations/discrete-data"
         }
     ]
 }
