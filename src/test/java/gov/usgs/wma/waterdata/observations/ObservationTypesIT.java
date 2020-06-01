@@ -1,4 +1,4 @@
-package gov.usgs.wma.waterdata.collections;
+package gov.usgs.wma.waterdata.observations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -14,13 +14,15 @@ import org.springframework.http.ResponseEntity;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
+import gov.usgs.wma.waterdata.collections.BaseCollectionsIT;
+
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
-public class CollectionsObservationsIT extends BaseCollectionsIT {
+public class ObservationTypesIT extends BaseCollectionsIT {
 	@Test
-	public void getObservationsTest() {
+	public void getObservationTypesTest() {
 		try {
-			doGetCollectionTest("/collections/monitoring-locations/items/USGS-07227448/observations", "observations.json");
+			doGetCollectionTest("/collections/monitoring-locations/items/USGS-07227448/observations", "observationTypes.json");
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);
 		}

@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonPropertyOrder(value={"observationTypes"})
-@Schema(description="Observations data in JSON format.")
-public class ObservationsJSON {
-	@Schema(description="available observations")
-	public ObservationJSON[] getObservations() {
+@Schema(description="Observation datasets in JSON format.")
+public class ObservationTypesJSON {
+	@Schema(description="available dataSets")
+	public ObservationTypeJSON[] getObservationTypes() {
 		return null;
 	}
 }

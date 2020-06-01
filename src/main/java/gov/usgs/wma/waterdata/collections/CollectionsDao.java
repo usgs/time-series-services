@@ -46,6 +46,10 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 		return getSqlSession().selectOne("observations.getObsverationsJson", params);
 	}
 
+	public String getDiscreteDataObsverationsJson(Map<String, Object> params) {
+		return getSqlSession().selectOne("observations.getDiscreteDataObsverationsJson", params);
+	}
+
 	public String getStatisticalTimeSeries(String collectionId, String featureId) {
 		Map<String,Object> params = collectionsParams.buildParams(collectionId, featureId);
 		
@@ -56,4 +60,5 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 		}
 		return json;
 	}
+
 }
