@@ -22,7 +22,7 @@ public class DescreteDataObservationsIT extends BaseCollectionsIT {
 	@Test
 	public void getDescreteDataObservationsTest() {
 		try {
-			doGetCollectionTest("/collections/monitoring-locations/items/USGS-07227448/observations/descrete-data", "descreteDataobservations.json");
+			doGetCollectionTest("/collections/monitoring-locations/items/USGS-07227448/observations/descrete-data", "descreteDataObservations.json");
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);
 		}
