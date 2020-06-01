@@ -44,7 +44,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.6.RELEASE</version>
+        <version>2.3.0.RELEASE</version>
     </parent>
 
     <dependencies>
@@ -91,6 +91,11 @@
             <groupId>net.postgis</groupId>
             <artifactId>postgis-jdbc</artifactId>
             <version>${postgis-jdbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
         </dependency>
 
         <!-- TEST dependencies -->
@@ -157,7 +162,6 @@
                 <configuration>
                     <environmentVariables>
                         <ROOT_LOG_LEVEL>INFO</ROOT_LOG_LEVEL>
-                        <SITE_URL_BASE>https://unittest/api/observations/</SITE_URL_BASE>
                         <WDFN_DATABASE_ADDRESS>${TESTING_DATABASE_ADDRESS}</WDFN_DATABASE_ADDRESS>
                         <WDFN_DATABASE_PORT>${TESTING_DATABASE_PORT}</WDFN_DATABASE_PORT>
                         <WDFN_DATABASE_NAME>wqp_db</WDFN_DATABASE_NAME>
