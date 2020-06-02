@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.usgs.wma.waterdata.OgcException;
+import gov.usgs.wma.waterdata.openapi.schema.observations.ObservationTypesJSON;
 import gov.usgs.wma.waterdata.openapi.schema.observations.ObservationsJSON;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,24 +25,24 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Observations Datasets", description = "Feature Observations")
 @RestController
 public class ObservationsController extends BaseController {
-	
+
 	protected CollectionsDao collectionsDao;
 
 	protected CollectionParams collectionsParams;
-	
+
 	@Autowired
 	public ObservationsController(CollectionsDao collectionsDao, CollectionParams collectionsParams) {
 		this.collectionsDao = collectionsDao;
 		this.collectionsParams = collectionsParams;
 	}
 
-	
+
 	@Operation(description = "Return data sets available at the monitoring location.",
 			responses = {
 					@ApiResponse(
 							responseCode = "200",
 							description = "available datasets.",
-							content = @Content(schema = @Schema(implementation = ObservationsJSON.class))),
+							content = @Content(schema = @Schema(implementation = ObservationTypesJSON.class))),
 					@ApiResponse(
 							responseCode = "404",
 							description = HTTP_404_DESCRIPTION,
@@ -62,7 +63,38 @@ public class ObservationsController extends BaseController {
 		String 	rtn = collectionsDao.getObsverationsJson(collectionsParams.buildParams(collectionId, featureId));
 		if (rtn == null) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
-		} 
+		}
+
+		return rtn;
+	}
+
+	@Operation(description = "Return descrete data observations available at the monitoring location.",
+			responses = {
+					@ApiResponse(
+							responseCode = "200",
+							description = "available observations.",
+							content = @Content(schema = @Schema(implementation = ObservationsJSON.class))),
+					@ApiResponse(
+							responseCode = "404",
+							description = HTTP_404_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class))),
+					@ApiResponse(
+							responseCode = "500",
+							description = HTTP_500_DESCRIPTION,
+							content = @Content(schema = @Schema(implementation = OgcException.class)))
+					}
+		)
+	@GetMapping(value = "collections/{collectionId}/items/{featureId}/observations/descrete-data", produces = MediaType.APPLICATION_JSON_VALUE)
+	public String getDiscreteDataObservations(
+			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
+			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
+			@PathVariable(value = PARAM_FEATURE_ID) String featureId,
+			HttpServletResponse response) {
+
+		String 	rtn = collectionsDao.getDiscreteDataObsverationsJson(collectionsParams.buildParams(collectionId, featureId));
+		if (rtn == null) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+		}
 
 		return rtn;
 	}
