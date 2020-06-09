@@ -1,0 +1,8 @@
+{
+    "observations": [
+        {
+            "name": "groundwater-levels",
+            "url": "https://unittest/api/observations/collections/AHS/items/USGS-343204093005501/observations/discrete-data/groundwater-levels"
+        }
+    ]
+}
