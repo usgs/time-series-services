@@ -84,7 +84,7 @@ public class ObservationsController extends BaseController {
 							content = @Content(schema = @Schema(implementation = OgcException.class)))
 					}
 		)
-	@GetMapping(value = "collections/{collectionId}/items/{featureId}/observations/descrete-data", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "collections/{collectionId}/items/{featureId}/observations/discrete-data", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getDiscreteDataObservations(
 			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
