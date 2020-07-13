@@ -5,7 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html). (Patch version X.Y.0 is implied if not specified.)
 
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.6.0...master)
-
+### Changed
+-   IOW-506 Unapproved data older than 1095 is not returned
 
 ## [0.6.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.5.0...time-series-services-0.6.0) - 2020-04-29
 ### Changed
