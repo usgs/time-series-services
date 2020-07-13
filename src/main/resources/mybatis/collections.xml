@@ -106,7 +106,7 @@
     <select id="getStatisticalTimeSeriesJson" parameterType="java.util.Map" resultType="String">
         <!-- The aliases in this query are used for the JSON key names and some are intentionally mixed case -->
         <!-- The inner select distinct is necessary until we have a top level table with this information -->
-        select row_to_json(fsts)
+        <![CDATA[select row_to_json(fsts)
           from ( select 'Feature' as "type",
                           ml.monitoring_location_identifier as "id",
                           json_build_object(
@@ -129,9 +129,10 @@
                                                 ||'/observations/statistical-time-series/'
                                                 ||time_series_unique_id
                                                    as "url"
-                                       from nwis.groundwater_daily_value gw
+                                      from nwis.groundwater_daily_value gw
                                       where gw.monitoring_location_id = ml.monitoring_location_id
-                                   ) as sts
+                                          AND (LOWER(CAST(gw.approvals AS VARCHAR)) LIKE '%approved%' OR CURRENT_DATE - gw.time_step <= 1095)
+                              ) as sts
                           ) as "timeSeries"
                    from nwis.monitoring_location ml
                   where geom is not null
@@ -145,7 +146,7 @@
                             where n.network_code = #{collectionId,jdbcType=VARCHAR}
                               and ns.monitoring_location_id = ml.monitoring_location_id
                    ))
-               ) as fsts
+               ) as fsts]]>
     </select>
 
 </mapper>

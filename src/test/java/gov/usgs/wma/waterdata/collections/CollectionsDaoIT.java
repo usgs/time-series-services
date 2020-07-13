@@ -26,6 +26,7 @@ import gov.usgs.wma.waterdata.springinit.DBTestConfig;
 @SpringBootTest(webEnvironment = WebEnvironment.NONE, classes = {DBTestConfig.class, CollectionParams.class, CollectionsDao.class,
 					ConfigurationService.class})
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
+@DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
 public class CollectionsDaoIT extends BaseIT {
 	@Autowired
 	private CollectionParams collectionsParams;
@@ -70,7 +71,7 @@ public class CollectionsDaoIT extends BaseIT {
 	public void foundCollectionFeatureTest() {
 		try {
 			String expected = getCompareFile("features/monitoring-locations/USGS-07227448.json");
-			String actual = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams("monitoring-locations","USGS-07227448"));
+			String actual = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(DEFAULT_COLLECTION_ID,"USGS-07227448"));
 			assertJsonEquals(expected, actual);
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);
@@ -79,7 +80,7 @@ public class CollectionsDaoIT extends BaseIT {
 
 	@Test
 	public void monLocCollectionFeatureCountTest() {
-		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams("monitoring-locations"));
+		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(DEFAULT_COLLECTION_ID));
 		assertTrue(count == 3);
 	}
 
@@ -137,6 +138,10 @@ public class CollectionsDaoIT extends BaseIT {
 	public void featureTimeSeriesCollectionEmptyTest() throws Exception {
 		String actualJSON  = collectionsDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "USGS-04027940");
 		String expectJSON = getCompareFile("features/monitoring-locations/usgs-04027940-obs-list.json");
+		System.out.println("Expected:");
+		System.out.println(expectJSON);
+		System.out.println("Actual:");
+		System.out.println(actualJSON);
 		assertThat(new JSONObject(actualJSON), sameJSONObjectAs(new JSONObject(expectJSON)));
 	}
 

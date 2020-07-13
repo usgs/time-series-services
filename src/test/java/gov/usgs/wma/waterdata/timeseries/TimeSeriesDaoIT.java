@@ -61,6 +61,7 @@ public class TimeSeriesDaoIT extends BaseIT {
 		String expectedJSON = getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac.json");
 		assertThat(new JSONObject(geoJSON), sameJSONObjectAs(new JSONObject(expectedJSON)));
 	}
+
 	@Test
 	public void timeSeriesNotInCollectionTest() throws Exception {
 		String geoJSON = timeSeriesDao.getTimeSeries("SOME-COLLECTION", "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");
