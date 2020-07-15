@@ -24,5 +24,4 @@ public class ObservationsStatTimeSeriesController1095IT extends BaseCollectionsI
 		String expectResponseJSON = getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac_1095.json");
 		assertThat(new JSONObject(rtn), sameJSONObjectAs(new JSONObject(expectResponseJSON)));
 	}
-
 }

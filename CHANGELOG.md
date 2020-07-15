@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.6.0...master)
 ### Changed
--   IOW-506 Unapproved data older than 1095 is not returned
+-   Unapproved data older than 1095 days is not returned from the services (USGS rule)
 
 ## [0.6.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.5.0...time-series-services-0.6.0) - 2020-04-29
 ### Changed

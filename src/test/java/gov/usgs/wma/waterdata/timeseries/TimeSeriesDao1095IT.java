@@ -32,8 +32,6 @@ public class TimeSeriesDao1095IT extends BaseIT {
 	@Autowired
 	private TimeSeriesDao timeSeriesDao;
 
-	@DatabaseSetup("classpath:/testData/monitoringLocation/")
-	@DatabaseSetup("classpath:/testData/groundwaterDailyValue1095/")
 	@Test
 	public void foundTest_UnapprovedData1095DaysOldIsOK1096IsNot() {
 		try {
@@ -43,8 +41,6 @@ public class TimeSeriesDao1095IT extends BaseIT {
 		}
 	}
 
-	@DatabaseSetup("classpath:/testData/monitoringLocation/")
-	@DatabaseSetup("classpath:/testData/groundwaterDailyValue1095/")
 	@Test
 	public void foundTimeSeriesTest_UnapprovedData1095DaysOldIsOK1096IsNot() throws Exception {
 		String geoJSON = timeSeriesDao.getTimeSeries("monitoring-locations", "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac");

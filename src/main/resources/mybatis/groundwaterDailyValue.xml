@@ -24,8 +24,11 @@
                        json_agg(grades) grades_agg
                   from nwis.groundwater_daily_value
                  where time_series_unique_id = #{timeSeriesId,jdbcType=VARCHAR}
-                   and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-                   AND (LOWER(CAST(approvals AS VARCHAR)) LIKE '%approved%' OR CURRENT_DATE - time_step <= 1095)
+                     and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                     AND (
+                         approvals ?? 'Approved'
+                         OR CURRENT_DATE - time_step <= 1095
+                     )
                  group by groundwater_daily_value_identifier,
                           monitoring_location_id,
                           observered_property_name,

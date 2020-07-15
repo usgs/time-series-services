@@ -138,10 +138,6 @@ public class CollectionsDaoIT extends BaseIT {
 	public void featureTimeSeriesCollectionEmptyTest() throws Exception {
 		String actualJSON  = collectionsDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "USGS-04027940");
 		String expectJSON = getCompareFile("features/monitoring-locations/usgs-04027940-obs-list.json");
-		System.out.println("Expected:");
-		System.out.println(expectJSON);
-		System.out.println("Actual:");
-		System.out.println(actualJSON);
 		assertThat(new JSONObject(actualJSON), sameJSONObjectAs(new JSONObject(expectJSON)));
 	}
 
