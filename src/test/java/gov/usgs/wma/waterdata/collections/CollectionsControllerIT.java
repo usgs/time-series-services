@@ -30,6 +30,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/monitoringLocation/")
+@DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
 public class CollectionsControllerIT extends BaseCollectionsIT {
 	@Autowired
 	private TestRestTemplate restTemplate;

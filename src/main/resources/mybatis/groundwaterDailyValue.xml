@@ -3,7 +3,7 @@
 
 <mapper namespace="groundwaterDailyValue">
 
-    <select id="getGeoJson" parameterType="String" resultType="String">
+    <select id="getGeoJson" parameterType="String" resultType="String"><![CDATA[
         with
             gw_daily_value as (
                 select groundwater_daily_value_identifier,
@@ -24,7 +24,11 @@
                        json_agg(grades) grades_agg
                   from nwis.groundwater_daily_value
                  where time_series_unique_id = #{timeSeriesId,jdbcType=VARCHAR}
-                   and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                     and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                     AND (
+                         approvals ?? 'Approved'
+                         OR CURRENT_DATE - time_step <= 1095
+                     )
                  group by groundwater_daily_value_identifier,
                           monitoring_location_id,
                           observered_property_name,
@@ -77,6 +81,6 @@
                     where nwis.network.network_code = #{collectionId,jdbcType=VARCHAR}
                       and nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
            ))
-    </select>
+    ]]></select>
 
 </mapper>

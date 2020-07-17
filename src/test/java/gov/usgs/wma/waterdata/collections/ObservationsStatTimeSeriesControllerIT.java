@@ -22,7 +22,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
 public class ObservationsStatTimeSeriesControllerIT extends BaseCollectionsIT {
 
-	protected String makeURL(String collectionId, String featureId, String guid) {
+	protected static String makeURL(String collectionId, String featureId, String guid) {
 		String url = URL_STATISTICAL_TIME_SERIES.replace(PARAM_COLLECTION_ID, collectionId);
 		url = url.replace(PARAM_FEATURE_ID, featureId);
 		url = url.replace(PARAM_TIME_SERIES_ID, guid);
