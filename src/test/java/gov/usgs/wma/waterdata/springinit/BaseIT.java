@@ -41,6 +41,7 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 @Import({DBTestConfig.class})
 @DirtiesContext
 public abstract class BaseIT {
+	protected String ogc404Payload = "{\"code\":\"404\", \"description\":\"Requested data not found\"}";
 
 
 	/**

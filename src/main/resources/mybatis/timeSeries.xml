@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="timeSeries">
+    <sql id="gwDailyValueJoin">
+        left join (select monitoring_location_id, time_series_unique_id, groundwater_daily_value_identifier,
+                       approvals, time_step, observered_property_id, observered_property_name, statistic_id, statistic
+                   from groundwater_daily_value) gw
+        on gw.monitoring_location_id = ml.monitoring_location_id
+    </sql>
+
+    <select id="getStatisticalTimeSeriesJson" parameterType="java.util.Map" resultType="String">
+        select json_build_object('type', 'Feature',
+                   'id', ml.monitoring_location_identifier,
+                   'geometry', json_build_object(
+                       'type', 'Point',
+                       'coordinates', json_build_array(
+                           to_json(trunc(st_x(st_transform(geom, 4326))::numeric, 7)),
+                           to_json(trunc(st_y(st_transform(geom, 4326))::numeric, 7))
+                       )
+                   ),
+                   'properties', json_build_object('samplingFeatureName', site_name),
+                   'timeSeries', coalesce(nullif(jsonb_agg(distinct 
+                                        case when gw.monitoring_location_id is not null then
+                                            jsonb_build_object(
+                                                 'id', groundwater_daily_value_identifier,
+                                                 'description', observered_property_name||', '||statistic,
+                                                 'parameterCode', observered_property_id,
+                                                 'statisticCode', statistic_id,
+                                                 'url', #{serverUrl,jdbcType=VARCHAR}
+                                                     || 'collections/' || #{collectionId} || '/items/'
+                                                     || ml.monitoring_location_identifier
+                                                     || '/observations/statistical-time-series/' || time_series_unique_id)
+                                        end
+                                 ), jsonb_build_array(null)), jsonb_build_array())
+               )
+        <choose>
+            <when test="collectionId == 'monitoring-locations'">
+                from nwis.monitoring_location ml
+                <include refid="gwDailyValueJoin"/>
+            </when>
+            <otherwise>
+                from nwis.network
+                join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
+                join nwis.monitoring_location ml on nwis.network_sites.monitoring_location_id = ml.monitoring_location_id
+                <include refid="gwDailyValueJoin"/>
+            </otherwise>
+        </choose>
+                where ml.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                and geom is not null
+        <if test="collectionId != 'monitoring-locations'">
+                and network_code = #{collectionId}
+        </if>
+                and (gw.monitoring_location_id is null or approvals ?? 'Approved'
+                     or current_date - time_step between 0 and 1095)
+                group by ml.monitoring_location_identifier, geom, site_name
+    </select>
+
+</mapper>
