@@ -170,6 +170,12 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 
 	@Test
 	public void collectionNotFoundItemsTest() {
+		String rtn = doCollectionRequest("/collections/xyz/items", HttpStatus.NOT_FOUND);
+		assertEquals(ogc404Payload, rtn);
+	}
+
+	@Test
+	public void collectionNotFoundFeatureExistsTest() {
 		String rtn = doCollectionRequest("/collections/xyz/items/USGS-07227448", HttpStatus.NOT_FOUND);
 		assertEquals(ogc404Payload, rtn);
 	}
