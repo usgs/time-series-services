@@ -30,7 +30,7 @@ WDFN_SCHEMA_OWNER_PASSWORD: "changeMe"
 ### Running the Demo DB for local development
 The short version:
 ```shell
-docker network create --subnet=172.25.0.0/16 wdfn
+docker network create --subnet=172.25.0.0/16 wdfn  (only needs to be run once)
 docker run -it --network=wdfn -p 127.0.0.1:5437:5432/tcp usgswma/wqp_db:etl
 ```
 The network and the port will need to match the values in the application.yml.
@@ -46,6 +46,7 @@ mvn package
 To additionally start up a Docker database and run the integration tests via Maven, use:
 
 ```.sh
+docker network create --subnet=172.25.0.0/16 wdfn  (only needs to be run once)
 mvn verify -DTESTING_DATABASE_PORT=5437 -DTESTING_DATABASE_ADDRESS=localhost -DTESTING_DATABASE_NETWORK=wdfn
 ```
 **Note:  If you configure your IDE to run integration tests, make sure the configuration is pointed at a local Docker
