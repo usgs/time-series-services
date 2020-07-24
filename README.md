@@ -26,22 +26,17 @@ WDFN_DB_READ_ONLY_PASSWORD: "changeMe"
 WDFN_SCHEMA_OWNER_USERNAME: "wdfn_owner"
 WDFN_SCHEMA_OWNER_PASSWORD: "changeMe"
 ```
+
 ### Running the Demo DB for local development
 The short version:
 ```shell
 docker network create --subnet=172.25.0.0/16 wdfn
 docker run -it --network=wdfn -p 127.0.0.1:5437:5432/tcp usgswma/wqp_db:etl
 ```
-Note the _5437_ port mapping, which is used in the environmental variables below.
+The network and the port will need to match the values in the application.yml.
+
 ## Testing
 This project contains JUnit tests. Maven can be used to run them (in addition to the capabilities of your IDE).
-
-### Docker Network
-A named Docker Network is needed to run the automated tests via maven. The following is a sample command for creating your own local network. In this example the name is wqp and the ip addresses will be 172.25.0.x
-
-```.sh
-docker network create --subnet=172.25.0.0/16 wdfn
-```
 
 ### Unit Testing
 To run the unit tests of the application use:
