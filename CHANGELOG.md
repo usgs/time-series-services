@@ -5,7 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html). (Patch version X.Y.0 is implied if not specified.)
 
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.6.0...master)
-
+### Changed
+-   Removed deprecated end point: /monitoring-location/{monitoringLocationId}/time-series/{timeSeriesId}
+-   Performance improvement on end point: /collections/{collectionId}/items/{featureId}/observations/statistical-time-series
+-   Unapproved time series data older than 1095 days is not returned from the services (USGS rule)
 
 ## [0.6.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.5.0...time-series-services-0.6.0) - 2020-04-29
 ### Changed

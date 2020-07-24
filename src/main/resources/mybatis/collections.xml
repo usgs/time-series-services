@@ -19,26 +19,26 @@
                 'contactEmail', #{monLocContactEmail,jdbcType=VARCHAR}
             ) properties,
             <include refid="geomColumns"/>
-         from nwis.monitoring_location
-         where geom is not null
-         <if test="collectionId != null and collectionId != 'monitoring-locations'">
+        from nwis.monitoring_location
+        where geom is not null
+        <if test="collectionId != null and collectionId != 'monitoring-locations'">
             limit 0
-         </if>
+        </if>
         )
-      UNION
+        UNION
         select
-            network_code id, network_name title, description, properties,
-            <include refid="geomColumns"/>
+        network_code id, network_name title, description, properties,
+        <include refid="geomColumns"/>
         from nwis.network
         join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
         join nwis.monitoring_location on nwis.network_sites.monitoring_location_id = nwis.monitoring_location.monitoring_location_id
         where
-            geom is not null
+        geom is not null
         <if test="collectionId != null">
             and network_code = #{collectionId,jdbcType=VARCHAR}
         </if>
         group by id, title, description, properties
-      ORDER BY id
+        ORDER BY id
     </sql>
 
     <sql id="collectionColumnsToJson">
@@ -79,73 +79,27 @@
     <select id="getCollectionsJson" parameterType="map" resultType="String">
         select json_build_object(
             'collections', json_agg(collections),
-             'links' , json_build_array(
-                 json_build_object(
-                      'type', 'application/json',
-                       'rel',  'self',
-                       'title', 'This document as JSON',
-                       'href',  #{serverUrl} || 'collections?f=json'
-                 )
-             )
+            'links' , json_build_array(
+                json_build_object(
+                    'type', 'application/json',
+                    'rel',  'self',
+                    'title', 'This document as JSON',
+                    'href',  #{serverUrl} || 'collections?f=json'
+                )
+            )
         )
         from (
-            select <include refid="collectionColumnsToJson"/>
-                from (<include refid="selectCollectionsQuery"/>) as cols
+        select <include refid="collectionColumnsToJson"/>
+        from (<include refid="selectCollectionsQuery"/>) as cols
         ) as collections
     </select>
 
     <select id="getCollectionJson" parameterType="map" resultType="String">
-      select row_to_json(collection)
+        select row_to_json(collection)
         from (
-            select <include refid="collectionColumnsToJson"/>
-                from (<include refid="selectCollectionsQuery"/>) as cols
+        select <include refid="collectionColumnsToJson"/>
+        from (<include refid="selectCollectionsQuery"/>) as cols
         ) as collection
-    </select>
-
-
-    <select id="getStatisticalTimeSeriesJson" parameterType="java.util.Map" resultType="String">
-        <!-- The aliases in this query are used for the JSON key names and some are intentionally mixed case -->
-        <!-- The inner select distinct is necessary until we have a top level table with this information -->
-        select row_to_json(fsts)
-          from ( select 'Feature' as "type",
-                          ml.monitoring_location_identifier as "id",
-                          json_build_object(
-                             'type', 'Point',
-                             'coordinates', json_build_array(
-                                 to_json(trunc(st_x(st_transform(geom, 4326))::numeric, 7)),
-                                 to_json(trunc(st_y(st_transform(geom, 4326))::numeric, 7))
-                             )
-                          ) as "geometry",
-                          json_build_object('samplingFeatureName', site_name) as "properties",
-                          ( select array_to_json(array_agg(sts))
-                              from ( select distinct 
-                                            groundwater_daily_value_identifier as "id",
-                                            observered_property_name||', '||statistic as "description",
-                                            observered_property_id as "parameterCode",
-                                            statistic_id as "statisticCode",
-                                            #{serverUrl,jdbcType=VARCHAR}
-                                                ||'collections/monitoring-locations/items/'
-                                                ||monitoring_location_identifier
-                                                ||'/observations/statistical-time-series/'
-                                                ||time_series_unique_id
-                                                   as "url"
-                                       from nwis.groundwater_daily_value gw
-                                      where gw.monitoring_location_id = ml.monitoring_location_id
-                                   ) as sts
-                          ) as "timeSeries"
-                   from nwis.monitoring_location ml
-                  where geom is not null
-                    and ml.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-                    and ('monitoring-locations' = #{collectionId,jdbcType=VARCHAR}
-                     or exists (
-                           select 1
-                             from nwis.network n
-                             join nwis.network_sites ns
-                               on n.network_id = ns.network_id
-                            where n.network_code = #{collectionId,jdbcType=VARCHAR}
-                              and ns.monitoring_location_id = ml.monitoring_location_id
-                   ))
-               ) as fsts
     </select>
 
 </mapper>

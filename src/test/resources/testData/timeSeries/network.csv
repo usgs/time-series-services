@@ -1,0 +1,2 @@
+network_id,network_code,network_name,description,properties
+43,"SAT","Test network for statistical time series","for testing only","{}"

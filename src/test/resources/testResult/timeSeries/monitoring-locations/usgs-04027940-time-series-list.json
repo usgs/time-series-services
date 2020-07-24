@@ -1,0 +1,15 @@
+{
+    "type": "Feature",
+    "id": "USGS-04027940",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -90.1218414,
+            46.3477249
+        ]
+    },
+    "properties": {
+        "samplingFeatureName": "MONTREAL RIVER 7 MI SOUTH OF IRONWOOD, MI"
+    },
+    "timeSeries": []
+}

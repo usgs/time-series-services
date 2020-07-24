@@ -16,8 +16,6 @@ public abstract class BaseCollectionsIT extends BaseIT {
 	@Autowired
 	protected TestRestTemplate restTemplate;
 
-	protected String ogc404Payload = "{\"code\":\"404\", \"description\":\"Requested data not found\"}";
-	
 	protected void doGetCollectionTest(String path, String resultFile) throws IOException {
 		String actual = doCollectionRequest(path);
 		String expected = getCompareFile(resultFile);
