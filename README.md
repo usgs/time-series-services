@@ -27,30 +27,30 @@ WDFN_SCHEMA_OWNER_USERNAME: "wdfn_owner"
 WDFN_SCHEMA_OWNER_PASSWORD: "changeMe"
 ```
 
-## Testing
-This project contains JUnit tests. Maven can be used to run them (in addition to the capabilities of your IDE).
-
-### Docker Network
-A named Docker Network is needed to run the automated tests via maven. The following is a sample command for creating your own local network. In this example the name is wqp and the ip addresses will be 172.25.0.x
-
-```.sh
-docker network create --subnet=172.25.0.0/16 wdfn
+### Running the Demo DB for local development
+The short version:
+```shell
+docker network create --subnet=172.25.0.0/16 wdfn  (only needs to be run once)
+docker run -it --network=wdfn -p 127.0.0.1:5437:5432/tcp usgswma/wqp_db:etl
 ```
+The network and the port will need to match the values in the application.yml.
 
 ### Unit Testing
-To run the unit tests of the application use:
+To run the JUnit tests via Maven:
 
 ```.sh
 mvn package
 ```
 
 ### Database Integration Testing
-To additionally start up a Docker database and run the integration tests of the application use:
+To additionally start up a Docker database and run the integration tests via Maven, use:
 
 ```.sh
+docker network create --subnet=172.25.0.0/16 wdfn  (only needs to be run once)
 mvn verify -DTESTING_DATABASE_PORT=5437 -DTESTING_DATABASE_ADDRESS=localhost -DTESTING_DATABASE_NETWORK=wdfn
 ```
-
+**Note:  If you configure your IDE to run integration tests, make sure the configuration is pointed at a local Docker
+db, not a cloud hosted db.  Integration tests will delete/modify records in the db they are pointed at.**
 ### Maven DOCKER_HOST Error
 
 If maven verify returns an error like this "... no DOCKER_HOST environment variable ..."
