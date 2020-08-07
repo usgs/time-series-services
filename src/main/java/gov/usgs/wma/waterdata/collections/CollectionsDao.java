@@ -34,9 +34,6 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 	}
 
 	public int getCollectionFeatureCount(Map<String, Object> params) {
-		Set<String> keys = params.keySet();
-
-
 		return getSqlSession().selectOne("features.getCollectionFeatureCount", params);
 	}
 

@@ -1,12 +1,11 @@
 package gov.usgs.wma.waterdata.collections;
 
 import static gov.usgs.wma.waterdata.collections.CollectionParams.DEFAULT_COLLECTION_ID;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +72,7 @@ public class CollectionsDaoIT extends BaseIT {
             fail("Unexpected IOException during test", e);
         }
     }
-    
+
     @Test
     public void monLocCollectionFeatureCountTest() {
         int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(DEFAULT_COLLECTION_ID));
