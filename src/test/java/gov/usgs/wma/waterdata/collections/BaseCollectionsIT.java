@@ -1,10 +1,15 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
 
 import java.io.IOException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
@@ -33,6 +38,28 @@ public abstract class BaseCollectionsIT extends BaseIT {
 		assertNotNull(rtn.getBody());
 
 		return rtn.getBody();
+	}
+
+	protected void doJsonCompare(ResponseEntity<String> rtn, String compareFile) {
+		try {
+			JSONObject featureCollection = new JSONObject(getCompareFile(compareFile));
+			JSONObject returnedJson = new JSONObject(rtn.getBody());
+			assertHasExpectedFields(returnedJson);
+			assertThat(returnedJson,
+				sameJSONObjectAs(featureCollection).allowingExtraUnexpectedFields());
+		} catch (JSONException e) {
+			fail("Unexpected JSONException during test", e);
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
+	}
+
+	protected void assertHasExpectedFields(JSONObject featureCollection) throws JSONException {
+		assertTrue(featureCollection.names().length() == 4);
+		assertNotNull(featureCollection.getString("type"));
+		assertTrue(featureCollection.get("features") instanceof JSONArray);
+		assertTrue(featureCollection.get("links") instanceof JSONArray);
+		assertNotNull(featureCollection.getString("timeStamp"));
 	}
 
 }
