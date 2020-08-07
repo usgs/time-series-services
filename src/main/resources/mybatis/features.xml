@@ -94,6 +94,7 @@
                   <include refid="collectionsJoin"/>
                  where geom is not null
             </when>
+
             <otherwise>,
                        network_name collection_title
                   <include refid="common.networkSites"/>
@@ -201,6 +202,7 @@
     <select id="getCollectionFeatureCount" parameterType="map" resultType="int">
         select count(*)
         <choose>
+
             <when test="collectionId == 'monitoring-locations'">
                  from nwis.monitoring_location
                 where geom is not null

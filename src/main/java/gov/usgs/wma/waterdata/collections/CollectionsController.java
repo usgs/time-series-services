@@ -1,15 +1,19 @@
 package gov.usgs.wma.waterdata.collections;
 
-import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
-import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
+import gov.usgs.wma.waterdata.OgcException;
+import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionGeoJSON;
+import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionsGeoJSON;
+import gov.usgs.wma.waterdata.openapi.schema.collections.FeatureCollectionGeoJSON;
+import gov.usgs.wma.waterdata.openapi.schema.collections.FeatureGeoJSON;
+import gov.usgs.wma.waterdata.parameter.BoundingBox;
+import gov.usgs.wma.waterdata.validation.BBox;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,27 +23,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import gov.usgs.wma.waterdata.OgcException;
-import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionGeoJSON;
-import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionsGeoJSON;
-import gov.usgs.wma.waterdata.openapi.schema.collections.FeatureCollectionGeoJSON;
-import gov.usgs.wma.waterdata.openapi.schema.collections.FeatureGeoJSON;
-import gov.usgs.wma.waterdata.parameter.BoundingBox;
-import gov.usgs.wma.waterdata.validation.BBox;
-
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
 
 @Tag(name = "Observations - OGC api", description = "Feature Collections")
 @RestController
@@ -52,9 +45,6 @@ public class CollectionsController extends BaseController {
 	public static final String REGEX_FIPS_HYDRO = "[0-9]{12}";
 	public static final String REGEX_FIPS_COUNTY = "[0-9]{5}";
 	public static final String REGEX_FIPS_STATE = "[0-9]{2}";
-	//public static final String REGEX_FIPS_STATE = "(?:([A-Z]{2}):)?([0-9]{1,2})";
-	//public static final String REGEX_FIPS_COUNTY = "(?:([A-Z]{2}):)?([0-9]{1,2}):([0-9]{3}|N/A)";
-
 	protected static final String LIMIT_VALIDATE_MESS = "limit must be greater than or equal to 1";
 	protected static final String START_INDEX_VALIDATE_MESS = "startIndex must be greater than or equal to 0";
 	protected static final String BBOX_DESCRIPTION = "Bounding box: minimum longitude, minimum latitude, maximum longitude, maximum latitude<br>"
@@ -144,25 +134,28 @@ public class CollectionsController extends BaseController {
 	@GetMapping(value = "collections/{collectionId}/items", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollectionFeatures(
 		HttpServletRequest request,
-		@Size(min=0, max=50, message="The number of countries is not between {min} and {max} occurrences")
+		@Size(min=0, max=250, message="The number of countries is not between {min} and {max} occurrences")
 		@Parameter(description="Countries in 2 digit FIPS format (for example, US or MX)")
 		@RequestParam(value="country", required = false) List<@Pattern(regexp=REGEX_FIPS_COUNTRY) String> countries,
 
-		@Size(min=0, max=50, message="The number of counties is not between {min} and {max} occurrences")
+		@Size(min=0, max=1000, message="The number of counties is not between {min} and {max} occurrences")
 		@Parameter(description="Counties in FIPS format.  For example, Dane County, Wisconsin would be 55025")
 		@RequestParam(value="county", required = false) List<@Pattern(regexp=REGEX_FIPS_COUNTY) String> counties,
 
-		@Size(min=0, max=50, message="The number of states is not between {min} and {max} occurrences")
+		@Size(min=0, max=100, message="The number of states is not between {min} and {max} occurrences")
 		@Parameter(description="States in FIPS format.  For example, Wisconsin would be 55")
 		@RequestParam(value="state", required = false) List<@Pattern(regexp=REGEX_FIPS_STATE) String> states,
 
-		@Size(min=0, max=50, message="The number of states is not between {min} and {max} occurrences")
+		@Size(min=0, max=1000, message="The number of hydrological units is not between {min} and {max} occurrences")
+		@Parameter(description="For example, 040103020107")
 		@RequestParam(value="hydrologicalUnit", required = false)
 			List<@Pattern(regexp=REGEX_FIPS_HYDRO) String> hydrologicalUnits,
-
+        @Parameter(description="For example, N9999OTHER")
 		@RequestParam(value="nationalAquiferCode", required = false) String nationalAquiferCode,
+		@Parameter(description="For example, USGS-343204093005501")
 		@RequestParam(value="monitoringLocationNumber", required = false) String monitoringLocationNumber,
-		@Parameter(description="Well, Stream, or other site type") @RequestParam(value="monitoringLocationType", required = false) String monitoringLocationType,
+		@Parameter(description="Well, Stream, or other type")
+		@RequestParam(value="monitoringLocationType", required = false) String monitoringLocationType,
 		@Parameter(description="USGS or other agency")
 		@RequestParam(value="agencyCode", required = false) String agencyCode,
 		@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
@@ -184,10 +177,7 @@ public class CollectionsController extends BaseController {
 		params = addParam(params, "hydrologicalUnits", hydrologicalUnits);
 
 		int count = collectionsDao.getCollectionFeatureCount(params);
-		if (countries != null || nationalAquiferCode != null || monitoringLocationNumber != null) {
-			System.err.println(request.getQueryString());
-			System.err.println("count=" + count);
-		}
+
 		String rtn;
 		if (startIndex >= count) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -213,12 +203,6 @@ public class CollectionsController extends BaseController {
 		return rtn;
 	}
 
-	private Map<String, Object> addParam(Map<String, Object> params, String key, Object value) {
-		if (value != null) {
-			params.put(key, value);
-		}
-		return params;
-	}
 
 	@Operation(
 			description = "Return GeoJSON Data specific to the requested Collection Feature.",
@@ -252,5 +236,12 @@ public class CollectionsController extends BaseController {
 
 		return rtn;
 	}
-	
+
+
+	private Map<String, Object> addParam(Map<String, Object> params, String key, Object value) {
+		if (value != null) {
+			params.put(key, value);
+		}
+		return params;
+	}
 }
