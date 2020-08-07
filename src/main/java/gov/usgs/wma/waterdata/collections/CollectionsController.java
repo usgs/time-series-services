@@ -150,7 +150,7 @@ public class CollectionsController extends BaseController {
 		@Parameter(description="For example, 040103020107")
 		@RequestParam(value="hydrologicalUnit", required = false)
 			List<@Pattern(regexp=REGEX_FIPS_HYDRO) String> hydrologicalUnits,
-        @Parameter(description="For example, N9999OTHER")
+		@Parameter(description="For example, N9999OTHER")
 		@RequestParam(value="nationalAquiferCode", required = false) String nationalAquiferCode,
 		@Parameter(description="For example, USGS-343204093005501")
 		@RequestParam(value="monitoringLocationNumber", required = false) String monitoringLocationNumber,
