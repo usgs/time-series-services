@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +71,23 @@ public class CollectionsDaoIT extends BaseIT {
 			String expected = getCompareFile("features/monitoring-locations/USGS-07227448.json");
 			String actual = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(DEFAULT_COLLECTION_ID,"USGS-07227448"));
 			assertJsonEquals(expected, actual);
+		} catch (IOException e) {
+			fail("Unexpected IOException during test", e);
+		}
+	}
+
+
+	@Test
+	public void foundCollectionFeatureCountriesTest() {
+		try {
+			String expected = getCompareFile("features/monitoring-locations/USGS-07227448.json");
+			Map<String, Object> params = collectionsParams.buildParams(DEFAULT_COLLECTION_ID,"USGS-07227448");
+			List<String> countries = new ArrayList<>();
+			countries.add("MX");
+			params.put("countries", countries);
+			String actual = collectionsDao.getCollectionFeatureJson(params);
+			System.err.println("XYZZZ " + actual);
+			assertNull(actual);
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);
 		}

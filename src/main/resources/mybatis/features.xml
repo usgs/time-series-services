@@ -105,6 +105,32 @@
         <if test="featureId != null">
                    and monitoring_location.monitoring_location_identifier = #{featureId}
         </if>
+        <if test="countries != null">
+            and country_cd in <foreach item="i" collection="countries" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+        <if test="states != null">
+            and state_cd in <foreach item="i" collection="states" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+        <if test="counties != null">
+            and concat(state_cd, county_cd) in <foreach item="i" collection="counties" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+
+        <if test="nationalAquiferCode != null">
+            and nat_aqfr_cd = #{nationalAquiferCode}
+        </if>
+        <if test="monitoringLocationNumber != null">
+            and monitoring_location.monitoring_location_identifier = #{monitoringLocationNumber}
+        </if>
+        <if test="agencyCode != null">
+            and agency_cd = #{agencyCode}
+        </if>
+        <if test="hydrologicalUnits != null">
+            and calculated_huc_12 in <foreach item="i" collection="hydrologicalUnits" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+        <if test="monitoringLocationType != null">
+            and site_type = #{monitoringLocationType}
+        </if>
+
         <include refid="bboxFilter"/>
                  order by collection_title, monitoring_location.monitoring_location_identifier
         <if test="limit != null">
@@ -188,6 +214,32 @@
         <if test="featureId != null">
                  and monitoring_location_identifier = #{featureId}
         </if>
+        <if test="countries != null">
+            and country_cd in <foreach item="i" collection="countries" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+        <if test="states != null">
+            and state_cd in <foreach item="i" collection="states" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+        <if test="counties != null">
+            and concat(state_cd, county_cd) in <foreach item="i" collection="counties" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+
+        <if test="nationalAquiferCode != null">
+            and nat_aqfr_cd = #{nationalAquiferCode}
+        </if>
+        <if test="monitoringLocationNumber != null">
+            and monitoring_location.monitoring_location_identifier = #{monitoringLocationNumber}
+        </if>
+        <if test="agencyCode != null">
+            and agency_cd = #{agencyCode}
+        </if>
+        <if test="hydrologicalUnits != null">
+            and calculated_huc_12 in <foreach item="i" collection="hydrologicalUnits" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+        <if test="monitoringLocationType != null">
+            and site_type = #{monitoringLocationType}
+        </if>
+
         <include refid="bboxFilter"/>
     </select>
 

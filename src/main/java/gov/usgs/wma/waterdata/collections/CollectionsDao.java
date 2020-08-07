@@ -1,6 +1,7 @@
 package gov.usgs.wma.waterdata.collections;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
@@ -23,6 +24,7 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 		return getSqlSession().selectOne("collections.getCollectionJson", params);
 	}
 
+
 	public String getCollectionFeaturesJson(Map<String, Object> params) {
 		return getSqlSession().selectOne("features.getCollectionFeaturesJson", params);
 	}
@@ -32,6 +34,13 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 	}
 
 	public int getCollectionFeatureCount(Map<String, Object> params) {
+		Set<String> keys = params.keySet();
+		if (keys.contains("nationalAquiferCode")) {
+			for (String key: keys) {
+				System.err.println("COUNT " + key + " " + params.get(key));
+			}
+		}
+
 		return getSqlSession().selectOne("features.getCollectionFeatureCount", params);
 	}
 

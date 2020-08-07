@@ -3,8 +3,12 @@ package gov.usgs.wma.waterdata.collections;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +34,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Tag(name = "Observations - OGC api", description = "Feature Collections")
 @RestController
@@ -38,6 +48,12 @@ public class CollectionsController extends BaseController {
 	protected CollectionsDao collectionsDao;
 
 	protected CollectionParams collectionsParams;
+	public static final String REGEX_FIPS_COUNTRY = "[A-Z]{2}";
+	public static final String REGEX_FIPS_HYDRO = "[0-9]{12}";
+	public static final String REGEX_FIPS_COUNTY = "[0-9]{5}";
+	public static final String REGEX_FIPS_STATE = "[0-9]{2}";
+	//public static final String REGEX_FIPS_STATE = "(?:([A-Z]{2}):)?([0-9]{1,2})";
+	//public static final String REGEX_FIPS_COUNTY = "(?:([A-Z]{2}):)?([0-9]{1,2}):([0-9]{3}|N/A)";
 
 	protected static final String LIMIT_VALIDATE_MESS = "limit must be greater than or equal to 1";
 	protected static final String START_INDEX_VALIDATE_MESS = "startIndex must be greater than or equal to 0";
@@ -127,21 +143,67 @@ public class CollectionsController extends BaseController {
 	@Parameter(name = "bbox", description = BBOX_DESCRIPTION, schema = @Schema(implementation = String.class, type = "string"))
 	@GetMapping(value = "collections/{collectionId}/items", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollectionFeatures(
-			@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
-			@Min(value=1, message = LIMIT_VALIDATE_MESS) @RequestParam(value = "limit", required = false, defaultValue = "10000") int limit,
-			@Min(value=0, message = START_INDEX_VALIDATE_MESS) @RequestParam(value = "startIndex", required = false, defaultValue = "0") int startIndex,
-			@BBox @RequestParam(value = "bbox", required = false) BoundingBox bbox,
-			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId, HttpServletResponse response) {
+		HttpServletRequest request,
+		@Size(min=0, max=50, message="The number of countries is not between {min} and {max} occurrences")
+		@Parameter(description="Countries in 2 digit FIPS format (for example, US or MX)")
+		@RequestParam(value="country", required = false) List<@Pattern(regexp=REGEX_FIPS_COUNTRY) String> countries,
 
-		int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(collectionId));
+		@Size(min=0, max=50, message="The number of counties is not between {min} and {max} occurrences")
+		@Parameter(description="Counties in FIPS format.  For example, Dane County, Wisconsin would be 55025")
+		@RequestParam(value="county", required = false) List<@Pattern(regexp=REGEX_FIPS_COUNTY) String> counties,
 
+		@Size(min=0, max=50, message="The number of states is not between {min} and {max} occurrences")
+		@Parameter(description="States in FIPS format.  For example, Wisconsin would be 55")
+		@RequestParam(value="state", required = false) List<@Pattern(regexp=REGEX_FIPS_STATE) String> states,
+
+		@Size(min=0, max=50, message="The number of states is not between {min} and {max} occurrences")
+		@RequestParam(value="hydrologicalUnit", required = false)
+			List<@Pattern(regexp=REGEX_FIPS_HYDRO) String> hydrologicalUnits,
+
+		@RequestParam(value="nationalAquiferCode", required = false) String nationalAquiferCode,
+		@RequestParam(value="monitoringLocationNumber", required = false) String monitoringLocationNumber,
+		@Parameter(description="Well, Stream, or other site type") @RequestParam(value="monitoringLocationType", required = false) String monitoringLocationType,
+		@Parameter(description="USGS or other agency")
+		@RequestParam(value="agencyCode", required = false) String agencyCode,
+		@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
+		@Min(value=1, message = LIMIT_VALIDATE_MESS) @RequestParam(value = "limit", required = false, defaultValue = "10000") int limit,
+		@Min(value=0, message = START_INDEX_VALIDATE_MESS) @RequestParam(value = "startIndex", required = false, defaultValue = "0") int startIndex,
+		@BBox @RequestParam(value = "bbox", required = false) BoundingBox bbox,
+		@Parameter(description="monitoring-locations or ANC") @PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
+		HttpServletResponse response) {
+
+		Map<String, Object> params = collectionsParams.buildParams(collectionId);
+
+		params = addParam(params, "countries", countries);
+		params = addParam(params, "nationalAquiferCode", nationalAquiferCode);
+		params = addParam(params, "monitoringLocationNumber", monitoringLocationNumber);
+		params = addParam(params, "states", states);
+		params = addParam(params, "counties", counties);
+		params = addParam(params, "monitoringLocationType", monitoringLocationType);
+		params = addParam(params, "agencyCode", agencyCode);
+		params = addParam(params, "hydrologicalUnits", hydrologicalUnits);
+
+		int count = collectionsDao.getCollectionFeatureCount(params);
+		if (countries != null || nationalAquiferCode != null || monitoringLocationNumber != null) {
+			System.err.println(request.getQueryString());
+			System.err.println("count=" + count);
+		}
 		String rtn;
 		if (startIndex >= count) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			rtn = ogc404Payload;
 		} else {
-			rtn = collectionsDao.getCollectionFeaturesJson(
-					collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count));
+			params = collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count);
+			params = addParam(params, "countries", countries);
+			params = addParam(params, "nationalAquiferCode", nationalAquiferCode);
+			params = addParam(params, "monitoringLocationNumber", monitoringLocationNumber);
+			params = addParam(params, "states", states);
+			params = addParam(params, "counties", counties);
+			params = addParam(params, "monitoringLocationType", monitoringLocationType);
+			params = addParam(params, "agencyCode", agencyCode);
+			params = addParam(params, "hydrologicalUnits", hydrologicalUnits);
+
+			rtn = collectionsDao.getCollectionFeaturesJson(params);
 			if (rtn == null) {
 				response.setStatus(HttpStatus.NOT_FOUND.value());
 				rtn = ogc404Payload;
@@ -149,6 +211,13 @@ public class CollectionsController extends BaseController {
 		}
 
 		return rtn;
+	}
+
+	private Map<String, Object> addParam(Map<String, Object> params, String key, Object value) {
+		if (value != null) {
+			params.put(key, value);
+		}
+		return params;
 	}
 
 	@Operation(

@@ -1,0 +1,187 @@
+﻿{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "USGS-04027940",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1218414,
+          46.3477249
+        ]
+      },
+      "properties": {
+        "agency": "U.S. Geological Survey",
+        "monitoringLocationNumber": "04027940",
+        "monitoringLocationName": "MONTREAL RIVER 7 MI SOUTH OF IRONWOOD, MI",
+        "monitoringLocationType": "Stream",
+        "district": "Michigan",
+        "state": "Michigan",
+        "county": "Gogebic County",
+        "country": "US",
+        "monitoringLocationAltitudeLandSurface": null,
+        "altitudeMethod": null,
+        "altitudeAccuracy": null,
+        "altitudeDatum": null,
+        "nationalAquifer": null,
+        "localAquifer": null,
+        "localAquiferType": null,
+        "wellDepth": null,
+        "holeDepth": null,
+        "holeDepthSource": null,
+        "agencyCode": "USGS",
+        "districtCode": "26",
+        "stateFIPS": "US:26",
+        "countyFIPS": "US:26:053",
+        "countryFIPS": "US",
+        "hydrologicUnit": "040103020107",
+        "monitoringLocationUrl": "https://waterdata.usgs.gov/monitoring-location/04027940"
+      },
+      "links": [
+        {
+          "rel": "self",
+          "href": "http://localhost:8080/api/observations/collections/monitoring-locations/items/USGS-04027940?f=json",
+          "type": "application/geo+json",
+          "title": "This document as GeoJSON"
+        },
+        {
+          "rel": "collection",
+          "href": "http://localhost:8080/api/observations/collections/monitoring-locations?f=json",
+          "type": "application/json",
+          "title": "NWIS Monitoring Locations"
+        }
+      ]
+    },
+    {
+      "type": "Feature",
+      "id": "USGS-07227448",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -102.480479,
+          35.667543
+        ]
+      },
+      "properties": {
+        "agency": "U.S. Geological Survey",
+        "monitoringLocationNumber": "07227448",
+        "monitoringLocationName": "Punta De Agua Ck ñr Channing, TX",
+        "monitoringLocationType": "Stream",
+        "district": "Texas",
+        "state": "Texas",
+        "county": "Hartley County",
+        "country": "US",
+        "monitoringLocationAltitudeLandSurface": "3407",
+        "altitudeMethod": "Interpolated from topographic map.",
+        "altitudeAccuracy": "10",
+        "altitudeDatum": "National Geodetic Vertical Datum of 1929",
+        "nationalAquifer": null,
+        "localAquifer": null,
+        "localAquiferType": null,
+        "wellDepth": null,
+        "holeDepth": null,
+        "holeDepthSource": null,
+        "agencyCode": "USGS",
+        "districtCode": "48",
+        "stateFIPS": "US:48",
+        "countyFIPS": "US:48:205",
+        "countryFIPS": "US",
+        "hydrologicUnit": "110901030506",
+        "monitoringLocationUrl": "https://waterdata.usgs.gov/monitoring-location/07227448"
+      },
+      "links": [
+        {
+          "rel": "self",
+          "href": "http://localhost:8080/api/observations/collections/monitoring-locations/items/USGS-07227448?f=json",
+          "type": "application/geo+json",
+          "title": "This document as GeoJSON"
+        },
+        {
+          "rel": "collection",
+          "href": "http://localhost:8080/api/observations/collections/monitoring-locations?f=json",
+          "type": "application/json",
+          "title": "NWIS Monitoring Locations"
+        }
+      ]
+    },
+    {
+      "type": "Feature",
+      "id": "USGS-343204093005501",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.0154556,
+          34.5345341
+        ]
+      },
+      "properties": {
+        "agency": "U.S. Geological Survey",
+        "monitoringLocationNumber": "343204093005501",
+        "monitoringLocationName": "02S19W26BBD1 Novastone T",
+        "monitoringLocationType": "Well",
+        "district": "Arkansas",
+        "state": "Arkansas",
+        "county": "Garland County",
+        "country": "US",
+        "monitoringLocationAltitudeLandSurface": "865",
+        "altitudeMethod": "Interpolated from topographic map.",
+        "altitudeAccuracy": "20",
+        "altitudeDatum": "National Geodetic Vertical Datum of 1929",
+        "nationalAquifer": "Other aquifers",
+        "localAquifer": "Arkansas Novaculite",
+        "localAquiferType": null,
+        "wellDepth": "263",
+        "holeDepth": null,
+        "holeDepthSource": "S",
+        "agencyCode": "USGS",
+        "districtCode": "05",
+        "stateFIPS": "US:05",
+        "countyFIPS": "US:05:051",
+        "countryFIPS": "US",
+        "hydrologicUnit": "080401010805",
+        "monitoringLocationUrl": "https://waterdata.usgs.gov/monitoring-location/343204093005501"
+      },
+      "links": [
+        {
+          "rel": "self",
+          "href": "http://localhost:8080/api/observations/collections/monitoring-locations/items/USGS-343204093005501?f=json",
+          "type": "application/geo+json",
+          "title": "This document as GeoJSON"
+        },
+        {
+          "rel": "collection",
+          "href": "http://localhost:8080/api/observations/collections/monitoring-locations?f=json",
+          "type": "application/json",
+          "title": "NWIS Monitoring Locations"
+        },
+        {
+          "rel": "collection",
+          "href": "http://localhost:8080/api/observations/collections/AHS?f=json",
+          "type": "application/json",
+          "title": "Arkansas Hot Springs National Park Network"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "type": "text/html",
+      "rel": "canonical",
+      "title": "information",
+      "href": "https://waterdata.usgs.gov"
+    },
+    {
+      "type": "application/geo+json",
+      "rel": "self",
+      "title": "This document as GeoJSON",
+      "href": "http://localhost:8080/api/observations/collections/monitoring-locations/items?f=json&startIndex=0&limit=10000"
+    },
+    {
+      "type": "application/json",
+      "rel": "collection",
+      "title": "NWIS Monitoring Locations",
+      "href": "http://localhost:8080/api/observations/collections/monitoring-locations?f=json"
+    }
+  ]
+}
