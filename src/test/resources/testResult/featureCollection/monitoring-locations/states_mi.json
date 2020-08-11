@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "USGS-04027940",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1218414,
+          46.3477249
+        ]
+      },
+      "properties": {
+        "agency": "U.S. Geological Survey",
+        "monitoringLocationNumber": "04027940",
+        "monitoringLocationName": "MONTREAL RIVER 7 MI SOUTH OF IRONWOOD, MI",
+        "monitoringLocationType": "Stream",
+        "district": "Michigan",
+        "state": "Michigan",
+        "county": "Gogebic County",
+        "country": "US",
+        "monitoringLocationAltitudeLandSurface": null,
+        "altitudeMethod": null,
+        "altitudeAccuracy": null,
+        "altitudeDatum": null,
+        "nationalAquifer": null,
+        "localAquifer": null,
+        "localAquiferType": null,
+        "wellDepth": null,
+        "holeDepth": null,
+        "holeDepthSource": null,
+        "agencyCode": "USGS",
+        "districtCode": "26",
+        "stateFIPS": "US:26",
+        "countyFIPS": "US:26:053",
+        "countryFIPS": "US",
+        "hydrologicUnit": "040103020107",
+        "monitoringLocationUrl": "https://waterdata.usgs.gov/monitoring-location/04027940"
+      },
+      "links": [
+        {
+          "rel": "self",
+          "href": "https://unittest/api/observations/collections/monitoring-locations/items/USGS-04027940?f=json",
+          "type": "application/geo+json",
+          "title": "This document as GeoJSON"
+        },
+        {
+          "rel": "collection",
+          "href": "https://unittest/api/observations/collections/monitoring-locations?f=json",
+          "type": "application/json",
+          "title": "NWIS Monitoring Locations"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "type": "text/html",
+      "rel": "canonical",
+      "title": "information",
+      "href": "https://waterdata.usgs.gov"
+    },
+    {
+      "type": "application/geo+json",
+      "rel": "self",
+      "title": "This document as GeoJSON",
+      "href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=0&limit=10000"
+    },
+    {
+      "type": "application/json",
+      "rel": "collection",
+      "title": "NWIS Monitoring Locations",
+      "href": "https://unittest/api/observations/collections/monitoring-locations?f=json"
+    }
+  ]
+}

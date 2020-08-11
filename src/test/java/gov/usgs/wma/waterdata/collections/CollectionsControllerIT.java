@@ -222,5 +222,4 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 
 		return convertedDate.getTime();
 	}
-
 }

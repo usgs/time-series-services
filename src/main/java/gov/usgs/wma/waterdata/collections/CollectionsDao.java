@@ -1,11 +1,11 @@
 package gov.usgs.wma.waterdata.collections;
 
-import java.util.Map;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.Map;
 
 
 @Repository
@@ -22,6 +22,7 @@ public class CollectionsDao extends SqlSessionDaoSupport {
 	public String getCollectionJson(Map<String, Object> params) {
 		return getSqlSession().selectOne("collections.getCollectionJson", params);
 	}
+
 
 	public String getCollectionFeaturesJson(Map<String, Object> params) {
 		return getSqlSession().selectOne("features.getCollectionFeaturesJson", params);

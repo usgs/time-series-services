@@ -1,13 +1,7 @@
 package gov.usgs.wma.waterdata.springinit;
 
 import java.io.InputStream;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.dbunit.dataset.IDataSet;
@@ -18,7 +12,6 @@ import org.springframework.core.io.Resource;
 
 import com.github.springtestdbunit.dataset.AbstractDataSetLoader;
 
-import static gov.usgs.wma.waterdata.springinit.BaseIT.getReplacementTokens;
 
 public class FileSensingDataSetLoader extends AbstractDataSetLoader {
 
