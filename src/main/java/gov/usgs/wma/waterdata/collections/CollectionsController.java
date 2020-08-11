@@ -1,6 +1,5 @@
 package gov.usgs.wma.waterdata.collections;
 
-import gov.usgs.wma.waterdata.ConfigurationService;
 import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionGeoJSON;
 import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionsGeoJSON;
