@@ -30,6 +30,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
@@ -172,8 +173,11 @@ public class CollectionsController extends BaseController {
 			.monitoringLocationType(monitoringLocationType)
 			.bbox(bbox).build();
 
-		int count = collectionsDao.getCollectionFeatureCount(params);
 
+
+
+		int count = collectionsDao.getCollectionFeatureCount(params);
+		
 		String rtn;
 		if (startIndex >= count) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -196,7 +200,6 @@ public class CollectionsController extends BaseController {
 
 		return rtn;
 	}
-
 
 	@Operation(
 			description = "Return GeoJSON Data specific to the requested Collection Feature.",

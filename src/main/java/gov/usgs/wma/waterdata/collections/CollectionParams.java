@@ -212,7 +212,7 @@ public class CollectionParams {
 			params = buildFilterableItem(params, PARAM_NATIONAL_AQUIFER_CODE, nationalAquiferCode, "&nationalAquiferCode=");
 			params = buildFilterableItem(params, PARAM_AGENCY_CODE, agencyCode, "&agencyCode=");
             		params = buildFilterableItem(params, PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationNumber, "&monitoringLocationNumber=");
-			params = buildFilterableItem(params, PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationType, "&monitoringLocationType=");
+			params = buildFilterableItem(params, PARAM_MONITORING_LOCATION_TYPE, monitoringLocationType, "&monitoringLocationType=");
 
 			params.put(PARAM_FILTER_OPTIONS, filterOptions);
 			return params;
@@ -225,7 +225,10 @@ public class CollectionParams {
 			if (myList != null) {
 				params.put(key, myList);
 				for (String item: myList) {
-					this.filterOptions += urlJoiner + item;
+					String addition = urlJoiner + item;
+					if (!filterOptions.contains(addition)) {
+						filterOptions += addition;
+					}
 				}
 			}
 			return params;
@@ -235,7 +238,10 @@ public class CollectionParams {
 			Map<String, Object> params, String key, String item, String urlJoiner) {
 			if (item != null) {
 				params.put(key, item);
-				filterOptions += urlJoiner + item;
+				String addition = urlJoiner + item;
+				if (!filterOptions.contains(addition)) {
+					filterOptions += addition;
+				}
 			}
 			return params;
 		}

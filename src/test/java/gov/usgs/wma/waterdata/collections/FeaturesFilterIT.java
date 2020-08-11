@@ -122,7 +122,6 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
     public void monitoringLocationTypeTest() throws IOException {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?monitoringLocationType=Well",
             String.class);
-
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featureCollection/monitoring-locations/monitoring_location_type_well.json";
         doJsonCompare(rtn, compareFile);
