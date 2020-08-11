@@ -41,7 +41,7 @@ public class CollectionParams {
 	public static final Integer DEFAULT_START_INDEX   = 0;
 	public static final Integer MAX_LIMIT     = 10000;
 
-	public static Builder builder;
+	public Builder builder;
 
 	protected ConfigurationService configurationService;
 
@@ -52,26 +52,27 @@ public class CollectionParams {
 	}
 
 	public static class Builder {
-        private String collectionId;
-        private String featureId;
-        private String timeSeriesId;
-        private ConfigurationService configurationService;
-        private BoundingBox bbox;
-        private int limitParam = MAX_LIMIT;
-        private int count = 0;
-        private int startIndex = 0;
-        private List<String> countries;
-        private List<String> counties;
-        private List<String> states;
-        private List<String> hydrologicalUnits;
-        private String nationalAquiferCode;
-        private String agencyCode;
-        private String monitoringLocationType;
-        private String monitoringLocationNumber;
+		private String collectionId;
+		private String featureId;
+		private String timeSeriesId;
+		private ConfigurationService configurationService;
+		private BoundingBox bbox;
+		private int limitParam = MAX_LIMIT;
+		private int count = 0;
+		private int startIndex = 0;
+		private List<String> countries;
+		private List<String> counties;
+		private List<String> states;
+		private List<String> hydrologicalUnits;
+		private String nationalAquiferCode;
+		private String agencyCode;
+		private String monitoringLocationType;
+		private String monitoringLocationNumber;
 		private boolean isPaging = false;
+	        private String filterOptions = "";
 
-        public Builder(ConfigurationService configurationService) {
-        	this.configurationService = configurationService;
+        	public Builder(ConfigurationService configurationService) {
+        		this.configurationService = configurationService;
 		}
 
 		public void clear() {
@@ -91,11 +92,12 @@ public class CollectionParams {
 			monitoringLocationType = null;
 			monitoringLocationNumber = null;
 			isPaging = false;
+			filterOptions = "";
 		}
 
 		public Builder countries(List<String> countries) {
-        	this.countries = countries;
-        	return this;
+	        	this.countries = countries;
+        		return this;
 		}
 
 		public Builder counties(List<String> counties) {
@@ -114,8 +116,8 @@ public class CollectionParams {
 		}
 
 		public Builder agencyCode(String agencyCode) {
-        	this.agencyCode = agencyCode;
-        	return this;
+	        	this.agencyCode = agencyCode;
+        		return this;
 		}
 
 		public Builder nationalAquiferCode(String nationalAquiferCode) {
@@ -145,24 +147,31 @@ public class CollectionParams {
 		}
 
 		public Builder timeSeriesId(String timeSeriesId) {
-			this.timeSeriesId = timeSeriesId;
-			return this;
+        		this.timeSeriesId = timeSeriesId;
+        		return this;
 		}
 
 		public Builder bbox(BoundingBox bbox) {
-        	this.bbox = bbox;
-        	return this;
+        		this.bbox = bbox;
+        		return this;
 		}
 
 		public Builder paging(int limit, int startIndex, int count) {
-        	this.isPaging = true;
-			this.limitParam = limit;
+        		this.isPaging = true;
+        		this.limitParam = limit;
 			if (limit > MAX_LIMIT) {
 				this.limitParam = MAX_LIMIT;
 			}
 			this.startIndex = startIndex;
 			this.count = count;
-            return this;
+			return this;
+		}
+
+		private Map<String, Object> buildNullableItem(Map<String, Object> params, String key, Object value) {
+        		if (value != null) {
+        			params.put(key, value);
+				}
+        		return params;
 		}
 
 		public Map<String, Object> build() {
@@ -173,15 +182,9 @@ public class CollectionParams {
 			params.put(PARAM_MON_LOC_CONTACT_NAME, configurationService.getMonLocContactName());
 			params.put(PARAM_MON_LOC_CONTACT_EMAIL, configurationService.getMonLocContactEmail());
 
-			if (collectionId != null) {
-				params.put(PARAM_COLLECTION_ID, collectionId);
-			}
-			if (featureId != null) {
-				params.put(PARAM_FEATURE_ID, featureId);
-			}
-			if (timeSeriesId != null) {
-				params.put(PARAM_TIME_SERIES_ID, timeSeriesId);
-			}
+			params = buildNullableItem(params, PARAM_COLLECTION_ID, collectionId);
+			params = buildNullableItem(params, PARAM_FEATURE_ID, featureId);
+			params = buildNullableItem(params, PARAM_TIME_SERIES_ID, timeSeriesId);
 
 			if (isPaging) {
 				params.put(PARAM_LIMIT, limitParam);
@@ -202,49 +205,41 @@ public class CollectionParams {
 				params.put(PARAM_POINT_UP_RIGHT, String.format("Point(%s %s)", bbox.getEast(), bbox.getNorth()));
 			}
 
-			String filterOptions = "";
-			if (countries != null) {
-				params.put(PARAM_COUNTRIES, countries);
-				for (String country: countries) {
-					filterOptions += "&country=" + country;
-				}
-			}
-			if (counties != null) {
-				params.put(PARAM_COUNTIES, counties);
-				for (String county: counties) {
-					filterOptions += "&county=" + county;
-				}
-			}
-			if (states != null) {
-				params.put(PARAM_STATES, states);
-				for (String state: states) {
-					filterOptions += "&state=" + state;
-				}
-			}
-			if (hydrologicalUnits != null) {
-				params.put(PARAM_HYDROLOGICAL_UNITS, hydrologicalUnits);
-				for (String hydrologicalUnit: hydrologicalUnits) {
-					filterOptions += "&hydrologicalUnit=" + hydrologicalUnit;
-				}
-			}
-			if (nationalAquiferCode != null) {
-				params.put(PARAM_NATIONAL_AQUIFER_CODE, nationalAquiferCode);
-				filterOptions += "&nationalAquiferCode=" + nationalAquiferCode;
-			}
-			if (agencyCode != null) {
-				params.put(PARAM_AGENCY_CODE, agencyCode);
-				filterOptions += "&agencyCode=" + agencyCode;
-			}
-			if (monitoringLocationNumber != null) {
-				params.put(PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationNumber);
-				filterOptions += "&monitoringLocationNumber=" + monitoringLocationNumber;
-			}
-			if (monitoringLocationType != null) {
-				params.put(PARAM_MONITORING_LOCATION_TYPE, monitoringLocationType);
-				filterOptions += "&monitoringLocationType=" + monitoringLocationType;
-			}
+			params = buildFilterableList(params, PARAM_COUNTRIES, countries, "&country=");
+			params = buildFilterableList(params, PARAM_COUNTIES, counties, "&county=");
+			params = buildFilterableList(params, PARAM_STATES, states, "&state=");
+			params = buildFilterableList(params, PARAM_HYDROLOGICAL_UNITS, hydrologicalUnits, "&hydrologicalUnit=");
+			params = buildFilterableItem(params, PARAM_NATIONAL_AQUIFER_CODE, nationalAquiferCode, "&nationalAquiferCode=");
+			params = buildFilterableItem(params, PARAM_AGENCY_CODE, agencyCode, "&agencyCode=");
+            		params = buildFilterableItem(params, PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationNumber, "&monitoringLocationNumber=");
+			params = buildFilterableItem(params, PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationType, "&monitoringLocationType=");
+
 			params.put(PARAM_FILTER_OPTIONS, filterOptions);
 			return params;
 		}
+
+		private Map<String, Object> buildFilterableList(
+			Map<String, Object> params, String key, List<String> myList,
+			String urlJoiner) {
+
+			if (myList != null) {
+				params.put(key, myList);
+				for (String item: myList) {
+					this.filterOptions += urlJoiner + item;
+				}
+			}
+			return params;
+		}
+
+		private Map<String, Object> buildFilterableItem(
+			Map<String, Object> params, String key, String item, String urlJoiner) {
+			if (item != null) {
+				params.put(key, item);
+				filterOptions += urlJoiner + item;
+			}
+			return params;
+		}
+
 	}
+
 }

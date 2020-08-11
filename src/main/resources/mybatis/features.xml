@@ -115,7 +115,6 @@
         <if test="counties != null">
             and concat(state_cd, county_cd) in <foreach item="i" collection="counties" open="(" separator="," close=")">#{i}</foreach>
         </if>
-
         <if test="nationalAquiferCode != null">
             and nat_aqfr_cd = #{nationalAquiferCode}
         </if>
@@ -202,7 +201,6 @@
     <select id="getCollectionFeatureCount" parameterType="map" resultType="int">
         select count(*)
         <choose>
-
             <when test="collectionId == 'monitoring-locations'">
                  from nwis.monitoring_location
                 where geom is not null
@@ -225,7 +223,6 @@
         <if test="counties != null">
             and concat(state_cd, county_cd) in <foreach item="i" collection="counties" open="(" separator="," close=")">#{i}</foreach>
         </if>
-
         <if test="nationalAquiferCode != null">
             and nat_aqfr_cd = #{nationalAquiferCode}
         </if>
