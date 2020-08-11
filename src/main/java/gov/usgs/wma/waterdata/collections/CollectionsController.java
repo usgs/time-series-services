@@ -1,5 +1,6 @@
 package gov.usgs.wma.waterdata.collections;
 
+import gov.usgs.wma.waterdata.ConfigurationService;
 import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionGeoJSON;
 import gov.usgs.wma.waterdata.openapi.schema.collections.CollectionsGeoJSON;
@@ -51,6 +52,9 @@ public class CollectionsController extends BaseController {
 			+ "bbox=-109.046667,37.0,-102.046667,39.0 limits results to monitoring sites in Colorado.";
 
 	@Autowired
+	ConfigurationService configurationService;
+
+	@Autowired
 	public CollectionsController(CollectionsDao collectionsDao, CollectionParams collectionsParams) {
 		this.collectionsDao = collectionsDao;
 		this.collectionsParams = collectionsParams;
@@ -73,8 +77,8 @@ public class CollectionsController extends BaseController {
 	@GetMapping(value = "collections", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollections(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			HttpServletResponse response) {
-
-		return collectionsDao.getCollectionsJson(collectionsParams.buildParams(null));
+        collectionsParams.builder.clear();
+		return collectionsDao.getCollectionsJson(collectionsParams.builder.build());
 	}
 
 	@Operation(
@@ -98,8 +102,8 @@ public class CollectionsController extends BaseController {
 	@GetMapping(value = "collections/{collectionId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollection(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId, HttpServletResponse response) {
-
-		String rtn = collectionsDao.getCollectionJson(collectionsParams.buildParams(collectionId));
+		collectionsParams.builder.clear();
+		String rtn = collectionsDao.getCollectionJson(collectionsParams.builder.collectionId(collectionId).build());
 		if (rtn == null) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			rtn = ogc404Payload;
@@ -164,17 +168,13 @@ public class CollectionsController extends BaseController {
 		@BBox @RequestParam(value = "bbox", required = false) BoundingBox bbox,
 		@Parameter(description="monitoring-locations or ANC") @PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
 		HttpServletResponse response) {
-
-		Map<String, Object> params = collectionsParams.buildParams(collectionId);
-
-		params = addParam(params, "countries", countries);
-		params = addParam(params, "nationalAquiferCode", nationalAquiferCode);
-		params = addParam(params, "monitoringLocationNumber", monitoringLocationNumber);
-		params = addParam(params, "states", states);
-		params = addParam(params, "counties", counties);
-		params = addParam(params, "monitoringLocationType", monitoringLocationType);
-		params = addParam(params, "agencyCode", agencyCode);
-		params = addParam(params, "hydrologicalUnits", hydrologicalUnits);
+		collectionsParams.builder.clear();
+		Map<String, Object> params = collectionsParams.builder.collectionId(collectionId).
+			countries(countries).states(states).counties(counties).hydrologicalUnits(hydrologicalUnits)
+			.nationalAquiferCode(nationalAquiferCode).agencyCode(agencyCode)
+			.monitoringLocationNumber(monitoringLocationNumber)
+			.monitoringLocationType(monitoringLocationType)
+			.bbox(bbox).build();
 
 		int count = collectionsDao.getCollectionFeatureCount(params);
 
@@ -183,15 +183,13 @@ public class CollectionsController extends BaseController {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			rtn = ogc404Payload;
 		} else {
-			params = collectionsParams.buildParams(collectionId, limit, startIndex, bbox, count);
-			params = addParam(params, "countries", countries);
-			params = addParam(params, "nationalAquiferCode", nationalAquiferCode);
-			params = addParam(params, "monitoringLocationNumber", monitoringLocationNumber);
-			params = addParam(params, "states", states);
-			params = addParam(params, "counties", counties);
-			params = addParam(params, "monitoringLocationType", monitoringLocationType);
-			params = addParam(params, "agencyCode", agencyCode);
-			params = addParam(params, "hydrologicalUnits", hydrologicalUnits);
+			params = collectionsParams.builder.collectionId(collectionId).bbox(bbox)
+				.paging(limit, startIndex, count)
+				.countries(countries).states(states).counties(counties)
+				.hydrologicalUnits(hydrologicalUnits).nationalAquiferCode(nationalAquiferCode)
+				.agencyCode(agencyCode).monitoringLocationNumber(monitoringLocationNumber)
+				.monitoringLocationType(monitoringLocationType)
+				.bbox(bbox). paging(limit, startIndex, count).build();
 
 			rtn = collectionsDao.getCollectionFeaturesJson(params);
 			if (rtn == null) {
@@ -228,7 +226,10 @@ public class CollectionsController extends BaseController {
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
 			@PathVariable(value = PARAM_FEATURE_ID) String featureId, HttpServletResponse response) {
 
-		String rtn =collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(collectionId, featureId));
+		collectionsParams.builder.clear();
+
+		String rtn =collectionsDao.getCollectionFeatureJson(collectionsParams.builder.collectionId(collectionId).
+			featureId(featureId).build());
 			if (rtn == null) {
 				response.setStatus(HttpStatus.NOT_FOUND.value());
 				rtn = ogc404Payload;

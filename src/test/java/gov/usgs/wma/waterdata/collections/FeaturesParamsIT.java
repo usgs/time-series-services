@@ -139,7 +139,4 @@ public class FeaturesParamsIT extends BaseCollectionsIT  {
 			doJsonCompare(rtn, compareFile);
 		}
 	}
-
-
-
 }

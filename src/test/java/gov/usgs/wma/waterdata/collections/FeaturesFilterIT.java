@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class FeaturesFilterIT extends BaseCollectionsIT {
@@ -32,6 +33,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?country=MX",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertEquals(ogc404Payload, rtn.getBody());
     }
 
     @Test
@@ -57,6 +59,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?state=57",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertEquals(ogc404Payload, rtn.getBody());
     }
 
 
@@ -82,6 +85,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?county=06071",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertEquals(ogc404Payload, rtn.getBody());
     }
 
     @Test
@@ -107,6 +111,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicalUnit=000000000000",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertEquals(ogc404Payload, rtn.getBody());
     }
 
 
@@ -133,6 +138,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?monitoringLocationType=Unknown",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertEquals(ogc404Payload, rtn.getBody());
     }
 
     @Test
@@ -148,6 +154,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?agencyCode=Unknown",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertEquals(ogc404Payload, rtn.getBody());
     }
 
     @Test
@@ -165,6 +172,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?nationalAquiferCode=DOESNTEXIST",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertEquals(ogc404Payload, rtn.getBody());
     }
 
     @Test
@@ -184,5 +192,6 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             "/collections/monitoring-locations/items?monitoringLocationNumber=DOESNTEXIST",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertEquals(ogc404Payload, rtn.getBody());
     }
 }

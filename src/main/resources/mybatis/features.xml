@@ -174,7 +174,7 @@
                                                                              'rel', 'prev',
                                                                              'title', 'items (prev)',
                                                                              'href', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
-                                                                                     || '/items?f=json'  || #{prevStartIndex}
+                                                                                     || '/items?f=json'  || #{prevStartIndex}  || #{filterOptions}
                                                                             )
         </if>
         <if test="nextStartIndex != null">,
@@ -183,7 +183,7 @@
                                                                              'rel', 'next',
                                                                              'title', 'items (next)',
                                                                              'href', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
-                                                                                     || '/items?f=json'  || #{nextStartIndex}
+                                                                                     || '/items?f=json'  || #{nextStartIndex} || #{filterOptions}
                                                                             )
         </if>
                                                           ),

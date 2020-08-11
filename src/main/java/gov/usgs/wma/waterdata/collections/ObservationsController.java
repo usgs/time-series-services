@@ -59,8 +59,10 @@ public class ObservationsController extends BaseController {
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
 			@PathVariable(value = PARAM_FEATURE_ID) String featureId,
 			HttpServletResponse response) {
+		collectionsParams.builder.clear();
 
-		String 	rtn = collectionsDao.getObsverationsJson(collectionsParams.buildParams(collectionId, featureId));
+		String 	rtn = collectionsDao.getObsverationsJson(collectionsParams.builder.collectionId(collectionId)
+			.featureId(featureId).build());
 		if (rtn == null) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
@@ -90,8 +92,10 @@ public class ObservationsController extends BaseController {
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
 			@PathVariable(value = PARAM_FEATURE_ID) String featureId,
 			HttpServletResponse response) {
+		collectionsParams.builder.clear();
 
-		String 	rtn = collectionsDao.getDiscreteDataObsverationsJson(collectionsParams.buildParams(collectionId, featureId));
+		String 	rtn = collectionsDao.getDiscreteDataObsverationsJson(collectionsParams.builder.collectionId(collectionId)
+			.featureId(featureId).build());
 		if (rtn == null) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}

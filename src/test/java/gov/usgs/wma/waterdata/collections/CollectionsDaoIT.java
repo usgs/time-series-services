@@ -6,7 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,11 +32,16 @@ public class CollectionsDaoIT extends BaseIT {
     @Autowired
     private CollectionsDao collectionsDao;
 
+    @BeforeEach
+    public void setUp() {
+        collectionsParams.builder.clear();
+    }
+
     @Test
     public void foundCollectionsTest() {
         try {
             String expected = getCompareFile("collections.json");
-            String actual = collectionsDao.getCollectionsJson(collectionsParams.buildParams(null));
+            String actual = collectionsDao.getCollectionsJson(collectionsParams.builder.build());
             assertJsonEquals(expected, actual);
         } catch (IOException e) {
             fail("Unexpected IOException during test", e);
@@ -44,7 +52,7 @@ public class CollectionsDaoIT extends BaseIT {
     public void foundMonLocCollectionTest() {
         try {
             String expected = getCompareFile("monLocsCollection.json");
-            String actual = collectionsDao.getCollectionJson(collectionsParams.buildParams("monitoring-locations"));
+            String actual = collectionsDao.getCollectionJson(collectionsParams.builder.collectionId("monitoring-locations").build());
             assertJsonEquals(expected, actual);
         } catch (IOException e) {
             fail("Unexpected IOException during test", e);
@@ -55,7 +63,7 @@ public class CollectionsDaoIT extends BaseIT {
     public void foundNetworkCollectionTest() {
         try {
             String expected = getCompareFile("ahsCollection.json");
-            String actual = collectionsDao.getCollectionJson(collectionsParams.buildParams("AHS"));
+            String actual = collectionsDao.getCollectionJson(collectionsParams.builder.collectionId("AHS").build());
             assertJsonEquals(expected, actual);
         } catch (IOException e) {
             fail("Unexpected IOException during test", e);
@@ -66,7 +74,9 @@ public class CollectionsDaoIT extends BaseIT {
     public void foundCollectionFeatureTest() {
         try {
             String expected = getCompareFile("features/monitoring-locations/USGS-07227448.json");
-            String actual = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams(DEFAULT_COLLECTION_ID, "USGS-07227448"));
+            String actual = collectionsDao.getCollectionFeatureJson(
+                collectionsParams.builder.collectionId(DEFAULT_COLLECTION_ID)
+                .featureId("USGS-07227448").build());
             assertJsonEquals(expected, actual);
         } catch (IOException e) {
             fail("Unexpected IOException during test", e);
@@ -75,49 +85,59 @@ public class CollectionsDaoIT extends BaseIT {
 
     @Test
     public void monLocCollectionFeatureCountTest() {
-        int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams(DEFAULT_COLLECTION_ID));
+        Map<String, Object> params = collectionsParams.builder.collectionId(DEFAULT_COLLECTION_ID).build();
+        int count = collectionsDao.getCollectionFeatureCount(params);
         assertTrue(count == 3);
     }
 
     @Test
     public void networkCollectionFeatureCountTest() {
-        int count = collectionsDao.getCollectionFeatureCount(collectionsParams.buildParams("AHS"));
+        int count = collectionsDao.getCollectionFeatureCount(
+            collectionsParams.builder.collectionId("AHS").build());
         assertTrue(count == 1);
     }
 
     @Test
     public void notFoundTest() {
-        String collectionJson = collectionsDao.getCollectionJson(collectionsParams.buildParams("xyz"));
+        String collectionJson = collectionsDao.getCollectionJson(
+            collectionsParams.builder.collectionId("xyz").build());
         assertNull(collectionJson);
     }
 
     @Test
     public void notFoundFeatureNoCollectionTest() {
-        String featureJson = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams("xyz", "USGS-07227448"));
+        String featureJson = collectionsDao.getCollectionFeatureJson(
+            collectionsParams.builder.collectionId("xyz")
+            .featureId("USGS-07227448").build());
         assertNull(featureJson);
     }
 
     @Test
     public void notFoundFeaturesNoCollectionTest() {
-        String featureJson = collectionsDao.getCollectionFeaturesJson(collectionsParams.buildParams("xyz", "USGS-07227448"));
+        String featureJson = collectionsDao.getCollectionFeaturesJson(
+            collectionsParams.builder.collectionId("xyz")
+            .featureId("USGS-07227448").build());
         assertNull(featureJson);
     }
 
     @Test
     public void notFoundFeatureId() {
-        String featureJson = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams("monitoring-locations", "xyz"));
+        String featureJson = collectionsDao.getCollectionFeatureJson(
+            collectionsParams.builder.collectionId("monitoring-locations").featureId("xyz").build());
         assertNull(featureJson);
     }
 
     @Test
     public void notFoundFeatureNoGeom() {
-        String featureJson = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams("monitoring-locations", "USGS-04028090"));
+        String featureJson = collectionsDao.getCollectionFeatureJson(
+            collectionsParams.builder.collectionId("monitoring-locations").featureId("USGS-04028090").build());
         assertNull(featureJson);
     }
 
     @Test
     public void notFoundFeatureNotInCollection() {
-        String featureJson = collectionsDao.getCollectionFeatureJson(collectionsParams.buildParams("AHS", "USGS-07227448"));
+        String featureJson = collectionsDao.getCollectionFeatureJson(
+            collectionsParams.builder.collectionId("AHS").featureId("USGS-07227448").build());
         assertNull(featureJson);
     }
 
