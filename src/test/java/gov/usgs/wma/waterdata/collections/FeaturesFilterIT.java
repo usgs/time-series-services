@@ -53,7 +53,6 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         doJsonCompare(rtn, compareFile);
     }
 
-
     @Test
     public void stateTestNotFound() throws IOException {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?state=57",
@@ -61,7 +60,6 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertEquals(ogc404Payload, rtn.getBody());
     }
-
 
     @Test
     public void stateTestInvalid() throws IOException {
@@ -95,7 +93,6 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
-
     @Test
     public void hydrologicalUnitsTest() throws IOException {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicalUnit=040103020107",
@@ -114,14 +111,12 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         assertEquals(ogc404Payload, rtn.getBody());
     }
 
-
     @Test
     public void hydrologicalUnitsTestInvalid() throws IOException {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicalUnit=INVALID",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
-
 
     @Test
     public void monitoringLocationTypeTest() throws IOException {

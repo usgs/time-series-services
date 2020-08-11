@@ -39,8 +39,6 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 	public static final List<String> AHS_FEATURE_IDS = List.of("USGS-343204093005501");
 	public static final List<String> MONLOC_FEATURE_IDS = List.of("USGS-04027940", "USGS-07227448", "USGS-343204093005501");
 
-
-
 	@Test
 	public void collectionsToCollectionTest() {
 		try {
@@ -224,5 +222,4 @@ public class CollectionsControllerIT extends BaseCollectionsIT {
 
 		return convertedDate.getTime();
 	}
-
 }

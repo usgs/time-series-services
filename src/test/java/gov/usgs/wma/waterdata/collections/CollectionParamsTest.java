@@ -121,7 +121,6 @@ class CollectionParamsTest {
 		assertCommonParams(13);
 	}
 
-
 	@Test
 	public void testCollectionFeatureFilterParams() {
 		List<String> countries = new ArrayList<>();

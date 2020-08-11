@@ -41,9 +41,6 @@ public class FeaturesParamsIT extends BaseCollectionsIT  {
 		}
 	}
 
-
-
-
 	@Test
 	public void noPrevLinkTest() {
 		for (String collectionId : COLLECTION_IDS) {

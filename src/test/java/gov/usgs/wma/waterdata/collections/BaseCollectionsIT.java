@@ -64,5 +64,4 @@ public abstract class BaseCollectionsIT extends BaseIT {
 		assertTrue(featureCollection.get("links") instanceof JSONArray);
 		assertNotNull(featureCollection.getString("timeStamp"));
 	}
-
 }

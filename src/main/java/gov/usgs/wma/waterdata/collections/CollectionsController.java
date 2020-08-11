@@ -52,9 +52,6 @@ public class CollectionsController extends BaseController {
 			+ "bbox=-109.046667,37.0,-102.046667,39.0 limits results to monitoring sites in Colorado.";
 
 	@Autowired
-	private ConfigurationService configurationService;
-
-	@Autowired
 	public CollectionsController(CollectionsDao collectionsDao, CollectionParams collectionsParams) {
 		this.collectionsDao = collectionsDao;
 		this.collectionsParams = collectionsParams;
