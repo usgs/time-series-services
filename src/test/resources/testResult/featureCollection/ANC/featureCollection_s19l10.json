@@ -25,6 +25,7 @@
         "altitudeAccuracy": null,
         "altitudeDatum": null,
         "nationalAquifer": null,
+                "nationalAquiferCode": null,
         "localAquifer": null,
         "localAquiferType": null,
         "wellDepth": null,

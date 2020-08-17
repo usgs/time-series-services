@@ -33,14 +33,13 @@ public class CollectionsDaoIT extends BaseIT {
 
     @BeforeEach
     public void setUp() {
-        collectionsParams.builder.clear();
     }
 
     @Test
     public void foundCollectionsTest() {
         try {
             String expected = getCompareFile("collections.json");
-            String actual = collectionsDao.getCollectionsJson(collectionsParams.builder.build());
+            String actual = collectionsDao.getCollectionsJson(collectionsParams.builder().build());
             assertJsonEquals(expected, actual);
         } catch (IOException e) {
             fail("Unexpected IOException during test", e);
@@ -51,7 +50,7 @@ public class CollectionsDaoIT extends BaseIT {
     public void foundMonLocCollectionTest() {
         try {
             String expected = getCompareFile("monLocsCollection.json");
-            String actual = collectionsDao.getCollectionJson(collectionsParams.builder.collectionId("monitoring-locations").build());
+            String actual = collectionsDao.getCollectionJson(collectionsParams.builder().collectionId("monitoring-locations").build());
             assertJsonEquals(expected, actual);
         } catch (IOException e) {
             fail("Unexpected IOException during test", e);
@@ -62,7 +61,7 @@ public class CollectionsDaoIT extends BaseIT {
     public void foundNetworkCollectionTest() {
         try {
             String expected = getCompareFile("ahsCollection.json");
-            String actual = collectionsDao.getCollectionJson(collectionsParams.builder.collectionId("AHS").build());
+            String actual = collectionsDao.getCollectionJson(collectionsParams.builder().collectionId("AHS").build());
             assertJsonEquals(expected, actual);
         } catch (IOException e) {
             fail("Unexpected IOException during test", e);
@@ -74,7 +73,7 @@ public class CollectionsDaoIT extends BaseIT {
         try {
             String expected = getCompareFile("features/monitoring-locations/USGS-07227448.json");
             String actual = collectionsDao.getCollectionFeatureJson(
-                collectionsParams.builder.collectionId(DEFAULT_COLLECTION_ID)
+                collectionsParams.builder().collectionId(DEFAULT_COLLECTION_ID)
                 .featureId("USGS-07227448").build());
             assertJsonEquals(expected, actual);
         } catch (IOException e) {
@@ -84,7 +83,7 @@ public class CollectionsDaoIT extends BaseIT {
 
     @Test
     public void monLocCollectionFeatureCountTest() {
-        Map<String, Object> params = collectionsParams.builder.collectionId(DEFAULT_COLLECTION_ID).build();
+        Map<String, Object> params = collectionsParams.builder().collectionId(DEFAULT_COLLECTION_ID).build();
         int count = collectionsDao.getCollectionFeatureCount(params);
         assertTrue(count == 3);
     }
@@ -92,21 +91,21 @@ public class CollectionsDaoIT extends BaseIT {
     @Test
     public void networkCollectionFeatureCountTest() {
         int count = collectionsDao.getCollectionFeatureCount(
-            collectionsParams.builder.collectionId("AHS").build());
+            collectionsParams.builder().collectionId("AHS").build());
         assertTrue(count == 1);
     }
 
     @Test
     public void notFoundTest() {
         String collectionJson = collectionsDao.getCollectionJson(
-            collectionsParams.builder.collectionId("xyz").build());
+            collectionsParams.builder().collectionId("xyz").build());
         assertNull(collectionJson);
     }
 
     @Test
     public void notFoundFeatureNoCollectionTest() {
         String featureJson = collectionsDao.getCollectionFeatureJson(
-            collectionsParams.builder.collectionId("xyz")
+            collectionsParams.builder().collectionId("xyz")
             .featureId("USGS-07227448").build());
         assertNull(featureJson);
     }
@@ -114,7 +113,7 @@ public class CollectionsDaoIT extends BaseIT {
     @Test
     public void notFoundFeaturesNoCollectionTest() {
         String featureJson = collectionsDao.getCollectionFeaturesJson(
-            collectionsParams.builder.collectionId("xyz")
+            collectionsParams.builder().collectionId("xyz")
             .featureId("USGS-07227448").build());
         assertNull(featureJson);
     }
@@ -122,21 +121,21 @@ public class CollectionsDaoIT extends BaseIT {
     @Test
     public void notFoundFeatureId() {
         String featureJson = collectionsDao.getCollectionFeatureJson(
-            collectionsParams.builder.collectionId("monitoring-locations").featureId("xyz").build());
+            collectionsParams.builder().collectionId("monitoring-locations").featureId("xyz").build());
         assertNull(featureJson);
     }
 
     @Test
     public void notFoundFeatureNoGeom() {
         String featureJson = collectionsDao.getCollectionFeatureJson(
-            collectionsParams.builder.collectionId("monitoring-locations").featureId("USGS-04028090").build());
+            collectionsParams.builder().collectionId("monitoring-locations").featureId("USGS-04028090").build());
         assertNull(featureJson);
     }
 
     @Test
     public void notFoundFeatureNotInCollection() {
         String featureJson = collectionsDao.getCollectionFeatureJson(
-            collectionsParams.builder.collectionId("AHS").featureId("USGS-07227448").build());
+            collectionsParams.builder().collectionId("AHS").featureId("USGS-07227448").build());
         assertNull(featureJson);
     }
 

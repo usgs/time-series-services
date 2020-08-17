@@ -3,7 +3,7 @@
 
 <mapper namespace="features">
 
-    <sql id="bboxFilter">
+    <sql id="queryFilters">
         <if test="pointLowLeft != null and pointUpRight != null">
             and st_intersects(
                               st_setsrid(
@@ -14,6 +14,30 @@
                                          4326),
                               st_setsrid(geom, 4326)
                              )
+        </if>
+        <if test="countries != null">
+             and country_cd in <foreach item="i" collection="countries" open="(" separator="," close=")">#{i}</foreach>
+         </if>
+        <if test="states != null">
+            and country_cd || ':' || state_cd in <foreach item="i" collection="states" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+        <if test="counties != null">
+            and country_cd || ':' || state_cd || ':' || county_cd in <foreach item="i" collection="counties" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+        <if test="nationalAquiferCode != null">
+            and nat_aqfr_cd = #{nationalAquiferCode}
+        </if>
+        <if test="monitoringLocationNumber != null">
+            and monitoring_location.site_identification_number  = #{monitoringLocationNumber}
+        </if>
+        <if test="agencyCode != null">
+            and agency_cd = #{agencyCode}
+        </if>
+        <if test="hydrologicUnits != null">
+            and calculated_huc_12 in <foreach item="i" collection="hydrologicUnits" open="(" separator="," close=")">#{i}</foreach>
+        </if>
+        <if test="monitoringLocationType != null">
+            and site_type in <foreach item="i" collection="monitoringLocationType" open="(" separator="," close=")">#{i}</foreach>
         </if>
     </sql>
 
@@ -59,6 +83,7 @@
                                                                  'altitudeAccuracy', altitude_accuracy,
                                                                  'altitudeDatum', altitude_datum,
                                                                  'nationalAquifer', national_aquifer,
+                                                                 'nationalAquiferCode', nat_aqfr_cd,
                                                                  'localAquifer', local_aquifer,
                                                                  'localAquiferType', local_aquifer_type,
                                                                  'wellDepth', well_depth,
@@ -106,32 +131,7 @@
         <if test="featureId != null">
                    and monitoring_location.monitoring_location_identifier = #{featureId}
         </if>
-        <if test="countries != null">
-            and country_cd in <foreach item="i" collection="countries" open="(" separator="," close=")">#{i}</foreach>
-        </if>
-        <if test="states != null">
-            and state_cd in <foreach item="i" collection="states" open="(" separator="," close=")">#{i}</foreach>
-        </if>
-        <if test="counties != null">
-            and concat(state_cd, county_cd) in <foreach item="i" collection="counties" open="(" separator="," close=")">#{i}</foreach>
-        </if>
-        <if test="nationalAquiferCode != null">
-            and nat_aqfr_cd = #{nationalAquiferCode}
-        </if>
-        <if test="monitoringLocationNumber != null">
-            and monitoring_location.monitoring_location_identifier = #{monitoringLocationNumber}
-        </if>
-        <if test="agencyCode != null">
-            and agency_cd = #{agencyCode}
-        </if>
-        <if test="hydrologicalUnits != null">
-            and calculated_huc_12 in <foreach item="i" collection="hydrologicalUnits" open="(" separator="," close=")">#{i}</foreach>
-        </if>
-        <if test="monitoringLocationType != null">
-            and site_type = #{monitoringLocationType}
-        </if>
-
-        <include refid="bboxFilter"/>
+        <include refid="queryFilters"/>
                  order by collection_title, monitoring_location.monitoring_location_identifier
         <if test="limit != null">
                  limit #{limit}
@@ -211,35 +211,7 @@
                       network_code = #{collectionId}
             </otherwise>
         </choose>
-        <if test="featureId != null">
-                 and monitoring_location_identifier = #{featureId}
-        </if>
-        <if test="countries != null">
-            and country_cd in <foreach item="i" collection="countries" open="(" separator="," close=")">#{i}</foreach>
-        </if>
-        <if test="states != null">
-            and state_cd in <foreach item="i" collection="states" open="(" separator="," close=")">#{i}</foreach>
-        </if>
-        <if test="counties != null">
-            and concat(state_cd, county_cd) in <foreach item="i" collection="counties" open="(" separator="," close=")">#{i}</foreach>
-        </if>
-        <if test="nationalAquiferCode != null">
-            and nat_aqfr_cd = #{nationalAquiferCode}
-        </if>
-        <if test="monitoringLocationNumber != null">
-            and monitoring_location.monitoring_location_identifier = #{monitoringLocationNumber}
-        </if>
-        <if test="agencyCode != null">
-            and agency_cd = #{agencyCode}
-        </if>
-        <if test="hydrologicalUnits != null">
-            and calculated_huc_12 in <foreach item="i" collection="hydrologicalUnits" open="(" separator="," close=")">#{i}</foreach>
-        </if>
-        <if test="monitoringLocationType != null">
-            and site_type = #{monitoringLocationType}
-        </if>
-
-        <include refid="bboxFilter"/>
+        <include refid="queryFilters"/>
     </select>
 
 </mapper>

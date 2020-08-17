@@ -21,7 +21,7 @@ public class FeaturesFilterLinksIT extends BaseCollectionsIT  {
 	@Test
 	public void prevAndNextLinkTestWithFilters() {
 		ResponseEntity<String> rtn = restTemplate.getForEntity(
-			"/collections/monitoring-locations/items?startIndex=10&limit=2&country=US&country=MX&agencyCode=USGS", String.class);
+			"/collections/monitoring-locations/items?startIndex=10&limit=2&countryFIPS=US&countryFIPS=MX&agencyCode=USGS", String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
 		String compareFile = "featureCollection/monitoring-locations/featureCollection_s10l2_with_filters.json";
 		doJsonCompare(rtn, compareFile);

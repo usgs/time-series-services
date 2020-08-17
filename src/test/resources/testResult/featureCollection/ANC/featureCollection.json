@@ -53,6 +53,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -111,6 +112,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -169,6 +171,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -227,6 +230,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -285,6 +289,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -343,6 +348,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -401,6 +407,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -459,6 +466,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -517,6 +525,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -575,6 +584,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -633,6 +643,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -691,6 +702,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -749,6 +761,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -807,6 +820,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -865,6 +879,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -923,6 +938,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -981,6 +997,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -1039,6 +1056,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -1097,6 +1115,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
@@ -1155,6 +1174,7 @@
                 "monitoringLocationType": null,
                 "monitoringLocationUrl": null,
                 "nationalAquifer": null,
+                "nationalAquiferCode": null,
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null

@@ -24,6 +24,7 @@
         "altitudeAccuracy": "20",
         "altitudeDatum": "National Geodetic Vertical Datum of 1929",
         "nationalAquifer": "Other aquifers",
+        "nationalAquiferCode": "N9999OTHER",
         "localAquifer": "Arkansas Novaculite",
         "localAquiferType": null,
         "wellDepth": "263",

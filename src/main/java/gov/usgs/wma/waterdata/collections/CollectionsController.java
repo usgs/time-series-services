@@ -30,7 +30,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
@@ -43,9 +42,26 @@ public class CollectionsController extends BaseController {
 
 	protected CollectionParams collectionsParams;
 	public static final String REGEX_FIPS_COUNTRY = "[A-Z]{2}";
+	public static final String REGEX_FIPS_COUNTRY_MESS = "countryFIPS must match " + REGEX_FIPS_COUNTRY;
+	public static final String FIPS_COUNTRY_DESC =  "two-character Federal Information Processing Standard (FIPS) Country Codes." +
+            " (Example: US for United States, MX for Mexico";
 	public static final String REGEX_FIPS_HYDRO = "[0-9]{12}";
-	public static final String REGEX_FIPS_COUNTY = "[0-9]{5}";
-	public static final String REGEX_FIPS_STATE = "[0-9]{2}";
+	public static final String REGEX_FIPS_HYDRO_MESS = "hydrologic unit must match " + REGEX_FIPS_HYDRO;
+
+	public static final String REGEX_FIPS_COUNTY = "(?:([A-Z]{2}):)?([0-9]{1,2}):([0-9]{3}|N/A)";
+	public static final String REGEX_FIPS_COUNTY_MESS = "countyFIPS must match " + REGEX_FIPS_COUNTY;
+	public static final String FIPS_COUNTY_DESC =
+			"two-character Federal Information Processing Standard (FIPS) Country Code, followed by a colon" +
+            " followed by a two-digit FIPS State Code, followed by a colon, followed by a three-digit FIPS County Code." +
+            " (Example: Buffalo County in Wisconsin is US:55:011)";
+
+	public static final String FIPS_STATE_DESC =
+			"two-character Federal Information Processing Standard (FIPS) country code, " +
+	        "followed by a colon, followed by a two-digit FIPS state code." +
+            " (Example: Wisconsin is US:55)";
+	public static final String REGEX_FIPS_STATE = "(?:([A-Z]{2}):)?([0-9]{1,2})";
+	public static final String REGEX_FIPS_STATE_MESS = "stateFIPS must match " + REGEX_FIPS_STATE;
+
 	protected static final String LIMIT_VALIDATE_MESS = "limit must be greater than or equal to 1";
 	protected static final String START_INDEX_VALIDATE_MESS = "startIndex must be greater than or equal to 0";
 	protected static final String BBOX_DESCRIPTION = "Bounding box: minimum longitude, minimum latitude, maximum longitude, maximum latitude<br>"
@@ -74,8 +90,7 @@ public class CollectionsController extends BaseController {
 	@GetMapping(value = "collections", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollections(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			HttpServletResponse response) {
-        collectionsParams.builder.clear();
-		return collectionsDao.getCollectionsJson(collectionsParams.builder.build());
+		return collectionsDao.getCollectionsJson(collectionsParams.builder().build());
 	}
 
 	@Operation(
@@ -99,8 +114,7 @@ public class CollectionsController extends BaseController {
 	@GetMapping(value = "collections/{collectionId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollection(@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId, HttpServletResponse response) {
-		collectionsParams.builder.clear();
-		String rtn = collectionsDao.getCollectionJson(collectionsParams.builder.collectionId(collectionId).build());
+		String rtn = collectionsDao.getCollectionJson(collectionsParams.builder().collectionId(collectionId).build());
 		if (rtn == null) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			rtn = ogc404Payload;
@@ -135,46 +149,49 @@ public class CollectionsController extends BaseController {
 	@GetMapping(value = "collections/{collectionId}/items", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getOgcCollectionFeatures(
 		HttpServletRequest request,
-		@Size(min=0, max=250, message="The number of countries is not between {min} and {max} occurrences")
-		@Parameter(description="Countries in 2 digit FIPS format (for example, US or MX)")
-		@RequestParam(value="country", required = false) List<@Pattern(regexp=REGEX_FIPS_COUNTRY) String> countries,
+		@Size(min=1, max=250, message="The number of countries queried on must be between {min} and {max}")
+		@Parameter(description=FIPS_COUNTRY_DESC)
+		@RequestParam(value="countryFIPS", required = false) List<@Pattern(regexp=REGEX_FIPS_COUNTRY, message=REGEX_FIPS_COUNTRY_MESS) String> countries,
 
-		@Size(min=0, max=1000, message="The number of counties is not between {min} and {max} occurrences")
-		@Parameter(description="Counties in FIPS format.  For example, Dane County, Wisconsin would be 55025")
-		@RequestParam(value="county", required = false) List<@Pattern(regexp=REGEX_FIPS_COUNTY) String> counties,
+		@Size(min=1, max=1000, message="The number of counties queried on must be between {min} and {max}")
+		@Parameter(description=FIPS_COUNTY_DESC)
+		@RequestParam(value="countyFIPS", required = false) List<@Pattern(regexp=REGEX_FIPS_COUNTY, message=REGEX_FIPS_COUNTY_MESS) String> counties,
 
-		@Size(min=0, max=100, message="The number of states is not between {min} and {max} occurrences")
-		@Parameter(description="States in FIPS format.  For example, Wisconsin would be 55")
-		@RequestParam(value="state", required = false) List<@Pattern(regexp=REGEX_FIPS_STATE) String> states,
+		@Size(min=1, max=55, message="The number of states queried on must be between {min} and {max}")
+		@Parameter(description=FIPS_STATE_DESC)
+		@RequestParam(value="stateFIPS", required = false) List<@Pattern(regexp=REGEX_FIPS_STATE, message=REGEX_FIPS_STATE_MESS) String> states,
 
-		@Size(min=0, max=1000, message="The number of hydrological units is not between {min} and {max} occurrences")
+		@Size(min=1, max=1000, message="The number of hydrologic units queried on must be between {min} and {max}")
 		@Parameter(description="For example, 040103020107")
-		@RequestParam(value="hydrologicalUnit", required = false)
-			List<@Pattern(regexp=REGEX_FIPS_HYDRO) String> hydrologicalUnits,
+		@RequestParam(value="hydrologicUnit", required = false)
+			List<@Pattern(regexp=REGEX_FIPS_HYDRO, message=REGEX_FIPS_HYDRO_MESS) String> hydrologicUnits,
 		@Parameter(description="For example, N9999OTHER")
+
 		@RequestParam(value="nationalAquiferCode", required = false) String nationalAquiferCode,
 		@Parameter(description="For example, USGS-343204093005501")
+
 		@RequestParam(value="monitoringLocationNumber", required = false) String monitoringLocationNumber,
 		@Parameter(description="Well, Stream, or other type")
-		@RequestParam(value="monitoringLocationType", required = false) String monitoringLocationType,
+
+		@Size(min=1, max=100, message="The number of monitoring location types queried on must be between {min} and {max}")
+		@RequestParam(value="monitoringLocationType", required = false) List<String> monitoringLocationType,
 		@Parameter(description="USGS or other agency")
+
 		@RequestParam(value="agencyCode", required = false) String agencyCode,
 		@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
+
 		@Min(value=1, message = LIMIT_VALIDATE_MESS) @RequestParam(value = "limit", required = false, defaultValue = "10000") int limit,
 		@Min(value=0, message = START_INDEX_VALIDATE_MESS) @RequestParam(value = "startIndex", required = false, defaultValue = "0") int startIndex,
+
 		@BBox @RequestParam(value = "bbox", required = false) BoundingBox bbox,
 		@Parameter(description="monitoring-locations or ANC") @PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
 		HttpServletResponse response) {
-		collectionsParams.builder.clear();
-		Map<String, Object> params = collectionsParams.builder.collectionId(collectionId).
-			countries(countries).states(states).counties(counties).hydrologicalUnits(hydrologicalUnits)
+		Map<String, Object> params = collectionsParams.builder().collectionId(collectionId)
+			.countries(countries).states(states).counties(counties).hydrologicUnits(hydrologicUnits)
 			.nationalAquiferCode(nationalAquiferCode).agencyCode(agencyCode)
 			.monitoringLocationNumber(monitoringLocationNumber)
 			.monitoringLocationType(monitoringLocationType)
 			.bbox(bbox).build();
-
-
-
 
 		int count = collectionsDao.getCollectionFeatureCount(params);
 		
@@ -183,10 +200,10 @@ public class CollectionsController extends BaseController {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			rtn = ogc404Payload;
 		} else {
-			params = collectionsParams.builder.collectionId(collectionId).bbox(bbox)
+			params = collectionsParams.builder().collectionId(collectionId).bbox(bbox)
 				.paging(limit, startIndex, count)
 				.countries(countries).states(states).counties(counties)
-				.hydrologicalUnits(hydrologicalUnits).nationalAquiferCode(nationalAquiferCode)
+				.hydrologicUnits(hydrologicUnits).nationalAquiferCode(nationalAquiferCode)
 				.agencyCode(agencyCode).monitoringLocationNumber(monitoringLocationNumber)
 				.monitoringLocationType(monitoringLocationType)
 				.bbox(bbox). paging(limit, startIndex, count).build();
@@ -225,9 +242,8 @@ public class CollectionsController extends BaseController {
 			@PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
 			@PathVariable(value = PARAM_FEATURE_ID) String featureId, HttpServletResponse response) {
 
-		collectionsParams.builder.clear();
 
-		String rtn =collectionsDao.getCollectionFeatureJson(collectionsParams.builder.collectionId(collectionId).
+		String rtn =collectionsDao.getCollectionFeatureJson(collectionsParams.builder().collectionId(collectionId).
 			featureId(featureId).build());
 			if (rtn == null) {
 				response.setStatus(HttpStatus.NOT_FOUND.value());
