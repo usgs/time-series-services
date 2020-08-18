@@ -162,22 +162,23 @@ public class CollectionsController extends BaseController {
 		@RequestParam(value="stateFIPS", required = false) List<@Pattern(regexp=REGEX_FIPS_STATE, message=REGEX_FIPS_STATE_MESS) String> states,
 
 		@Size(min=1, max=1000, message="The number of hydrologic units queried on must be between {min} and {max}")
-		@Parameter(description="For example, 040103020107")
+		@Parameter(description="Example: 040103020107")
 		@RequestParam(value="hydrologicUnit", required = false)
 			List<@Pattern(regexp=REGEX_FIPS_HYDRO, message=REGEX_FIPS_HYDRO_MESS) String> hydrologicUnits,
-		@Parameter(description="Example: 150301080300")
 
-		@RequestParam(value="nationalAquiferCode", required = false) String nationalAquiferCode,
 		@Parameter(description="Example: N100GLCIAL")
+		@RequestParam(value="nationalAquiferCode", required = false) String nationalAquiferCode,
 
+		@Parameter(description="Example: 343204093005501")
 		@RequestParam(value="monitoringLocationNumber", required = false) String monitoringLocationNumber,
-		@Parameter(description="Well, Stream, or other type")
 
 		@Size(min=1, max=100, message="The number of monitoring location types queried on must be between {min} and {max}")
+		@Parameter(description="Well, Stream, or other type")
 		@RequestParam(value="monitoringLocationType", required = false) List<String> monitoringLocationType,
-		@Parameter(description="USGS or other agency")
 
+		@Parameter(description="USGS or other agency")
 		@RequestParam(value="agencyCode", required = false) String agencyCode,
+
 		@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 
 		@Min(value=1, message = LIMIT_VALIDATE_MESS) @RequestParam(value = "limit", required = false, defaultValue = "10000") int limit,
