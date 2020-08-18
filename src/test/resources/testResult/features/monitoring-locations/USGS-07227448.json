@@ -22,6 +22,7 @@
         "altitudeAccuracy": "10",
         "altitudeDatum": "National Geodetic Vertical Datum of 1929",
         "nationalAquifer": null,
+        "nationalAquiferCode": null,
         "localAquifer": null,
         "localAquiferType": null,
         "wellDepth": null,

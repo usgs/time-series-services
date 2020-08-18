@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DatabaseSetup("classpath:/testData/featuresFilters/")
+@DatabaseSetup("classpath:/testData/featuresFilterLinks/")
 public class FeaturesFilterLinksIT extends BaseCollectionsIT  {
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -21,9 +21,9 @@ public class FeaturesFilterLinksIT extends BaseCollectionsIT  {
 	@Test
 	public void prevAndNextLinkTestWithFilters() {
 		ResponseEntity<String> rtn = restTemplate.getForEntity(
-			"/collections/monitoring-locations/items?startIndex=10&limit=2&country=US&country=MX&agencyCode=USGS", String.class);
+			"/collections/monitoring-locations/items?startIndex=10&limit=2&countryFIPS=US&countryFIPS=MX&agencyCode=USGS", String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-		String compareFile = "featureCollection/monitoring-locations/featureCollection_s10l2_with_filters.json";
+		String compareFile = "featuresFilterLinks/monitoring-locations/featureCollection_s10l2_with_filters.json";
 		doJsonCompare(rtn, compareFile);
 	}
 }

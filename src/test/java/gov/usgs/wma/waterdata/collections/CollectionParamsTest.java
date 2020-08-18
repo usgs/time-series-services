@@ -66,7 +66,7 @@ class CollectionParamsTest {
 
 	@Test
 	public void testCollectionAndCommon() {
-		params = collectionParams.builder.collectionId(expectedCollectionId).build();
+		params = collectionParams.builder().collectionId(expectedCollectionId).build();
 		assertEquals(expectedCollectionId, params.get(PARAM_COLLECTION_ID));
 		assertEquals(null, params.get(PARAM_FEATURE_ID));
 		assertCommonParams(7);
@@ -75,7 +75,7 @@ class CollectionParamsTest {
 
 	@Test
 	public void testNullCollectionId() {
-		params = collectionParams.builder.build();
+		params = collectionParams.builder().build();
 		assertCommonParams(6);
 		assertEquals(null, params.get(PARAM_COLLECTION_ID));
 		assertEquals(null, params.get(PARAM_FEATURE_ID));
@@ -83,7 +83,7 @@ class CollectionParamsTest {
 
 	@Test
 	public void testCollectionFeature() {
-		params = collectionParams.builder.collectionId(expectedCollectionId)
+		params = collectionParams.builder().collectionId(expectedCollectionId)
 			.featureId(expectedFeatureId).build();
 		assertCommonParams(8);
 		assertEquals(expectedCollectionId, params.get(PARAM_COLLECTION_ID));
@@ -92,7 +92,7 @@ class CollectionParamsTest {
 
 	@Test
 	public void testNullCollectionNotNullFeature() {
-		params = collectionParams.builder.featureId(expectedFeatureId).build();
+		params = collectionParams.builder().featureId(expectedFeatureId).build();
 		assertCommonParams(7);
 		assertEquals(null, params.get(PARAM_COLLECTION_ID));
 		assertEquals(expectedFeatureId, params.get(PARAM_FEATURE_ID));
@@ -100,7 +100,7 @@ class CollectionParamsTest {
 
 	@Test
 	public void testNullCollectionNullFeature() {
-		params = collectionParams.builder.build();
+		params = collectionParams.builder().build();
 		assertCommonParams(6);
 		assertEquals(null, params.get(PARAM_COLLECTION_ID));
 		assertEquals(null, params.get(PARAM_FEATURE_ID));
@@ -109,7 +109,7 @@ class CollectionParamsTest {
 	@Test
 	public void testCollectionFeatureParms() {
 		BoundingBox bbox = new BoundingBox("-180,-90,180,90");
-		params = collectionParams.builder.collectionId(expectedCollectionId)
+		params = collectionParams.builder().collectionId(expectedCollectionId)
 			.bbox(bbox).paging(10001, 10, 15000).build();
 		assertEquals(expectedCollectionId, params.get(PARAM_COLLECTION_ID));
 		assertEquals(10000, params.get(PARAM_LIMIT));
@@ -134,15 +134,15 @@ class CollectionParamsTest {
 		List<String> counties= new ArrayList<>();
 		counties.add("06071");
 		counties.add("55025");
-		List<String> hydrologicalUnits = new ArrayList<>();
-		hydrologicalUnits.add("000000000000");
+		List<String> hydrologicUnits = new ArrayList<>();
+		hydrologicUnits.add("000000000000");
 		String nationalAquiferCode="N9999OTHER";
 		String agencyCode="USGS";
-		String monitoringLocationType="Well";
+		List<String> monitoringLocationType=List.of("Well");
 		String monitoringLocationNumber="USGS-72204322";
 
-		params = collectionParams.builder.collectionId(expectedCollectionId)
-			.countries(countries).states(states).counties(counties).hydrologicalUnits(hydrologicalUnits)
+		params = collectionParams.builder().collectionId(expectedCollectionId)
+			.countries(countries).states(states).counties(counties).hydrologicUnits(hydrologicUnits)
 			.nationalAquiferCode(nationalAquiferCode).agencyCode(agencyCode)
 			.monitoringLocationNumber(monitoringLocationNumber)
 			.monitoringLocationType(monitoringLocationType)
@@ -157,7 +157,7 @@ class CollectionParamsTest {
 		assertEquals("&country=MX&country=FR&country=KR" +
 			"&county=06071&county=55025" +
 			"&state=06&state=25&state=55" +
-			"&hydrologicalUnit=000000000000" +
+			"&hydrologicUnit=000000000000" +
 			"&nationalAquiferCode=N9999OTHER" +
 			"&agencyCode=USGS" +
 			"&monitoringLocationNumber=USGS-72204322" +
@@ -168,7 +168,7 @@ class CollectionParamsTest {
 
 	@Test
 	public void testCollectionFeatureParmsNoCollectionId() {
-		params = collectionParams.builder.paging(100, 0,  100).build();
+		params = collectionParams.builder().paging(100, 0,  100).build();
 		assertCommonParams(8);
 		assertEquals(null, params.get(PARAM_COLLECTION_ID));
 		assertEquals(100, params.get(PARAM_LIMIT));
@@ -181,7 +181,7 @@ class CollectionParamsTest {
 
 	@Test
 	public void testCollectionFeatureParmsNoLinks() {
-		params = collectionParams.builder.collectionId(expectedCollectionId).paging( 100, 0, 100).build();
+		params = collectionParams.builder().collectionId(expectedCollectionId).paging( 100, 0, 100).build();
 		assertCommonParams(9);
 		assertEquals(expectedCollectionId, params.get(PARAM_COLLECTION_ID));
 		assertEquals(100, params.get(PARAM_LIMIT));
@@ -194,7 +194,7 @@ class CollectionParamsTest {
 
 	@Test
 	public void testCollectionFeatureTimeSeries() {
-		params = collectionParams.builder.collectionId(expectedCollectionId)
+		params = collectionParams.builder().collectionId(expectedCollectionId)
 			.featureId(expectedFeatureId).timeSeriesId(expectedTimeSeriesId).build();
 		assertCommonParams(9);
 		assertEquals(expectedCollectionId, params.get(PARAM_COLLECTION_ID));

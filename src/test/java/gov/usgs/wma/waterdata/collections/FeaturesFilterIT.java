@@ -8,6 +8,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -15,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@DatabaseSetup("classpath:/testData/featuresFilter/")
 public class FeaturesFilterIT extends BaseCollectionsIT {
     @Autowired
     private TestRestTemplate restTemplate;
@@ -24,13 +27,13 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?country=MX&country=US&monitoringLocationType=Well",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/countries_mx_us.json";
+        String compareFile = "featuresFilter/monitoring-locations/countries_mx_us.json";
         doJsonCompare(rtn, compareFile);
     }
 
     @Test
     public void countryTestNotFound() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?country=MX",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?countryFIPS=MX",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertEquals(ogc404Payload, rtn.getBody());
@@ -38,24 +41,24 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 
     @Test
     public void countryTestInvalid() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?country=MXUS",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?countryFIPS=MXUS",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
     @Test
     public void stateTest() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?state=26",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?stateFIPS=US:26",
             String.class);
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/states_mi.json";
+        String compareFile = "featuresFilter/monitoring-locations/states_mi.json";
         doJsonCompare(rtn, compareFile);
     }
 
     @Test
     public void stateTestNotFound() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?state=57",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?stateFIPS=US:99",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertEquals(ogc404Payload, rtn.getBody());
@@ -63,24 +66,24 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 
     @Test
     public void stateTestInvalid() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?state=57000",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?stateFIPS=57000",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
     @Test
     public void countyTest() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?county=05051",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?countyFIPS=US:05:051",
             String.class);
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/counties_ak_05051.json";
+        String compareFile = "featuresFilter/monitoring-locations/counties_ak_05051.json";
         doJsonCompare(rtn, compareFile);
     }
 
     @Test
     public void countyTestNotFound() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?county=06071",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?countyFIPS=US:00:051",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertEquals(ogc404Payload, rtn.getBody());
@@ -88,32 +91,43 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 
     @Test
     public void countyTestInvalid() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?county=Hartley",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?countyFIPS=Hartley",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
     @Test
-    public void hydrologicalUnitsTest() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicalUnit=040103020107",
+    public void hydrologicUnitsTest() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicUnit=040103020107",
             String.class);
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/hydrological_unit_040103020107.json";
+        String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_040103020107.json";
         doJsonCompare(rtn, compareFile);
     }
 
+	@Test
+	public void hydrologicUnitsMultiValuesTest() throws IOException {
+		ResponseEntity<String> rtn = restTemplate.getForEntity(
+				"/collections/monitoring-locations/items?hydrologicUnit=040103020107&hydrologicUnit=080401010805",
+				String.class);
+
+		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+		String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_multi_values.json";
+		doJsonCompare(rtn, compareFile);
+	}
+
     @Test
-    public void hydrologicalUnitsTestNotFound() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicalUnit=000000000000",
+    public void hydrologicUnitsTestNotFound() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicUnit=000000000000",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertEquals(ogc404Payload, rtn.getBody());
     }
 
     @Test
-    public void hydrologicalUnitsTestInvalid() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicalUnit=INVALID",
+    public void hydrologicUnitsTestInvalid() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicUnit=INVALID",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
@@ -123,9 +137,19 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?monitoringLocationType=Well",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/monitoring_location_type_well.json";
+        String compareFile = "featuresFilter/monitoring-locations/monitoring_location_type_well.json";
         doJsonCompare(rtn, compareFile);
     }
+
+	@Test
+	public void monitoringLocationTypeMultiValuesTest() throws IOException {
+		ResponseEntity<String> rtn = restTemplate.getForEntity(
+				"/collections/monitoring-locations/items?monitoringLocationType=Well&monitoringLocationType=Stream",
+				String.class);
+		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+		String compareFile = "featuresFilter/monitoring-locations/monitoring_location_type_multi_values.json";
+		doJsonCompare(rtn, compareFile);
+	}
 
     @Test
     public void monitoringLocationTypeTestNotFound() throws IOException {
@@ -156,7 +180,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?nationalAquiferCode=N9999OTHER",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/nat_aqfr_cd_N9999OTHER.json";
+        String compareFile = "featuresFilter/monitoring-locations/nat_aqfr_cd_N9999OTHER.json";
         doJsonCompare(rtn, compareFile);
 
     }
@@ -172,11 +196,10 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
     @Test
     public void monitoringLocationNumberTest() throws IOException {
         ResponseEntity<String> rtn = restTemplate.getForEntity(
-            "/collections/monitoring-locations/items?monitoringLocationNumber=USGS-343204093005501",
+            "/collections/monitoring-locations/items?monitoringLocationNumber=343204093005501",
             String.class);
-
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/monitoring_location_number_USGS-343204093005501.json";
+        String compareFile = "featuresFilter/monitoring-locations/monitoring_location_number_USGS-343204093005501.json";
         doJsonCompare(rtn, compareFile);
     }
 

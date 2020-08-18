@@ -30,7 +30,7 @@ public class CollectionParams {
 	public static final String PARAM_COUNTRIES = "countries";
 	public static final String PARAM_COUNTIES = "counties";
 	public static final String PARAM_STATES = "states";
-	public static final String PARAM_HYDROLOGICAL_UNITS = "hydrologicalUnits";
+	public static final String PARAM_HYDROLOGIC_UNITS = "hydrologicUnits";
 	public static final String PARAM_NATIONAL_AQUIFER_CODE = "nationalAquiferCode";
 	public static final String PARAM_AGENCY_CODE = "agencyCode";
 	public static final String PARAM_MONITORING_LOCATION_NUMBER = "monitoringLocationNumber";
@@ -41,14 +41,15 @@ public class CollectionParams {
 	public static final Integer DEFAULT_START_INDEX   = 0;
 	public static final Integer MAX_LIMIT     = 10000;
 
-	public Builder builder;
-
 	protected ConfigurationService configurationService;
 
 	@Autowired
 	public CollectionParams(ConfigurationService configurationService) {
 		this.configurationService = configurationService;
-		this.builder = new Builder(configurationService);
+	}
+
+	public Builder builder() {
+		return new Builder(configurationService);
 	}
 
 	public static class Builder {
@@ -63,36 +64,16 @@ public class CollectionParams {
 		private List<String> countries;
 		private List<String> counties;
 		private List<String> states;
-		private List<String> hydrologicalUnits;
+		private List<String> hydrologicUnits;
 		private String nationalAquiferCode;
 		private String agencyCode;
-		private String monitoringLocationType;
+		private List<String> monitoringLocationType;
 		private String monitoringLocationNumber;
 		private boolean isPaging = false;
 	        private String filterOptions = "";
 
         	public Builder(ConfigurationService configurationService) {
         		this.configurationService = configurationService;
-		}
-
-		public void clear() {
-			collectionId = null;
-			featureId = null;
-			timeSeriesId = null;
-			bbox = null;
-			limitParam = MAX_LIMIT;
-			count = 0;
-			startIndex = 0;
-			countries = null;
-			counties = null;
-			states = null;
-			hydrologicalUnits = null;
-			nationalAquiferCode = null;
-			agencyCode = null;
-			monitoringLocationType = null;
-			monitoringLocationNumber = null;
-			isPaging = false;
-			filterOptions = "";
 		}
 
 		public Builder countries(List<String> countries) {
@@ -110,8 +91,8 @@ public class CollectionParams {
 			return this;
 		}
 
-		public Builder hydrologicalUnits(List<String> hydrologicalUnits) {
-			this.hydrologicalUnits = hydrologicalUnits;
+		public Builder hydrologicUnits(List<String> hydrologicUnits) {
+			this.hydrologicUnits = hydrologicUnits;
 			return this;
 		}
 
@@ -131,7 +112,7 @@ public class CollectionParams {
 		}
 
 
-		public Builder monitoringLocationType(String monitoringLocationType) {
+		public Builder monitoringLocationType(List<String> monitoringLocationType) {
 			this.monitoringLocationType = monitoringLocationType;
 			return this;
 		}
@@ -208,11 +189,11 @@ public class CollectionParams {
 			params = buildFilterableList(params, PARAM_COUNTRIES, countries, "&country=");
 			params = buildFilterableList(params, PARAM_COUNTIES, counties, "&county=");
 			params = buildFilterableList(params, PARAM_STATES, states, "&state=");
-			params = buildFilterableList(params, PARAM_HYDROLOGICAL_UNITS, hydrologicalUnits, "&hydrologicalUnit=");
+			params = buildFilterableList(params, PARAM_HYDROLOGIC_UNITS, hydrologicUnits, "&hydrologicUnit=");
 			params = buildFilterableItem(params, PARAM_NATIONAL_AQUIFER_CODE, nationalAquiferCode, "&nationalAquiferCode=");
 			params = buildFilterableItem(params, PARAM_AGENCY_CODE, agencyCode, "&agencyCode=");
             		params = buildFilterableItem(params, PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationNumber, "&monitoringLocationNumber=");
-			params = buildFilterableItem(params, PARAM_MONITORING_LOCATION_TYPE, monitoringLocationType, "&monitoringLocationType=");
+			params = buildFilterableList(params, PARAM_MONITORING_LOCATION_TYPE, monitoringLocationType, "&monitoringLocationType=");
 
 			params.put(PARAM_FILTER_OPTIONS, filterOptions);
 			return params;

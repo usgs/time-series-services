@@ -59,6 +59,10 @@ public class FeatureProperties {
 	public String getNationalAquifer() {
 		return null;
 	}
+	@Schema(description = "nationalAquiferCode", example = "")
+	public String getNationalAquiferCode() {
+		return null;
+	}
 	@Schema(description = "localAquifer", example = "Eagle Ford Shale")
 	public String getLocalAquifer() {
 		return null;

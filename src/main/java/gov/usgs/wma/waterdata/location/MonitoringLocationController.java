@@ -28,6 +28,7 @@ public class MonitoringLocationController {
 		this.monitoringLocationDao = monitoringLocationDao;
 	}
 
+	@Deprecated
 	@Operation(
 			description="Return GeoJSON Data specific to the requested Monitoring Location.",
 			responses= {

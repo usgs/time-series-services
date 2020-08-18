@@ -48,6 +48,7 @@
         "hydrologicUnit": null,
         "state": null,
         "nationalAquifer": null,
+                "nationalAquiferCode": null,
         "agency": null,
         "altitudeAccuracy": null,
         "countryFIPS": null,
