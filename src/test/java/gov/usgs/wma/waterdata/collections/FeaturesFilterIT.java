@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DatabaseSetup("classpath:/testData/monitoringLocation/")
+@DatabaseSetup("classpath:/testData/featuresFilter/")
 public class FeaturesFilterIT extends BaseCollectionsIT {
     @Autowired
     private TestRestTemplate restTemplate;
@@ -27,7 +27,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?country=MX&country=US&monitoringLocationType=Well",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/countries_mx_us.json";
+        String compareFile = "featuresFilter/monitoring-locations/countries_mx_us.json";
         doJsonCompare(rtn, compareFile);
     }
 
@@ -52,7 +52,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/states_mi.json";
+        String compareFile = "featuresFilter/monitoring-locations/states_mi.json";
         doJsonCompare(rtn, compareFile);
     }
 
@@ -77,7 +77,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/counties_ak_05051.json";
+        String compareFile = "featuresFilter/monitoring-locations/counties_ak_05051.json";
         doJsonCompare(rtn, compareFile);
     }
 
@@ -102,7 +102,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/hydrological_unit_040103020107.json";
+        String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_040103020107.json";
         doJsonCompare(rtn, compareFile);
     }
 
@@ -113,7 +113,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 				String.class);
 
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-		String compareFile = "featureCollection/monitoring-locations/hydrological_unit_multi_values.json";
+		String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_multi_values.json";
 		doJsonCompare(rtn, compareFile);
 	}
 
@@ -137,7 +137,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?monitoringLocationType=Well",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/monitoring_location_type_well.json";
+        String compareFile = "featuresFilter/monitoring-locations/monitoring_location_type_well.json";
         doJsonCompare(rtn, compareFile);
     }
 
@@ -147,7 +147,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 				"/collections/monitoring-locations/items?monitoringLocationType=Well&monitoringLocationType=Stream",
 				String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-		String compareFile = "featureCollection/monitoring-locations/monitoring_location_type_multi_values.json";
+		String compareFile = "featuresFilter/monitoring-locations/monitoring_location_type_multi_values.json";
 		doJsonCompare(rtn, compareFile);
 	}
 
@@ -180,7 +180,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?nationalAquiferCode=N9999OTHER",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/nat_aqfr_cd_N9999OTHER.json";
+        String compareFile = "featuresFilter/monitoring-locations/nat_aqfr_cd_N9999OTHER.json";
         doJsonCompare(rtn, compareFile);
 
     }
@@ -199,7 +199,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             "/collections/monitoring-locations/items?monitoringLocationNumber=343204093005501",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-        String compareFile = "featureCollection/monitoring-locations/monitoring_location_number_USGS-343204093005501.json";
+        String compareFile = "featuresFilter/monitoring-locations/monitoring_location_number_USGS-343204093005501.json";
         doJsonCompare(rtn, compareFile);
     }
 

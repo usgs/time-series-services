@@ -44,7 +44,7 @@ public class CollectionsController extends BaseController {
 	public static final String REGEX_FIPS_COUNTRY = "[A-Z]{2}";
 	public static final String REGEX_FIPS_COUNTRY_MESS = "countryFIPS must match " + REGEX_FIPS_COUNTRY;
 	public static final String FIPS_COUNTRY_DESC =  "two-character Federal Information Processing Standard (FIPS) Country Codes." +
-            " (Example: US for United States, MX for Mexico";
+            " (Example: US for United States, MX for Mexico)";
 	public static final String REGEX_FIPS_HYDRO = "[0-9]{12}";
 	public static final String REGEX_FIPS_HYDRO_MESS = "hydrologic unit must match " + REGEX_FIPS_HYDRO;
 
@@ -165,10 +165,10 @@ public class CollectionsController extends BaseController {
 		@Parameter(description="For example, 040103020107")
 		@RequestParam(value="hydrologicUnit", required = false)
 			List<@Pattern(regexp=REGEX_FIPS_HYDRO, message=REGEX_FIPS_HYDRO_MESS) String> hydrologicUnits,
-		@Parameter(description="For example, N9999OTHER")
+		@Parameter(description="Example: 150301080300")
 
 		@RequestParam(value="nationalAquiferCode", required = false) String nationalAquiferCode,
-		@Parameter(description="For example, USGS-343204093005501")
+		@Parameter(description="Example: N100GLCIAL")
 
 		@RequestParam(value="monitoringLocationNumber", required = false) String monitoringLocationNumber,
 		@Parameter(description="Well, Stream, or other type")
