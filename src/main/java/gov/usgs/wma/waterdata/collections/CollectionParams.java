@@ -214,18 +214,6 @@ public class CollectionParams {
 			}
 			return params;
 		}
-
-		private Map<String, Object> buildFilterableItem(
-			Map<String, Object> params, String key, String item, String urlJoiner) {
-			if (item != null) {
-				params.put(key, item);
-				String addition = urlJoiner + item;
-				if (!filterOptions.contains(addition)) {
-					filterOptions += addition;
-				}
-			}
-			return params;
-		}
 	}
 }
 
