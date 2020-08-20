@@ -47,7 +47,10 @@ public class CollectionsController extends BaseController {
             " (Example: US for United States, MX for Mexico)";
 	public static final String REGEX_FIPS_HYDRO = "[0-9]{12}";
 	public static final String REGEX_FIPS_HYDRO_MESS = "hydrologic unit must match " + REGEX_FIPS_HYDRO;
-
+	public static final String REGEX_MON_LOC_NUMBER = "[0-9]+";
+	public static final String REGEX_MON_LOC_NUMBER_MESS = "monitoring location number must match " + REGEX_MON_LOC_NUMBER;
+	public static final String REGEX_NATIONAL_AQUIFER_CODE = "[A-Z][0-9]+[A-Z]+";
+	public static final String REGEX_NATIONAL_AQUIFER_CODE_MESS = "national aquifer code must match " + REGEX_NATIONAL_AQUIFER_CODE;
 	public static final String REGEX_FIPS_COUNTY = "(?:([A-Z]{2}):)?([0-9]{1,2}):([0-9]{3}|N/A)";
 	public static final String REGEX_FIPS_COUNTY_MESS = "countyFIPS must match " + REGEX_FIPS_COUNTY;
 	public static final String FIPS_COUNTY_DESC =
@@ -164,20 +167,25 @@ public class CollectionsController extends BaseController {
 		@Size(min=1, max=1000, message="The number of hydrologic units queried on must be between {min} and {max}")
 		@Parameter(description="Example: 040103020107")
 		@RequestParam(value="hydrologicUnit", required = false)
-			List<@Pattern(regexp=REGEX_FIPS_HYDRO, message=REGEX_FIPS_HYDRO_MESS) String> hydrologicUnits,
+		List<@Pattern(regexp=REGEX_FIPS_HYDRO, message=REGEX_FIPS_HYDRO_MESS) String> hydrologicUnits,
 
+		@Size(min=1, max=1000, message="The number of national aquifer codes queried on must be between {min} and {max}")
 		@Parameter(description="Example: N100GLCIAL")
-		@RequestParam(value="nationalAquiferCode", required = false) String nationalAquiferCode,
+		@RequestParam(value="nationalAquiferCode", required = false) 
+		List<@Pattern(regexp=REGEX_NATIONAL_AQUIFER_CODE, message=REGEX_NATIONAL_AQUIFER_CODE_MESS) String> nationalAquiferCodes,
 
+		@Size(min=1, max=1000, message="The number of monitoring location numbers queried on must be between {min} and {max}")
 		@Parameter(description="Example: 343204093005501")
-		@RequestParam(value="monitoringLocationNumber", required = false) String monitoringLocationNumber,
+		@RequestParam(value="monitoringLocationNumber", required = false) 
+		List<@Pattern(regexp=REGEX_MON_LOC_NUMBER, message=REGEX_MON_LOC_NUMBER_MESS) String> monitoringLocationNumbers,
 
 		@Size(min=1, max=100, message="The number of monitoring location types queried on must be between {min} and {max}")
 		@Parameter(description="Well, Stream, or other type")
 		@RequestParam(value="monitoringLocationType", required = false) List<String> monitoringLocationType,
 
+		@Size(min=1, max=1000, message="The number of agency codes queried on must be between {min} and {max}")
 		@Parameter(description="USGS or other agency")
-		@RequestParam(value="agencyCode", required = false) String agencyCode,
+		@RequestParam(value="agencyCode", required = false) List<String> agencyCodes,
 
 		@RequestParam(value = "f", required = false, defaultValue = "json") String mimeType,
 
@@ -187,10 +195,11 @@ public class CollectionsController extends BaseController {
 		@BBox @RequestParam(value = "bbox", required = false) BoundingBox bbox,
 		@Parameter(description="monitoring-locations or ANC") @PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
 		HttpServletResponse response) {
+
 		Map<String, Object> params = collectionsParams.builder().collectionId(collectionId)
 			.countries(countries).states(states).counties(counties).hydrologicUnits(hydrologicUnits)
-			.nationalAquiferCode(nationalAquiferCode).agencyCode(agencyCode)
-			.monitoringLocationNumber(monitoringLocationNumber)
+			.nationalAquiferCodes(nationalAquiferCodes).agencyCodes(agencyCodes)
+			.monitoringLocationNumbers(monitoringLocationNumbers)
 			.monitoringLocationType(monitoringLocationType)
 			.bbox(bbox).build();
 
@@ -204,8 +213,8 @@ public class CollectionsController extends BaseController {
 			params = collectionsParams.builder().collectionId(collectionId).bbox(bbox)
 				.paging(limit, startIndex, count)
 				.countries(countries).states(states).counties(counties)
-				.hydrologicUnits(hydrologicUnits).nationalAquiferCode(nationalAquiferCode)
-				.agencyCode(agencyCode).monitoringLocationNumber(monitoringLocationNumber)
+				.hydrologicUnits(hydrologicUnits).nationalAquiferCodes(nationalAquiferCodes)
+				.agencyCodes(agencyCodes).monitoringLocationNumbers(monitoringLocationNumbers)
 				.monitoringLocationType(monitoringLocationType)
 				.bbox(bbox). paging(limit, startIndex, count).build();
 
