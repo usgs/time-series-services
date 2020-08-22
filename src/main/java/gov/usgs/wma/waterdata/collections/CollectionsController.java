@@ -218,6 +218,7 @@ public class CollectionsController extends BaseController {
 				.monitoringLocationType(monitoringLocationType)
 				.bbox(bbox). paging(limit, startIndex, count).build();
 
+			// This will not be null, even if the result set is empty, because metadata will be returned.
 			rtn = collectionsDao.getCollectionFeaturesJson(params);
 		}
 
