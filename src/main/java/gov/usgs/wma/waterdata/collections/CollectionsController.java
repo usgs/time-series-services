@@ -219,10 +219,6 @@ public class CollectionsController extends BaseController {
 				.bbox(bbox). paging(limit, startIndex, count).build();
 
 			rtn = collectionsDao.getCollectionFeaturesJson(params);
-			if (rtn == null) {
-				response.setStatus(HttpStatus.NOT_FOUND.value());
-				rtn = ogc404Payload;
-			}
 		}
 
 		return rtn;

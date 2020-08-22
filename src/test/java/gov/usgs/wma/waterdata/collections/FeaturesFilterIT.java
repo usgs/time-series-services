@@ -176,7 +176,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 
     @Test
     public void agencyCodeMultiValuesTest() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?agencyCode=USGS&agencyCode=NSA",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?agencyCode=USGS&agencyCode=DOESNTEXIST",
             String.class);
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
