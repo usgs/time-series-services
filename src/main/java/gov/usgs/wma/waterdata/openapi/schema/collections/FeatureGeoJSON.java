@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import gov.usgs.wma.waterdata.openapi.schema.geojson.Geometry;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@JsonPropertyOrder(value = { "type", "id", "geometry", "properties"})
+@JsonPropertyOrder(value = { "type", "id", "geometry", "properties", "links"})
 @Schema(description = "Feature MetaData in GeoJSON format.")
 public class FeatureGeoJSON {
 	@Schema(description="The type of this object - Currently only 'Feature' objects are produced.", example="Feature")
@@ -22,6 +22,11 @@ public class FeatureGeoJSON {
 	}
 	@Schema(description="The properties associated with this Feature.")
 	public FeatureProperties getProperties() {
+		return null;
+	}
+
+	@Schema(description="Reference links for this Feature.")
+	public LinkGeoJSON[] getLinks() {
 		return null;
 	}
 	

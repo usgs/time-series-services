@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Added filtering to /collections/{collectionId}/items
 -   Added nationalAquiferCode to feature properties
 -   Deprecated end point: /monitoring-location/{monitoringLocationId}
+-   Add links to swagger output for collections/{collectionsId}/items/{featureId}
 
 ## [0.6.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.5.0...time-series-services-0.6.0) - 2020-04-29
 ### Changed
