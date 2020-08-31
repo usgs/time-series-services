@@ -24,14 +24,14 @@
         <if test="counties != null">
             and country_cd || ':' || state_cd || ':' || county_cd in <foreach item="i" collection="counties" open="(" separator="," close=")">#{i}</foreach>
         </if>
-        <if test="nationalAquiferCode != null">
-            and nat_aqfr_cd = #{nationalAquiferCode}
+        <if test="nationalAquiferCodes != null">
+            and nat_aqfr_cd in <foreach item="i" collection="nationalAquiferCodes" open="(" separator="," close=")">#{i}</foreach>
         </if>
-        <if test="monitoringLocationNumber != null">
-            and monitoring_location.site_identification_number  = #{monitoringLocationNumber}
+        <if test="monitoringLocationNumbers != null">
+            and monitoring_location.site_identification_number  in <foreach item="i" collection="monitoringLocationNumbers" open="(" separator="," close=")">#{i}</foreach>
         </if>
-        <if test="agencyCode != null">
-            and agency_cd = #{agencyCode}
+        <if test="agencyCodes != null">
+            and agency_cd in <foreach item="i" collection="agencyCodes" open="(" separator="," close=")">#{i}</foreach>
         </if>
         <if test="hydrologicUnits != null">
             and calculated_huc_12 in <foreach item="i" collection="hydrologicUnits" open="(" separator="," close=")">#{i}</foreach>

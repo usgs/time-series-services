@@ -31,9 +31,9 @@ public class CollectionParams {
 	public static final String PARAM_COUNTIES = "counties";
 	public static final String PARAM_STATES = "states";
 	public static final String PARAM_HYDROLOGIC_UNITS = "hydrologicUnits";
-	public static final String PARAM_NATIONAL_AQUIFER_CODE = "nationalAquiferCode";
-	public static final String PARAM_AGENCY_CODE = "agencyCode";
-	public static final String PARAM_MONITORING_LOCATION_NUMBER = "monitoringLocationNumber";
+	public static final String PARAM_NATIONAL_AQUIFER_CODES = "nationalAquiferCodes";
+	public static final String PARAM_AGENCY_CODES = "agencyCodes";
+	public static final String PARAM_MONITORING_LOCATION_NUMBER = "monitoringLocationNumbers";
 	public static final String PARAM_MONITORING_LOCATION_TYPE = "monitoringLocationType";
 	public static final String PARAM_FILTER_OPTIONS = "filterOptions";
 
@@ -65,20 +65,20 @@ public class CollectionParams {
 		private List<String> counties;
 		private List<String> states;
 		private List<String> hydrologicUnits;
-		private String nationalAquiferCode;
-		private String agencyCode;
+		private List<String> nationalAquiferCodes;
+		private List<String> agencyCodes;
 		private List<String> monitoringLocationType;
-		private String monitoringLocationNumber;
+		private List<String> monitoringLocationNumbers;
 		private boolean isPaging = false;
-	        private String filterOptions = "";
-
-        	public Builder(ConfigurationService configurationService) {
-        		this.configurationService = configurationService;
+		private String filterOptions = "";
+		
+		public Builder(ConfigurationService configurationService) {
+			this.configurationService = configurationService;
 		}
-
+		
 		public Builder countries(List<String> countries) {
-	        	this.countries = countries;
-        		return this;
+			this.countries = countries;
+			return this;
 		}
 
 		public Builder counties(List<String> counties) {
@@ -95,19 +95,19 @@ public class CollectionParams {
 			this.hydrologicUnits = hydrologicUnits;
 			return this;
 		}
-
-		public Builder agencyCode(String agencyCode) {
-	        	this.agencyCode = agencyCode;
-        		return this;
-		}
-
-		public Builder nationalAquiferCode(String nationalAquiferCode) {
-			this.nationalAquiferCode = nationalAquiferCode;
+		
+		public Builder agencyCodes(List<String> agencyCodes) {
+			this.agencyCodes = agencyCodes;
 			return this;
 		}
-
-		public Builder monitoringLocationNumber(String monitoringLocationNumber) {
-			this.monitoringLocationNumber = monitoringLocationNumber;
+		
+		public Builder nationalAquiferCodes(List<String> nationalAquiferCodes) {
+			this.nationalAquiferCodes = nationalAquiferCodes;
+			return this;
+		}
+		
+		public Builder monitoringLocationNumbers(List<String> monitoringLocationNumbers) {
+			this.monitoringLocationNumbers = monitoringLocationNumbers;
 			return this;
 		}
 
@@ -190,9 +190,9 @@ public class CollectionParams {
 			params = buildFilterableList(params, PARAM_COUNTIES, counties, "&county=");
 			params = buildFilterableList(params, PARAM_STATES, states, "&state=");
 			params = buildFilterableList(params, PARAM_HYDROLOGIC_UNITS, hydrologicUnits, "&hydrologicUnit=");
-			params = buildFilterableItem(params, PARAM_NATIONAL_AQUIFER_CODE, nationalAquiferCode, "&nationalAquiferCode=");
-			params = buildFilterableItem(params, PARAM_AGENCY_CODE, agencyCode, "&agencyCode=");
-            		params = buildFilterableItem(params, PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationNumber, "&monitoringLocationNumber=");
+			params = buildFilterableList(params, PARAM_NATIONAL_AQUIFER_CODES, nationalAquiferCodes, "&nationalAquiferCode=");
+			params = buildFilterableList(params, PARAM_AGENCY_CODES, agencyCodes, "&agencyCode=");
+			params = buildFilterableList(params, PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationNumbers, "&monitoringLocationNumber=");
 			params = buildFilterableList(params, PARAM_MONITORING_LOCATION_TYPE, monitoringLocationType, "&monitoringLocationType=");
 
 			params.put(PARAM_FILTER_OPTIONS, filterOptions);
@@ -214,19 +214,6 @@ public class CollectionParams {
 			}
 			return params;
 		}
-
-		private Map<String, Object> buildFilterableItem(
-			Map<String, Object> params, String key, String item, String urlJoiner) {
-			if (item != null) {
-				params.put(key, item);
-				String addition = urlJoiner + item;
-				if (!filterOptions.contains(addition)) {
-					filterOptions += addition;
-				}
-			}
-			return params;
-		}
-
 	}
-
 }
+

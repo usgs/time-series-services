@@ -22,6 +22,12 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private String badRequestPayloadMonLocNum = 
+        "{\"code\":\"400\",\"description\":\"" + CollectionsController.REGEX_MON_LOC_NUMBER_MESS + "\"}";
+    
+    private String badRequestPayloadNatAqfrCode = 
+        "{\"code\":\"400\",\"description\":\"" + CollectionsController.REGEX_NATIONAL_AQUIFER_CODE_MESS + "\"}";
+    
     @Test
     public void countryTest() throws IOException {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?country=MX&country=US&monitoringLocationType=Well",
@@ -167,9 +173,18 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
     }
 
+
+    @Test
+    public void agencyCodeMultiValuesTest() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?agencyCode=USGS&agencyCode=DOESNTEXIST",
+            String.class);
+
+        assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+    }
+
     @Test
     public void agencyCodeTestNotFound() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?agencyCode=Unknown",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?agencyCode=DoesntExist",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertEquals(ogc404Payload, rtn.getBody());
@@ -186,11 +201,29 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
     }
 
     @Test
+    public void nationalAquiferCodeMultiValuesTest() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?nationalAquiferCode=N9999OTHER&nationalAquiferCode=Z1234HMMMM",
+            String.class);
+        assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+        String compareFile = "featuresFilter/monitoring-locations/nat_aqfr_cd_N9999OTHER.json";
+        doJsonCompare(rtn, compareFile);
+
+    }
+
+    @Test
     public void nationalAquiferCodeTestNotFound() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?nationalAquiferCode=DOESNTEXIST",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?nationalAquiferCode=Z0000000000DOESNTEXIST",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertEquals(ogc404Payload, rtn.getBody());
+    }
+
+    @Test
+    public void nationalAquiferCodeTestInvalid() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?nationalAquiferCode=INVALID",
+            String.class);
+        assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertEquals(badRequestPayloadNatAqfrCode, rtn.getBody());
     }
 
     @Test
@@ -204,11 +237,30 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
     }
 
     @Test
+    public void monitoringLocationNumberMultiValuesTest() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity(
+            "/collections/monitoring-locations/items?monitoringLocationNumber=343204093005501&monitoringLocationNumber=000000000000",
+            String.class);
+        assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+        String compareFile = "featuresFilter/monitoring-locations/monitoring_location_number_USGS-343204093005501.json";
+        doJsonCompare(rtn, compareFile);
+    }
+    
+    @Test
     public void monitoringLocationNumberTestNotFound() throws IOException {
         ResponseEntity<String> rtn = restTemplate.getForEntity(
-            "/collections/monitoring-locations/items?monitoringLocationNumber=DOESNTEXIST",
+            "/collections/monitoring-locations/items?monitoringLocationNumber=8888888888888888888888888888",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertEquals(ogc404Payload, rtn.getBody());
+    }
+
+    @Test
+    public void monitoringLocationNumberTestInvalid() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity(
+            "/collections/monitoring-locations/items?monitoringLocationNumber=INVALID",
+            String.class);
+        assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertEquals(badRequestPayloadMonLocNum, rtn.getBody());
     }
 }
