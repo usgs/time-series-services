@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html). (Patch version X.Y.0 is implied if not specified.)
 
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.7.0...master)
+### Changed
+-   Add links to swagger output for collections/{collectionsId}/items/{featureId}
+-   Changed /collections/{collectionId}/items to make agencyCodes, nationalAquiferCodes, and monitoringLocationNumbers into lists
 
 ## [0.7.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.6.0...time-series-services-0.7.0) - 2020-08-19
 ### Added
@@ -16,7 +19,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Added filtering to /collections/{collectionId}/items
 -   Added nationalAquiferCode to feature properties
 -   Deprecated end point: /monitoring-location/{monitoringLocationId}
--   Add links to swagger output for collections/{collectionsId}/items/{featureId}
 
 ## [0.6.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.5.0...time-series-services-0.6.0) - 2020-04-29
 ### Changed

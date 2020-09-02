@@ -136,15 +136,18 @@ class CollectionParamsTest {
 		counties.add("55025");
 		List<String> hydrologicUnits = new ArrayList<>();
 		hydrologicUnits.add("000000000000");
-		String nationalAquiferCode="N9999OTHER";
-		String agencyCode="USGS";
+		List<String> nationalAquiferCodes=new ArrayList<>();
+		nationalAquiferCodes.add("N9999OTHER");
+		List<String> agencyCodes=new ArrayList<>();
+		agencyCodes.add("USGS");
 		List<String> monitoringLocationType=List.of("Well");
-		String monitoringLocationNumber="USGS-72204322";
+		List<String> monitoringLocationNumbers=new ArrayList<>();
+		monitoringLocationNumbers.add("USGS-72204322");
 
 		params = collectionParams.builder().collectionId(expectedCollectionId)
 			.countries(countries).states(states).counties(counties).hydrologicUnits(hydrologicUnits)
-			.nationalAquiferCode(nationalAquiferCode).agencyCode(agencyCode)
-			.monitoringLocationNumber(monitoringLocationNumber)
+			.nationalAquiferCodes(nationalAquiferCodes).agencyCodes(agencyCodes)
+			.monitoringLocationNumbers(monitoringLocationNumbers)
 			.monitoringLocationType(monitoringLocationType)
 			.paging(10001, 10, 15000).build();
 		assertEquals(expectedCollectionId, params.get(PARAM_COLLECTION_ID));
