@@ -184,7 +184,6 @@ public class CollectionsController extends BaseController {
 		@Parameter(description="Well, Stream, or other type")
 		@RequestParam(value="monitoringLocationType", required = false) List<String> monitoringLocationType,
 
-		//@Size(min=1, max=100, message="The Active Flag for Site monitoring locations ")
 		@Parameter(description="example: True|False|Null")
 		@RequestParam(value="siteActive", required = false) Boolean siteActive,
 
