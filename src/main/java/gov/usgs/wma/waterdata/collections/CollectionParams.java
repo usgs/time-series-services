@@ -27,6 +27,7 @@ public class CollectionParams {
 	public static final String  PARAM_MON_LOC_DESCRIPTION   = "monLocDescription";
 	public static final String  PARAM_MON_LOC_CONTACT_NAME  = "monLocContactName";
 	public static final String  PARAM_MON_LOC_CONTACT_EMAIL = "monLocContactEmail";
+	public static final String PARAM_SITE_ACTIVE = "siteActive";
 	public static final String PARAM_COUNTRIES = "countries";
 	public static final String PARAM_COUNTIES = "counties";
 	public static final String PARAM_STATES = "states";
@@ -61,6 +62,7 @@ public class CollectionParams {
 		private int limitParam = MAX_LIMIT;
 		private int count = 0;
 		private int startIndex = 0;
+		private Boolean siteActive; 
 		private List<String> countries;
 		private List<String> counties;
 		private List<String> states;
@@ -88,6 +90,11 @@ public class CollectionParams {
 
 		public Builder states(List<String> states) {
 			this.states = states;
+			return this;
+		}
+
+		public Builder siteActive(Boolean siteActive) {
+			this.siteActive = siteActive;
 			return this;
 		}
 
@@ -166,6 +173,7 @@ public class CollectionParams {
 			params = buildNullableItem(params, PARAM_COLLECTION_ID, collectionId);
 			params = buildNullableItem(params, PARAM_FEATURE_ID, featureId);
 			params = buildNullableItem(params, PARAM_TIME_SERIES_ID, timeSeriesId);
+			params = buildNullableItem(params, PARAM_SITE_ACTIVE, siteActive);
 
 			if (isPaging) {
 				params.put(PARAM_LIMIT, limitParam);

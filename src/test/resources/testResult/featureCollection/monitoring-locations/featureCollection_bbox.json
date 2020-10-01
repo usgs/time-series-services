@@ -40,6 +40,7 @@
         "county": null,
         "monitoringLocationUrl": null,
         "agencyCode": null,
+        "siteActive": null,
         "monitoringLocationType": null,
         "monitoringLocationNumber": null,
         "localAquiferType": null,

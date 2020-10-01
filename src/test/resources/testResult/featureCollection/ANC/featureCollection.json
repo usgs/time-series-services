@@ -33,6 +33,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,

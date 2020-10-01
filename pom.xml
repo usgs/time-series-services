@@ -199,7 +199,7 @@
                             <goal>stop</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions> 
                 <configuration>
 <!--                     <showLogs>true</showLogs> -->
                     <containerNamePattern>%a</containerNamePattern>

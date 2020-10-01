@@ -151,6 +151,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -175,6 +176,7 @@
                 "state": null,
                 "stateFIPS": null,
                 "wellDepth": null
+                
             },
             "type": "Feature"
         },
@@ -210,6 +212,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -269,6 +272,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -328,6 +332,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -387,6 +392,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -446,6 +452,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -505,6 +512,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -564,6 +572,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -623,6 +632,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -682,6 +692,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -741,6 +752,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -800,6 +812,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -859,6 +872,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -918,6 +932,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -977,6 +992,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -1036,6 +1052,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -1095,6 +1112,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,
@@ -1154,6 +1172,7 @@
             "properties": {
                 "agency": null,
                 "agencyCode": null,
+                "siteActive": null,
                 "altitudeAccuracy": null,
                 "altitudeDatum": null,
                 "altitudeMethod": null,

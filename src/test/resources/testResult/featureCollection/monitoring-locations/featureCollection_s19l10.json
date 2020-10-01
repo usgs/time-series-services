@@ -13,6 +13,7 @@
       },
       "properties": {
         "agency": null,
+        "siteActive": null,
         "monitoringLocationNumber": null,
         "monitoringLocationName": "monitoringLocationName000019",
         "monitoringLocationType": null,
@@ -38,6 +39,7 @@
         "countryFIPS": null,
         "hydrologicUnit": null,
         "monitoringLocationUrl": null
+        
       },
       "links": [
         {

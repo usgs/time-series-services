@@ -32,6 +32,7 @@
         "holeDepth": null,
         "holeDepthSource": null,
         "agencyCode": "USGS",
+        "siteActive": null,
         "districtCode": null,
         "stateFIPS": null,
         "countyFIPS": null,
@@ -72,6 +73,7 @@
       },
       "properties": {
         "agency": null,
+        "siteActive": null,
         "monitoringLocationNumber": null,
         "monitoringLocationName": "monitoringLocationName000011",
         "monitoringLocationType": null,
