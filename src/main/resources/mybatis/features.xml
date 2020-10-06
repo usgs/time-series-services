@@ -40,10 +40,10 @@
             and site_type in <foreach item="i" collection="monitoringLocationType" open="(" separator="," close=")">#{i}</foreach>
         </if>
         <if test="siteActive != null">
-            <if test="siteActive == TRUE">
+            <if test="siteActive">
                  and site_active
             </if>
-            <if test="siteActive == FALSE">
+            <if test="!siteActive">
                 and not site_active
            </if>
         </if>
