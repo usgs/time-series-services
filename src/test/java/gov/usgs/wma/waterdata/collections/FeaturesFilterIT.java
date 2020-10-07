@@ -12,6 +12,8 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 import java.io.IOException;
 
+import java.io.*;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -75,7 +77,8 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?siteActive=true",
             String.class);
             assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-            String compareFile = "featuresFilter/monitoring-locations/monitoring_location_type_multi_values.json";
+            String compareFile = "featuresFilter/monitoring-locations/monitoring_location_site_active_true.json";
+            System.out.println("True" + rtn.getBody());
             doJsonCompare(rtn, compareFile);
     }
 
@@ -84,7 +87,8 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?siteActive=false",
             String.class);
             assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-            String compareFile = "featuresFilter/monitoring-locations/monitoring_location_type_multi_values.json";
+            String compareFile = "featuresFilter/monitoring-locations/monitoring_location_site_active_false.json";
+            System.out.println("false" + rtn.getBody());
             doJsonCompare(rtn, compareFile);
     }
 

@@ -173,7 +173,6 @@ public class CollectionParams {
 			params = buildNullableItem(params, PARAM_COLLECTION_ID, collectionId);
 			params = buildNullableItem(params, PARAM_FEATURE_ID, featureId);
 			params = buildNullableItem(params, PARAM_TIME_SERIES_ID, timeSeriesId);
-			params = buildNullableItem(params, PARAM_SITE_ACTIVE, siteActive);
 
 			if (isPaging) {
 				params.put(PARAM_LIMIT, limitParam);
@@ -200,6 +199,7 @@ public class CollectionParams {
 			params = buildFilterableList(params, PARAM_HYDROLOGIC_UNITS, hydrologicUnits, "&hydrologicUnit=");
 			params = buildFilterableList(params, PARAM_NATIONAL_AQUIFER_CODES, nationalAquiferCodes, "&nationalAquiferCode=");
 			params = buildFilterableList(params, PARAM_AGENCY_CODES, agencyCodes, "&agencyCode=");
+			params = buildFilterableBool(params, PARAM_SITE_ACTIVE, siteActive, "&siteActive=");
 			params = buildFilterableList(params, PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationNumbers, "&monitoringLocationNumber=");
 			params = buildFilterableList(params, PARAM_MONITORING_LOCATION_TYPE, monitoringLocationType, "&monitoringLocationType=");
 
@@ -220,6 +220,26 @@ public class CollectionParams {
 					}
 				}
 			}
+			return params;
+		}
+
+		//return list of strings, return null is siteACtive is null 
+
+		private Map<String, Object> buildFilterableBool(
+			Map<String, Object> params, String key, Boolean flag,
+			String urlJoiner) {
+
+			if (flag != null) {
+				params.put(key, (Object) flag);
+				
+					String addition = urlJoiner + flag.toString();
+					if (!filterOptions.contains(addition)) {
+						filterOptions += addition;
+					}
+					System.out.println("filerOptions" + filterOptions);
+				
+			}
+			
 			return params;
 		}
 	}
