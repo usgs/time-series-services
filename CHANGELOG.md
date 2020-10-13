@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 -   Add links to swagger output for collections/{collectionsId}/items/{featureId}
 -   Changed /collections/{collectionId}/items to make agencyCodes, nationalAquiferCodes, and monitoringLocationNumbers into lists
+-   Active Flag True/False added to query Filter
+-   Hyrdrologic Unit filter updated to accept 2,4,6,8,10 lenghts  
 
 ## [0.7.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.6.0...time-series-services-0.7.0) - 2020-08-19
 ### Added
