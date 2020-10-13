@@ -27,6 +27,7 @@ public class CollectionParams {
 	public static final String  PARAM_MON_LOC_DESCRIPTION   = "monLocDescription";
 	public static final String  PARAM_MON_LOC_CONTACT_NAME  = "monLocContactName";
 	public static final String  PARAM_MON_LOC_CONTACT_EMAIL = "monLocContactEmail";
+	public static final String PARAM_SITE_ACTIVE = "active";
 	public static final String PARAM_COUNTRIES = "countries";
 	public static final String PARAM_COUNTIES = "counties";
 	public static final String PARAM_STATES = "states";
@@ -61,6 +62,7 @@ public class CollectionParams {
 		private int limitParam = MAX_LIMIT;
 		private int count = 0;
 		private int startIndex = 0;
+		private Boolean active; 
 		private List<String> countries;
 		private List<String> counties;
 		private List<String> states;
@@ -88,6 +90,11 @@ public class CollectionParams {
 
 		public Builder states(List<String> states) {
 			this.states = states;
+			return this;
+		}
+
+		public Builder active(Boolean active) {
+			this.active = active;
 			return this;
 		}
 
@@ -192,6 +199,7 @@ public class CollectionParams {
 			params = buildFilterableList(params, PARAM_HYDROLOGIC_UNITS, hydrologicUnits, "&hydrologicUnit=");
 			params = buildFilterableList(params, PARAM_NATIONAL_AQUIFER_CODES, nationalAquiferCodes, "&nationalAquiferCode=");
 			params = buildFilterableList(params, PARAM_AGENCY_CODES, agencyCodes, "&agencyCode=");
+			params = buildFilterableBool(params, PARAM_SITE_ACTIVE, active, "&active=");
 			params = buildFilterableList(params, PARAM_MONITORING_LOCATION_NUMBER, monitoringLocationNumbers, "&monitoringLocationNumber=");
 			params = buildFilterableList(params, PARAM_MONITORING_LOCATION_TYPE, monitoringLocationType, "&monitoringLocationType=");
 
@@ -212,6 +220,25 @@ public class CollectionParams {
 					}
 				}
 			}
+			return params;
+		}
+
+
+		private Map<String, Object> buildFilterableBool(
+			Map<String, Object> params, String key, Boolean flag,
+			String urlJoiner) {
+
+			if (flag != null) {
+				params.put(key, (Object) flag);
+				
+					String addition = urlJoiner + flag.toString();
+					if (!filterOptions.contains(addition)) {
+						filterOptions += addition;
+					}
+					
+				
+			}
+			
 			return params;
 		}
 	}

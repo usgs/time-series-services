@@ -39,6 +39,14 @@
         <if test="monitoringLocationType != null">
             and site_type in <foreach item="i" collection="monitoringLocationType" open="(" separator="," close=")">#{i}</foreach>
         </if>
+        <if test="active != null">
+            <if test="active">
+                 and site_active
+            </if>
+            <if test="!active">
+                and not site_active
+           </if>
+        </if>
     </sql>
 
     <sql id="collectionsJoin">
@@ -89,7 +97,8 @@
                                                                  'wellDepth', well_depth,
                                                                  'holeDepth', hole_depth,
                                                                  'holeDepthSource', source_of_hole_depth,
-                                                                 'agencyCode', agency_cd,
+                                                                 'agencyCode', agency_cd, 
+                                                                 'active', site_active,
                                                                  'districtCode', district_cd,
                                                                  'stateFIPS', country_cd || ':' || state_cd,
                                                                  'countyFIPS', country_cd || ':' || state_cd || ':' || county_cd,

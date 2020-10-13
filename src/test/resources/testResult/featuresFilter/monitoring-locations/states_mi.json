@@ -32,6 +32,7 @@
         "holeDepth": null,
         "holeDepthSource": null,
         "agencyCode": "USGS",
+        "active": true,
         "districtCode": "26",
         "stateFIPS": "US:26",
         "countyFIPS": "US:26:053",

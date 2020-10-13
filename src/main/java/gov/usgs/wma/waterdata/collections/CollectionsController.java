@@ -184,6 +184,9 @@ public class CollectionsController extends BaseController {
 		@Parameter(description="Well, Stream, or other type")
 		@RequestParam(value="monitoringLocationType", required = false) List<String> monitoringLocationType,
 
+		@Parameter(description="example: True|False|Null")
+		@RequestParam(value="active", required = false) Boolean active,
+
 		@Size(min=1, max=1000, message="The number of agency codes queried on must be between {min} and {max}")
 		@Parameter(description="USGS or other agency")
 		@RequestParam(value="agencyCode", required = false) List<String> agencyCodes,
@@ -200,6 +203,7 @@ public class CollectionsController extends BaseController {
 		Map<String, Object> params = collectionsParams.builder().collectionId(collectionId)
 			.countries(countries).states(states).counties(counties).hydrologicUnits(hydrologicUnits)
 			.nationalAquiferCodes(nationalAquiferCodes).agencyCodes(agencyCodes)
+			.active(active)
 			.monitoringLocationNumbers(monitoringLocationNumbers)
 			.monitoringLocationType(monitoringLocationType)
 			.bbox(bbox).build();
@@ -216,6 +220,7 @@ public class CollectionsController extends BaseController {
 				.countries(countries).states(states).counties(counties)
 				.hydrologicUnits(hydrologicUnits).nationalAquiferCodes(nationalAquiferCodes)
 				.agencyCodes(agencyCodes).monitoringLocationNumbers(monitoringLocationNumbers)
+				.active(active)
 				.monitoringLocationType(monitoringLocationType)
 				.bbox(bbox). paging(limit, startIndex, count).build();
 

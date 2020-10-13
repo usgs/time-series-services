@@ -12,6 +12,8 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 import java.io.IOException;
 
+import java.io.*;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,6 +71,26 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
         assertEquals(ogc404Payload, rtn.getBody());
     }
+
+    @Test
+    public void activeTestTrueFound() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?active=true",
+            String.class);
+            assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+            String compareFile = "featuresFilter/monitoring-locations/monitoring_location_site_active_true.json";
+            doJsonCompare(rtn, compareFile);
+    }
+
+    @Test
+    public void activeTestFalseFound() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?active=false",
+            String.class);
+            assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+            String compareFile = "featuresFilter/monitoring-locations/monitoring_location_site_active_false.json";
+            doJsonCompare(rtn, compareFile);
+    }
+
+    
 
     @Test
     public void stateTestInvalid() throws IOException {
