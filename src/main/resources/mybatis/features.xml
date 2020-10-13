@@ -3,6 +3,20 @@
 
 <mapper namespace="features">
 
+    <sql id="hucIndex">
+        <foreach item="i" collection="hydrologicUnits" separator=" or ">
+            <choose>
+                <when test="i.length() == 2">substring(calculated_huc_12, '[0-9]{2}') = #{i}</when>
+                <when test="i.length() == 4">substring(calculated_huc_12, '[0-9]{4}') = #{i}</when>
+                <when test="i.length() == 6">substring(calculated_huc_12, '[0-9]{6}') = #{i}</when>
+                <when test="i.length() == 8">substring(calculated_huc_12, '[0-9]{8}') = #{i}</when>
+                <when test="i.length() == 10">substring(calculated_huc_12, '[0-9]{10}') = #{i}</when>
+                <when test="i.length() == 12">calculated_huc_12 = #{i}</when>
+            </choose>
+        </foreach>
+    </sql>
+
+
     <sql id="queryFilters">
         <if test="pointLowLeft != null and pointUpRight != null">
             and st_intersects(
@@ -33,8 +47,9 @@
         <if test="agencyCodes != null">
             and agency_cd in <foreach item="i" collection="agencyCodes" open="(" separator="," close=")">#{i}</foreach>
         </if>
+
         <if test="hydrologicUnits != null">
-            and calculated_huc_12 in <foreach item="i" collection="hydrologicUnits" open="(" separator="," close=")">#{i}</foreach>
+            and (<include refid="hucIndex" />)
         </if>
         <if test="monitoringLocationType != null">
             and site_type in <foreach item="i" collection="monitoringLocationType" open="(" separator="," close=")">#{i}</foreach>
