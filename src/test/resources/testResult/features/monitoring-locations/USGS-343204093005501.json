@@ -31,7 +31,7 @@
         "holeDepth": null,
         "holeDepthSource": "S",
         "agencyCode": "USGS",
-        "siteActive": null, 
+        "active": null, 
         "districtCode": "05",
         "stateFIPS": "US:05",
         "countyFIPS": "US:05:051",

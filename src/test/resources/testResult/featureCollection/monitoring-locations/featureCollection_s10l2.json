@@ -13,7 +13,7 @@
       },
       "properties": {
         "agency": null,
-        "siteActive": null,
+        "active": null,
         "monitoringLocationNumber": null,
         "monitoringLocationName": "monitoringLocationName000010",
         "monitoringLocationType": null,

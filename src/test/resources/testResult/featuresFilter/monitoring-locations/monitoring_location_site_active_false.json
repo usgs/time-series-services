@@ -32,7 +32,7 @@
             "holeDepth": null,
             "holeDepthSource": null,
             "agencyCode": "USGS",
-            "siteActive": false,
+            "active": false,
             "districtCode": "48",
             "stateFIPS": "US:48",
             "countyFIPS": "US:48:205",

@@ -39,11 +39,11 @@
         <if test="monitoringLocationType != null">
             and site_type in <foreach item="i" collection="monitoringLocationType" open="(" separator="," close=")">#{i}</foreach>
         </if>
-        <if test="siteActive != null">
-            <if test="siteActive">
+        <if test="active != null">
+            <if test="active">
                  and site_active
             </if>
-            <if test="!siteActive">
+            <if test="!active">
                 and not site_active
            </if>
         </if>
@@ -98,7 +98,7 @@
                                                                  'holeDepth', hole_depth,
                                                                  'holeDepthSource', source_of_hole_depth,
                                                                  'agencyCode', agency_cd, 
-                                                                 'siteActive', site_active,
+                                                                 'active', site_active,
                                                                  'districtCode', district_cd,
                                                                  'stateFIPS', country_cd || ':' || state_cd,
                                                                  'countyFIPS', country_cd || ':' || state_cd || ':' || county_cd,

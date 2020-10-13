@@ -50,7 +50,7 @@
         "nationalAquifer": null,
         "nationalAquiferCode": null,
         "agency": null,
-        "siteActive": null,
+        "active": null,
         "altitudeAccuracy": null,
         "countryFIPS": null,
         "stateFIPS": null,

@@ -73,22 +73,20 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
     }
 
     @Test
-    public void siteActiveTestTrueFound() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?siteActive=true",
+    public void activeTestTrueFound() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?active=true",
             String.class);
             assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
             String compareFile = "featuresFilter/monitoring-locations/monitoring_location_site_active_true.json";
-            System.out.println("True" + rtn.getBody());
             doJsonCompare(rtn, compareFile);
     }
 
     @Test
-    public void siteActiveTestFalseFound() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?siteActive=false",
+    public void activeTestFalseFound() throws IOException {
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?active=false",
             String.class);
             assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
             String compareFile = "featuresFilter/monitoring-locations/monitoring_location_site_active_false.json";
-            System.out.println("false" + rtn.getBody());
             doJsonCompare(rtn, compareFile);
     }
 

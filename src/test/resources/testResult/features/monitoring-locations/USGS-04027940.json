@@ -28,7 +28,7 @@
     "wellDepth": null,
     "holeDepth": null,
     "holeDepthSource": null,
-    "siteActive": true, 
+    "active": true, 
     "agencyCode": "USGS",
     "districtCode": "26",
     "stateFIPS": "US:26",
