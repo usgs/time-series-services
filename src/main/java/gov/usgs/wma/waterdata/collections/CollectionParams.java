@@ -235,7 +235,7 @@ public class CollectionParams {
 					if (!filterOptions.contains(addition)) {
 						filterOptions += addition;
 					}
-					System.out.println("filerOptions" + filterOptions);
+					
 				
 			}
 			
