@@ -184,7 +184,7 @@ public class CollectionsController extends BaseController {
 		@Parameter(description="Well, Stream, or other type")
 		@RequestParam(value="monitoringLocationType", required = false) List<String> monitoringLocationType,
 
-		@Parameter(description="example: True|False|Null")
+		@Parameter(description="A location is active if it has instantaneous data collected within the last 6 months or discrete data collected in the last 13 months")
 		@RequestParam(value="active", required = false) Boolean active,
 
 		@Size(min=1, max=1000, message="The number of agency codes queried on must be between {min} and {max}")
