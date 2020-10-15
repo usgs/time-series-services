@@ -193,9 +193,9 @@ public class CollectionParams {
 				params.put(PARAM_POINT_UP_RIGHT, String.format("Point(%s %s)", bbox.getEast(), bbox.getNorth()));
 			}
 
-			params = buildFilterableList(params, PARAM_COUNTRIES, countries, "&country=");
-			params = buildFilterableList(params, PARAM_COUNTIES, counties, "&county=");
-			params = buildFilterableList(params, PARAM_STATES, states, "&state=");
+			params = buildFilterableList(params, PARAM_COUNTRIES, countries, "&countryFIPS=");
+			params = buildFilterableList(params, PARAM_COUNTIES, counties, "&countyFIPS=");
+			params = buildFilterableList(params, PARAM_STATES, states, "&stateFIPS=");
 			params = buildFilterableList(params, PARAM_HYDROLOGIC_UNITS, hydrologicUnits, "&hydrologicUnit=");
 			params = buildFilterableList(params, PARAM_NATIONAL_AQUIFER_CODES, nationalAquiferCodes, "&nationalAquiferCode=");
 			params = buildFilterableList(params, PARAM_AGENCY_CODES, agencyCodes, "&agencyCode=");

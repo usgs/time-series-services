@@ -182,7 +182,7 @@
                                                                              'title', 'This document as GeoJSON',
                                                                              'href', #{serverUrl} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
                                                                                      || '/items?f=json' || '&amp;startIndex=' || #{startIndex}
-                                                                                     || '&amp;limit=' || #{limit}
+                                                                                     || '&amp;limit=' || #{limit} || #{filterOptions}
                                                                             ),
                                                            json_build_object(
                                                                              'type', 'application/json',

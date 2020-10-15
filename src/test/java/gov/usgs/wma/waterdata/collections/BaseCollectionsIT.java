@@ -44,8 +44,14 @@ public abstract class BaseCollectionsIT extends BaseIT {
 	}
 
 	protected void doJsonCompare(ResponseEntity<String> rtn, String compareFile) {
+		doJsonCompare(rtn, compareFile, "");
+	}
+
+	protected void doJsonCompare(ResponseEntity<String> rtn, String compareFile, String filterOptions) {
 		try {
-			JSONObject featureCollection = new JSONObject(getCompareFile(compareFile));
+			String compareJson = getCompareFile(compareFile);
+			compareJson = compareJson.replace("{FilterOptions}", filterOptions);
+			JSONObject featureCollection = new JSONObject(compareJson);
 			JSONObject returnedJson = new JSONObject(rtn.getBody());
 			assertHasExpectedFields(returnedJson);
 			assertThat(returnedJson,

@@ -62,7 +62,7 @@
 		"type": "application/geo+json",
 		"rel": "self",
 		"title": "This document as GeoJSON",
-		"href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=0&limit=10000"
+		"href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=0&limit=10000{FilterOptions}"
 	}, {
 		"type": "application/json",
 		"rel": "collection",
