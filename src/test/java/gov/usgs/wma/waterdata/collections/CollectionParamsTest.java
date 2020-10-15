@@ -157,9 +157,9 @@ class CollectionParamsTest {
 		assertEquals("&startIndex=10010&limit=10000", params.get(PARAM_NEXT_START_INDEX));
 
 
-		assertEquals("&country=MX&country=FR&country=KR" +
-			"&county=06071&county=55025" +
-			"&state=06&state=25&state=55" +
+		assertEquals("&countryFIPS=MX&countryFIPS=FR&countryFIPS=KR" +
+			"&countyFIPS=06071&countyFIPS=55025" +
+			"&stateFIPS=06&stateFIPS=25&stateFIPS=55" +
 			"&hydrologicUnit=000000000000" +
 			"&nationalAquiferCode=N9999OTHER" +
 			"&agencyCode=USGS" +

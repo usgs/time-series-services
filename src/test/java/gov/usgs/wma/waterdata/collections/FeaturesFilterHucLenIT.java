@@ -41,7 +41,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_020103020107.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=020103020107");
     }
 
     @Test
@@ -50,7 +50,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_040103020109.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=040103020109");
     }
 
     @Test
@@ -67,7 +67,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_040103020109.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=04");
     }
 
     @Test
@@ -84,7 +84,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_040103020109.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=0401");
     }
 
     @Test
@@ -101,7 +101,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_040103020109.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=040103");
     }
 
     @Test
@@ -118,13 +118,13 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_040103020109.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=04010302");
     }
 
     @Test
     public void hydrologicUnitsMatch04Len9DigitsTest() throws IOException {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicUnit=040103020",
-            String.class);
+            String.class); 
             assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
             assertEquals(badRequestHucLength, rtn.getBody());
     }
@@ -135,7 +135,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_040103020109.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=0401030201");
     }
 
     @Test
@@ -152,7 +152,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_060103020107.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=060103020107");
     }
 
     @Test
@@ -161,7 +161,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_080103020107.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=080103020107");
     }
 
     @Test
@@ -170,7 +170,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_100103020107.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=100103020107");
     }
 
     @Test
@@ -179,7 +179,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_120103020107.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=120103020107");
     }
 
     @Test
@@ -188,6 +188,6 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_multi_values_len10_len12.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=100103020107&hydrologicUnit=120103020107");
     }
 }

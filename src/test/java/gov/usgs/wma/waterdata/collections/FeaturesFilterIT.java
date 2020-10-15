@@ -32,11 +32,11 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
     
     @Test
     public void countryTest() throws IOException {
-        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?country=MX&country=US&monitoringLocationType=Well",
+        ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?countryFIPS=MX&countryFIPS=US&monitoringLocationType=Well",
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/countries_mx_us.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&countryFIPS=MX&countryFIPS=US&monitoringLocationType=Well");
     }
 
     @Test
@@ -61,7 +61,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/states_mi.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&stateFIPS=US:26");
     }
 
     @Test
@@ -78,7 +78,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
             assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
             String compareFile = "featuresFilter/monitoring-locations/monitoring_location_site_active_true.json";
-            doJsonCompare(rtn, compareFile);
+            doJsonCompare(rtn, compareFile, "&active=true");
     }
 
     @Test
@@ -87,7 +87,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
             assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
             String compareFile = "featuresFilter/monitoring-locations/monitoring_location_site_active_false.json";
-            doJsonCompare(rtn, compareFile);
+            doJsonCompare(rtn, compareFile, "&active=false");
     }
 
     
@@ -106,7 +106,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/counties_ak_05051.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&countyFIPS=US:05:051");
     }
 
     @Test
@@ -131,7 +131,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_040103020107.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&hydrologicUnit=040103020107");
     }
 
 	@Test
@@ -142,7 +142,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
 		String compareFile = "featuresFilter/monitoring-locations/hydrological_unit_multi_values.json";
-		doJsonCompare(rtn, compareFile);
+		doJsonCompare(rtn, compareFile, "&hydrologicUnit=040103020107&hydrologicUnit=080401010805");
 	}
 
     @Test
@@ -166,7 +166,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/monitoring_location_type_well.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&monitoringLocationType=Well");
     }
 
 	@Test
@@ -176,7 +176,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
 				String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
 		String compareFile = "featuresFilter/monitoring-locations/monitoring_location_type_multi_values.json";
-		doJsonCompare(rtn, compareFile);
+		doJsonCompare(rtn, compareFile, "&monitoringLocationType=Well&monitoringLocationType=Stream");
 	}
 
     @Test
@@ -218,7 +218,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/nat_aqfr_cd_N9999OTHER.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&nationalAquiferCode=N9999OTHER");
 
     }
 
@@ -228,7 +228,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/nat_aqfr_cd_N9999OTHER.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&nationalAquiferCode=N9999OTHER&nationalAquiferCode=Z1234HMMMM");
 
     }
 
@@ -255,7 +255,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/monitoring_location_number_USGS-343204093005501.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&monitoringLocationNumber=343204093005501");
     }
 
     @Test
@@ -265,7 +265,7 @@ public class FeaturesFilterIT extends BaseCollectionsIT {
             String.class);
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         String compareFile = "featuresFilter/monitoring-locations/monitoring_location_number_USGS-343204093005501.json";
-        doJsonCompare(rtn, compareFile);
+        doJsonCompare(rtn, compareFile, "&monitoringLocationNumber=343204093005501&monitoringLocationNumber=000000000000");
     }
     
     @Test
