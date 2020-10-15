@@ -124,7 +124,7 @@ public class FeaturesFilterHucLenIT extends BaseCollectionsIT {
     @Test
     public void hydrologicUnitsMatch04Len9DigitsTest() throws IOException {
         ResponseEntity<String> rtn = restTemplate.getForEntity("/collections/monitoring-locations/items?hydrologicUnit=040103020",
-            String.class);
+            String.class); 
             assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
             assertEquals(badRequestHucLength, rtn.getBody());
     }
