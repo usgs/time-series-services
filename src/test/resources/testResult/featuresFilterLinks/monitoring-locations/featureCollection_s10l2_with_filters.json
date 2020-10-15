@@ -133,7 +133,7 @@
       "type": "application/geo+json",
       "rel": "self",
       "title": "This document as GeoJSON",
-      "href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=10&limit=2"
+      "href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=10&limit=2&countryFIPS=US&countryFIPS=MX&agencyCode=USGS"
     },
     {
       "type": "application/json",
@@ -145,13 +145,13 @@
       "type": "application/geo+json",
       "rel": "prev",
       "title": "items (prev)",
-      "href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=8&limit=2&country=US&country=MX&agencyCode=USGS"
+      "href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=8&limit=2&countryFIPS=US&countryFIPS=MX&agencyCode=USGS"
     },
     {
       "type": "application/geo+json",
       "rel": "next",
       "title": "items (next)",
-      "href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=12&limit=2&country=US&country=MX&agencyCode=USGS"
+      "href": "https://unittest/api/observations/collections/monitoring-locations/items?f=json&startIndex=12&limit=2&countryFIPS=US&countryFIPS=MX&agencyCode=USGS"
     }
   ]
 }
