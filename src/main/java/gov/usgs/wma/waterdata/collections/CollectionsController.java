@@ -45,8 +45,8 @@ public class CollectionsController extends BaseController {
 	public static final String FIPS_COUNTRY_DESC =  "two-character Federal Information Processing Standard (FIPS) Country Codes." +
             " (Example: US for United States, MX for Mexico)";
 	public static final String REGEX_FIPS_COUNTRY_MESS = "countryFIPS must be a " + FIPS_COUNTRY_DESC;
-	public static final String REGEX_FIPS_HYDRO = "[0-9]{12}";
-	public static final String REGEX_FIPS_HYDRO_MESS = "hydrologic unit must be a twelve digit number";
+	public static final String REGEX_FIPS_HYDRO = "(?:[0-9]{12})|(?:[0-9]{10})|(?:[0-9]{8})|(?:[0-9]{6})|(?:[0-9]{4})|(?:(?:[0-9]{2}){1,3}\\*?)";
+	public static final String REGEX_FIPS_HYDRO_MESS = "hydrologic unit must be a 2,4,6,8,10 or 12 digit number";
 	public static final String REGEX_MON_LOC_NUMBER = "[0-9]+";
 	public static final String REGEX_MON_LOC_NUMBER_MESS = "monitoring location number must be all numeric digits";
 	public static final String REGEX_NATIONAL_AQUIFER_CODE = "[A-Z][0-9]+[A-Z]+";
@@ -184,7 +184,7 @@ public class CollectionsController extends BaseController {
 		@Parameter(description="Well, Stream, or other type")
 		@RequestParam(value="monitoringLocationType", required = false) List<String> monitoringLocationType,
 
-		@Parameter(description="example: True|False|Null")
+		@Parameter(description="A location is active if it has instantaneous data collected within the last 6 months or discrete data collected in the last 13 months")
 		@RequestParam(value="active", required = false) Boolean active,
 
 		@Size(min=1, max=1000, message="The number of agency codes queried on must be between {min} and {max}")
