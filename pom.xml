@@ -11,9 +11,9 @@
     <properties>
         <java.version>11</java.version>
         <mybatis-spring.version>2.0.5</mybatis-spring.version>
-        <mybatis.version>3.5.5</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <postgis-jdbc.version>2.5.0</postgis-jdbc.version>
-        <springdoc.version>1.4.4</springdoc.version>
+        <springdoc.version>1.4.8</springdoc.version>
     </properties>
 
     <licenses>
