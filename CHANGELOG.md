@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html). (Patch version X.Y.0 is implied if not specified.)
 
-## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.7.0...master)
+## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.8.0...master)
+
+## [0.8.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.7.0...time-series-services-0.8.0) - 2020-10-27
 ### Changed
 -   Add links to swagger output for collections/{collectionsId}/items/{featureId}
--   Changed /collections/{collectionId}/items to make agencyCodes, nationalAquiferCodes, and monitoringLocationNumbers into lists
+-   countryFIPS, countyFIPS, stateFIPS, hydrologicUnit, nationalAquiferCode, monitoringLocationNumber, monitoringLocationType, agencyCode added to query Filter
+-   Changed /collections/{collectionId}/items to make agencyCode, nationalAquiferCode, and monitoringLocationNumber into lists
 -   Active Flag True/False added to query Filter
 -   Hyrdrologic Unit filter updated to accept 2,4,6,8,10 lenghts  
 -   Added Filter Options to self link url 
