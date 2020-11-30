@@ -4,15 +4,6 @@ import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTI
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SERIES_ID;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-
 import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.collections.BaseController;
 import gov.usgs.wma.waterdata.openapi.schema.observations.StatisticalFeatureGeoJSON;
@@ -23,6 +14,15 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+
 
 @Tag(name = "Statistical Observations Datasets", description = "Feature Statistical Time Series Observations, such as min, max, or median.")
 @RestController
@@ -65,7 +65,7 @@ public class TimeSeriesController extends BaseController {
 	@GetMapping(value = URL_STATISTICAL_TIME_SERIES, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String getTimeSeries(@PathVariable(value = PARAM_COLLECTION_ID) String collectionId, // ex: networkId,
 			@PathVariable(value = PARAM_FEATURE_ID) String featureId,
-			@PathVariable(value = PARAM_TIME_SERIES_ID) String timeSeriesId, // ex: USGS-123456
+			@PathVariable(value = PARAM_TIME_SERIES_ID) String timeSeriesId, // ex: 2ae58a8bdb1b4b778577a2ce3a5362d0
 			HttpServletResponse response) {
 
 		String rtn = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);

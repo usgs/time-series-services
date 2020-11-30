@@ -13,14 +13,14 @@
     },
     "timeSeries": [
         {
-            "id": "USGS-07227448-1ssdfsgfgrvmhjhjnbassdymbnjghnv0",
+            "id": "1ssdfsgfgrvmhjhjnbassdymbnjghnv0",
             "description": "Depth to water level, ft below land surface, DAILY MINIMUM VALUES",
             "parameterCode": "1",
             "statisticCode": "00002",
             "url": "https://unittest/api/observations/collections/SAT/items/USGS-07227448/observations/statistical-time-series/1ssdfsgfgrvmhjhjnbassdymbnjghnv0"
         },
         {
-            "id": "USGS-07227448-e6a4cc2de5bf437e83efe0107cf026ac",
+            "id": "e6a4cc2de5bf437e83efe0107cf026ac",
             "description": "Depth to water level, ft below land surface, DAILY MAXIMUM VALUES",
             "parameterCode": "1",
             "statisticCode": "00001",
