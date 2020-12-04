@@ -14,6 +14,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,13 +30,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.util.List;
-import java.util.Map;
 
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTION_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
@@ -78,11 +78,11 @@ public class CollectionsController extends BaseController {
 	}
 
 	@Operation(
-			description = "Return GeoJSON representation of the Collections.",
+			description = "Return OGCAPI JSON representation of the Collections.",
 			responses = {
 					@ApiResponse(
 							responseCode = "200",
-							description = "GeoJSON representation of the Collections.",
+							description = "OGCAPI JSON representation of the Collections.",
 							content = @Content(schema = @Schema(implementation = CollectionsGeoJSON.class))),
 					@ApiResponse(
 							responseCode = "500",
@@ -98,11 +98,11 @@ public class CollectionsController extends BaseController {
 	}
 
 	@Operation(
-			description = "Return GeoJSON Data specific to the requested Collection.",
+			description = "Return OGCAPI JSON Data specific to the requested Collection.",
 			responses = {
 					@ApiResponse(
 							responseCode = "200",
-							description = "GeoJSON representation of the Collection.",
+							description = "OGCAPI JSON representation of the Collection.",
 							content = @Content(schema = @Schema(implementation = CollectionGeoJSON.class))),
 					@ApiResponse(
 							responseCode = "404",
