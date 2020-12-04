@@ -23,7 +23,7 @@
                    'timeSeries', coalesce(nullif(jsonb_agg(distinct 
                                         case when gw.monitoring_location_id is not null then
                                             jsonb_build_object(
-                                                 'id', groundwater_daily_value_identifier,
+                                                 'id', time_series_unique_id,
                                                  'description', observered_property_name||', '||statistic,
                                                  'parameterCode', observered_property_id,
                                                  'statisticCode', statistic_id,
