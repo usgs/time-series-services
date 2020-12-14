@@ -12,6 +12,7 @@ applicationName: "time-series-services"
 containerPort: 8080
 # string parameter specifying a path that ALB should use to verify that your application is alive
 healthCheck: "/api/observations/about/health"
+healthCheckIntervalSeconds: 60
 configRepoPath: "wma/docker/wdfn/time-series-services"
 configCredentialsId: "wma-eto-eb-rsa"
 urlRules:
