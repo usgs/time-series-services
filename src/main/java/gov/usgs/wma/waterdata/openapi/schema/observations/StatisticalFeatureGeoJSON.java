@@ -1,9 +1,9 @@
 package gov.usgs.wma.waterdata.openapi.schema.observations;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import gov.usgs.wma.waterdata.openapi.schema.geojson.Geometry;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 
 
 @JsonPropertyOrder(value={"type","id","geometry","properties","timeSeries"})
@@ -26,7 +26,7 @@ public class StatisticalFeatureGeoJSON  {
 		return null;
 	}
 	@Schema(description="The statistical time series available for this Feature.")
-	public StatisticalTimeSeriesItem[] getTimesSeries() {
+	public StatisticalTimeSeriesItem[] getTimeSeries() {
 		return null;
 	}
 
