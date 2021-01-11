@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.8.0...master)
 
+## [0.9.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.8.0...time-series-services-0.9.0) - 2021-01-11
+### Changed
+-   Update project tagging scheme
+-   Move to Fargate 
+-   Update health check interval
+
 ## [0.8.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.7.0...time-series-services-0.8.0) - 2020-10-27
 ### Changed
 -   Add links to swagger output for collections/{collectionsId}/items/{featureId}
