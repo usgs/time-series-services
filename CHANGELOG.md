@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Update project tagging scheme
 -   Move to Fargate 
 -   Update health check interval
+-   Cleaned up Swagger
+-   Remove prefix from time series identifier
 
 ## [0.8.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.7.0...time-series-services-0.8.0) - 2020-10-27
 ### Changed
