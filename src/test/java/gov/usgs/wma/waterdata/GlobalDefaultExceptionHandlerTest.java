@@ -48,7 +48,7 @@ public class GlobalDefaultExceptionHandlerTest {
 	@Test
 	public void handleMissingServletRequestParameterException() throws IOException {
 		HttpServletResponse response = new MockHttpServletResponse();
-		String expected = "Required String parameter 'parm' is not present";
+		String expected = "Required request parameter 'parm' for method parameter type String is not present";
 		OgcException actual = controller.handleUncaughtException(new MissingServletRequestParameterException("parm", "String"), request, response);
 		assertNotNull(actual);
 		assertEquals(expected, actual.getDescription());
