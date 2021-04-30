@@ -19,10 +19,10 @@ import gov.usgs.wma.waterdata.collections.BaseCollectionsIT;
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/timeSeries/")
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
-@DatabaseSetup("classpath:/testData/bestTimeSeries/empty.xml")
-public class StatTimeSeriesControllerIT extends BaseCollectionsIT {
+@DatabaseSetup("classpath:/testData/bestTimeSeries/csv/")
+public class BestTimeSeriesIT extends BaseCollectionsIT {
 	@Test
-	public void featureTimeSeriesCollectionTest() throws Exception {
+	public void timeSeriesCollectionBestFoundTest() throws Exception {
 		String url = "/collections/monitoring-locations/items/USGS-07227448/observations/statistical-time-series";
 
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -30,20 +30,20 @@ public class StatTimeSeriesControllerIT extends BaseCollectionsIT {
 		HttpStatus actualStatusCode = response.getStatusCode();
 		assertThat(actualStatusCode, equalTo(HttpStatus.OK));
 
-		String expectResponseJSON = getCompareFile("timeSeries/monitoring-locations/usgs-07227448-time-series-list.json");
+		String expectResponseJSON = getCompareFile("bestTimeSeries/monitoring-locations/usgs-07227448-time-series-list.json");
 		String actualResponseJSON = response.getBody();
 		assertThat(new JSONObject(actualResponseJSON),
 				sameJSONObjectAs(new JSONObject(expectResponseJSON)).allowingAnyArrayOrdering());
 	}
 
 	@Test
-	public void featureTimeSeriesSatCollectionTest() throws Exception {
+	public void timeSeriesSatCollectionBestFoundTest() throws Exception {
 		String url = "/collections/SAT/items/USGS-07227448/observations/statistical-time-series";
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 
-		String expectResponseJSON = getCompareFile("timeSeries/SAT/usgs-07227448-time-series-list.json");
+		String expectResponseJSON = getCompareFile("bestTimeSeries/SAT/usgs-07227448-time-series-list.json");
 		String actualResponseJSON = response.getBody();
 		assertThat(new JSONObject(actualResponseJSON),
 				sameJSONObjectAs(new JSONObject(expectResponseJSON)).allowingAnyArrayOrdering());

@@ -9,6 +9,20 @@
         on gw.monitoring_location_id = ml.monitoring_location_id
     </sql>
 
+    <sql id="bestTimeSeriesQuery">
+       select monitoring_location_identifier, time_series_unique_id best_ts_id, parameter_cd, statistic_cd
+       from (select *, RANK() OVER (ORDER BY ranking DESC) AS rk
+             from nwis.best_time_series
+             where monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                   and ranking > 0) as t
+       where rk = 1
+    </sql>
+
+    <sql id="bestTimeSeriesJoin">
+       left join lateral (<include refid="bestTimeSeriesQuery"/>) best_time_series
+       on ml.monitoring_location_identifier = best_time_series.monitoring_location_identifier
+    </sql>
+
     <select id="getStatisticalTimeSeriesJson" parameterType="java.util.Map" resultType="String">
         select json_build_object('type', 'Feature',
                    'id', ml.monitoring_location_identifier,
@@ -31,6 +45,16 @@
                                                      || 'collections/' || #{collectionId} || '/items/'
                                                      || ml.monitoring_location_identifier
                                                      || '/observations/statistical-time-series/' || time_series_unique_id)
+                                                     || case
+                                                           when best_time_series.best_ts_id is null then
+                                                                jsonb_build_object('best', null)
+                                                           when best_time_series.best_ts_id = time_series_unique_id and
+                                                                best_time_series.parameter_cd = observered_property_id and
+                                                                best_time_series.statistic_cd = statistic_id then
+                                                                   jsonb_build_object('best', true)
+                                                            else
+                                                               jsonb_build_object('best', false)
+                                                        end
                                         end
                                  ), jsonb_build_array(null)), jsonb_build_array())
                )
@@ -38,12 +62,14 @@
             <when test="collectionId == 'monitoring-locations'">
                 from nwis.monitoring_location ml
                 <include refid="gwDailyValueJoin"/>
+                <include refid="bestTimeSeriesJoin"/>
             </when>
             <otherwise>
                 from nwis.network
                 join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
                 join nwis.monitoring_location ml on nwis.network_sites.monitoring_location_id = ml.monitoring_location_id
                 <include refid="gwDailyValueJoin"/>
+                <include refid="bestTimeSeriesJoin"/>
             </otherwise>
         </choose>
                 where ml.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
