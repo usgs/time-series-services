@@ -22,6 +22,7 @@ import gov.usgs.wma.waterdata.springinit.DBTestConfig;
 					ConfigurationService.class})
 @DatabaseSetup("classpath:/testData/timeSeries/")
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
+@DatabaseSetup("classpath:/testData/bestTimeSeries/empty.xml")
 public class StatTimeSeriesDaoIT extends BaseIT {
 	@Autowired
 	private TimeSeriesDao timeSeriesDao;
