@@ -22,6 +22,7 @@ import gov.usgs.wma.waterdata.springinit.DBTestConfig;
 					ConfigurationService.class})
 @DatabaseSetup("classpath:/testData/timeSeries/")
 @DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
+@DatabaseSetup("classpath:/testData/bestTimeSeries/empty.xml")
 public class StatTimeSeriesDaoIT extends BaseIT {
 	@Autowired
 	private TimeSeriesDao timeSeriesDao;
@@ -30,14 +31,14 @@ public class StatTimeSeriesDaoIT extends BaseIT {
 	public void featureTimeSeriesCollectionTest() throws Exception {
 		String actualJSON  = timeSeriesDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "USGS-07227448");
 		String expectJSON = getCompareFile("timeSeries/monitoring-locations/usgs-07227448-time-series-list.json");
-		assertThat(new JSONObject(actualJSON), sameJSONObjectAs(new JSONObject(expectJSON)));
+		assertThat(new JSONObject(actualJSON), sameJSONObjectAs(new JSONObject(expectJSON)).allowingAnyArrayOrdering());
 	}
 
 	@Test
 	public void featureTimeSeriesCollectionEmptyTest() throws Exception {
 		String actualJSON  = timeSeriesDao.getStatisticalTimeSeries(DEFAULT_COLLECTION_ID, "USGS-04027940");
 		String expectJSON = getCompareFile("timeSeries/monitoring-locations/usgs-04027940-time-series-list.json");
-		assertThat(new JSONObject(actualJSON), sameJSONObjectAs(new JSONObject(expectJSON)));
+		assertThat(new JSONObject(actualJSON), sameJSONObjectAs(new JSONObject(expectJSON)).allowingAnyArrayOrdering());
 	}
 	
 	@Test
