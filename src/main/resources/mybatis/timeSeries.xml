@@ -19,7 +19,7 @@
     </sql>
 
     <sql id="bestTimeSeriesJoin">
-       left join lateral (<include refid="bestTimeSeriesQuery"/>) best_time_series
+       left join (<include refid="bestTimeSeriesQuery"/>) best_time_series
        on ml.monitoring_location_identifier = best_time_series.monitoring_location_identifier
     </sql>
 
