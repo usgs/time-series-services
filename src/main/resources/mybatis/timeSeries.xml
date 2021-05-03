@@ -23,6 +23,19 @@
        on ml.monitoring_location_identifier = best_time_series.monitoring_location_identifier
     </sql>
 
+    <sql id="bestTimeSeriesValue">
+       case
+          when best_time_series.best_ts_id is null then
+                  null
+          when best_time_series.best_ts_id = time_series_unique_id and
+               best_time_series.parameter_cd = observered_property_id and
+               best_time_series.statistic_cd = statistic_id then
+                  true
+          else
+                  false
+       end
+    </sql>
+
     <select id="getStatisticalTimeSeriesJson" parameterType="java.util.Map" resultType="String">
         select json_build_object('type', 'Feature',
                    'id', ml.monitoring_location_identifier,
@@ -44,17 +57,8 @@
                                                  'url', #{serverUrl,jdbcType=VARCHAR}
                                                      || 'collections/' || #{collectionId} || '/items/'
                                                      || ml.monitoring_location_identifier
-                                                     || '/observations/statistical-time-series/' || time_series_unique_id)
-                                                     || case
-                                                           when best_time_series.best_ts_id is null then
-                                                                jsonb_build_object('best', null)
-                                                           when best_time_series.best_ts_id = time_series_unique_id and
-                                                                best_time_series.parameter_cd = observered_property_id and
-                                                                best_time_series.statistic_cd = statistic_id then
-                                                                   jsonb_build_object('best', true)
-                                                            else
-                                                               jsonb_build_object('best', false)
-                                                        end
+                                                     || '/observations/statistical-time-series/' || time_series_unique_id,
+                                                 'best', <include refid="bestTimeSeriesValue"/>)
                                         end
                                  ), jsonb_build_array(null)), jsonb_build_array())
                )
