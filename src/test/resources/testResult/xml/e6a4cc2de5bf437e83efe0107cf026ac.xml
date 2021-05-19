@@ -9,13 +9,13 @@
     <om:OM_Observation gml:id="e6a4cc2de5bf437e83efe0107cf026ac">
       <om:phenomenonTime>
         <gml:TimePeriod>
-          <gml:beginPosition>2019-11-09T00:00:00Z</gml:beginPosition>
-          <gml:endPosition>2019-11-15T00:00:00Z</gml:endPosition>
+          <gml:beginPosition>2019-11-09</gml:beginPosition>
+          <gml:endPosition>2019-11-15</gml:endPosition>
         </gml:TimePeriod>
       </om:phenomenonTime>
       <om:resultTime>
         <gml:timePosition>
-          <gml:timePosition>2019-11-15T00:00:00Z</gml:timePosition>
+          <gml:timePosition>2019-11-15</gml:timePosition>
         </gml:timePosition>
       </om:resultTime>
       <om:procedure>
@@ -33,43 +33,43 @@
       <om:result>
         <wml2:point>
           <wml2:MeasurementTVP>
-            <wml2:time>2019-11-09T00:00:00Z</wml2:time>
+            <wml2:time>2019-11-09</wml2:time>
             <wml2:value>12.5</wml2:value>
           </wml2:MeasurementTVP>
         </wml2:point>
         <wml2:point>
           <wml2:MeasurementTVP>
-            <wml2:time>2019-11-10T00:00:00Z</wml2:time>
+            <wml2:time>2019-11-10</wml2:time>
             <wml2:value>12.0</wml2:value>
           </wml2:MeasurementTVP>
         </wml2:point>
         <wml2:point>
           <wml2:MeasurementTVP>
-            <wml2:time>2019-11-11T00:00:00Z</wml2:time>
+            <wml2:time>2019-11-11</wml2:time>
             <wml2:value>11.0</wml2:value>
           </wml2:MeasurementTVP>
         </wml2:point>
         <wml2:point>
           <wml2:MeasurementTVP>
-            <wml2:time>2019-11-12T00:00:00Z</wml2:time>
+            <wml2:time>2019-11-12</wml2:time>
             <wml2:value>13.2</wml2:value>
           </wml2:MeasurementTVP>
         </wml2:point>
         <wml2:point>
           <wml2:MeasurementTVP>
-            <wml2:time>2019-11-13T00:00:00Z</wml2:time>
+            <wml2:time>2019-11-13</wml2:time>
             <wml2:value>13.5</wml2:value>
           </wml2:MeasurementTVP>
         </wml2:point>
         <wml2:point>
           <wml2:MeasurementTVP>
-            <wml2:time>2019-11-14T00:00:00Z</wml2:time>
+            <wml2:time>2019-11-14</wml2:time>
             <wml2:value>14.1</wml2:value>
           </wml2:MeasurementTVP>
         </wml2:point>
         <wml2:point>
           <wml2:MeasurementTVP>
-            <wml2:time>2019-11-15T00:00:00Z</wml2:time>
+            <wml2:time>2019-11-15</wml2:time>
             <wml2:value>14.1</wml2:value>
           </wml2:MeasurementTVP>
         </wml2:point>

@@ -9,13 +9,13 @@
     <om:OM_Observation gml:id="e6a4cc2de5bf437e83efe0107cf026ac">
       <om:phenomenonTime>
         <gml:TimePeriod>
-          <gml:beginPosition>[NOW-1095DAYS]T00:00:00Z</gml:beginPosition>
-          <gml:endPosition>[NOW-1095DAYS]T00:00:00Z</gml:endPosition>
+          <gml:beginPosition>[NOW-1095DAYS]</gml:beginPosition>
+          <gml:endPosition>[NOW-1095DAYS]</gml:endPosition>
         </gml:TimePeriod>
       </om:phenomenonTime>
       <om:resultTime>
         <gml:timePosition>
-          <gml:timePosition>[NOW-1095DAYS]T00:00:00Z</gml:timePosition>
+          <gml:timePosition>[NOW-1095DAYS]</gml:timePosition>
         </gml:timePosition>
       </om:resultTime>
       <om:procedure>
@@ -33,7 +33,7 @@
       <om:result>
         <wml2:point>
           <wml2:MeasurementTVP>
-            <wml2:time>[NOW-1095DAYS]T00:00:00Z</wml2:time>
+            <wml2:time>[NOW-1095DAYS]</wml2:time>
             <wml2:value>14.1</wml2:value>
           </wml2:MeasurementTVP>
         </wml2:point>
