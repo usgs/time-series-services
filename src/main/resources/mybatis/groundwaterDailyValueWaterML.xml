@@ -3,20 +3,6 @@
 
 <mapper namespace="groundwaterDailyValueWaterML">
 
-    <sql id="phenomenonTime">
-       xmlelement(name "om:phenomenonTime",
-       xmlelement(name "gml:TimePeriod",
-       xmlelement(name "gml:beginPosition", phenomenon_time_start,
-       xmlelement(name "gml:endPosition", phenomenon_time_end
-       ))))
-    </sql>
-
-    <sql id="resultTime">
-       xmlelement(name "om:resultTime",
-       xmlelement(name "gml:timePosition",
-       xmlelement(name "gml:timePosition", phenomenon_time_end)
-    </sql>
-
     <select id="getWaterML" parameterType="String" resultType="String"><![CDATA[
        with
             gw_daily_value as (
