@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.xmlunit.matchers.CompareMatcher;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,9 +107,6 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 		assertNotNull(rtn.getBody());
 
 		try {
-			PrintWriter out = new PrintWriter("c:/temp/" + compareFile);
-			out.println(rtn.getBody());
-			out.close();
 			String expectedXml = harmonizeXml(getCompareFile(compareFile));
 			expectedXml = expectedXml.replaceAll("<wml2:generationDate>.*</wml2:generationDate>", "");
 			expectedXml = expectedXml.replace("[collectionId]", collectionId);
