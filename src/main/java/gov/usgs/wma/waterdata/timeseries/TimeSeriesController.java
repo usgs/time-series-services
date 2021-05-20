@@ -4,6 +4,8 @@ import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTI
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SERIES_ID;
 
+import java.io.IOException;
+
 import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.collections.BaseController;
 import gov.usgs.wma.waterdata.openapi.schema.observations.StatisticalFeatureGeoJSON;
@@ -69,7 +71,7 @@ public class TimeSeriesController extends BaseController {
 			@ApiResponse(responseCode = "404", description = HTTP_404_DESCRIPTION, content = @Content(schema = @Schema(implementation = OgcException.class))),
 			@ApiResponse(responseCode = "500", description = HTTP_500_DESCRIPTION, content = @Content(schema = @Schema(implementation = OgcException.class))) }, externalDocs = @ExternalDocumentation(url = "https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json"))
 	@GetMapping(value = URL_STATISTICAL_TIME_SERIES, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-	public String getTimeSeries(@PathVariable(value = PARAM_COLLECTION_ID) String collectionId, // ex: networkId,
+	public void getTimeSeries(@PathVariable(value = PARAM_COLLECTION_ID) String collectionId,
 			@PathVariable(value = PARAM_FEATURE_ID) String featureId,
 			@PathVariable(value = PARAM_TIME_SERIES_ID) String timeSeriesId, // ex: 2ae58a8bdb1b4b778577a2ce3a5362d0
 			@Parameter(in = ParameterIn.QUERY, description = contentTypeDesc, schema = @Schema(type = "string"), examples = {
@@ -78,7 +80,7 @@ public class TimeSeriesController extends BaseController {
 			@RequestParam(value = "f", required = false, defaultValue = "json")
 			String mimeType,
 			HttpServletResponse response)
-					throws HttpMediaTypeNotAcceptableException {
+					throws HttpMediaTypeNotAcceptableException, IOException {
 
 		determineContentType(mimeType);
 		String rtn = null;
@@ -92,9 +94,10 @@ public class TimeSeriesController extends BaseController {
 
 		if (rtn == null) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			rtn = ogc404Payload;
 		}
 
-		return rtn;
+		response.getWriter().print(rtn);
 	}
 }

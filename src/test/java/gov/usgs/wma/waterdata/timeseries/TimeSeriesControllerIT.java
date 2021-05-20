@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
 
@@ -37,7 +38,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-07227448/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertNotNull(rtn.getBody());
 
 		try {
@@ -55,7 +56,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/SAT/items/USGS-07227448/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertNotNull(rtn.getBody());
 
 		try {
@@ -73,7 +74,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-12345678/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -82,7 +83,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-12345678/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -91,7 +92,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-04028090/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -100,7 +101,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/SAT/items/USGS-04028090/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 }

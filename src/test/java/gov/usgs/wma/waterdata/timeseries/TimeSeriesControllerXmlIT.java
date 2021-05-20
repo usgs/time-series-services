@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.xmlunit.matchers.CompareMatcher;
@@ -54,6 +55,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 		for (String contentType : contentNotAccepted) {
 			ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(baseUrl, contentType), String.class);
 			assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+			assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 			assertEquals(ogcNotAcceptedPayload, rtn.getBody());
 		}
 	}
@@ -64,7 +66,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 		for (String contentType : contentNotAccepted) {
 			ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(baseUrl, contentType), String.class);
 			assertThat(rtn.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-			assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+			assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 			assertEquals(ogcNotAcceptedPayload, rtn.getBody());
 		}
 	}
@@ -74,7 +76,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-12345678/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "xml"), String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -83,7 +85,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-12345678/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "xml"), String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -92,7 +94,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-04028090/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "xml"), String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -101,7 +103,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 		String url = "/collections/SAT/items/USGS-04028090/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "xml"), String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -110,7 +112,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 		String url = String.format(urlFormat, collectionId, featureId, tsid);
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_XML));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_XML));
 		assertNotNull(rtn.getBody());
 
 		try {
