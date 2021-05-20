@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="groundwaterDailyValueWaterML">
+
+    <select id="getWaterML" parameterType="String" resultType="String"><![CDATA[
+       with
+            gw_daily_value as (
+                select time_series_unique_id,
+                       monitoring_location_identifier,
+                       min(time_step) phenomenon_time_start,
+                       max(time_step) phenomenon_time_end,
+                       observered_property_name,
+                       observered_property_reference,
+                       statistic,
+                       statistic_reference,
+                       xmlagg(xmlelement(name "wml2:point", 
+                          xmlelement(name "wml2:MeasurementTVP", 
+                            xmlelement(name "wml2:time",
+                              to_char(time_step at time zone 'UTC',
+                                      'YYYY-MM-DD')),
+                            xmlelement(name "wml2:value", result)
+                       ))) result_agg
+                  from nwis.groundwater_daily_value
+                 where time_series_unique_id = #{timeSeriesId,jdbcType=VARCHAR}
+                     and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                     AND (
+                         approvals ?? 'Approved'
+                         OR CURRENT_DATE - time_step <= 1095
+                     )
+                 group by time_series_unique_id,
+                          monitoring_location_identifier,
+                          observered_property_name,
+                          observered_property_reference,
+                          statistic,
+                          statistic_reference
+            )
+        select 
+          '<?xml version="1.0" encoding="utf-8"?>' ||
+              xmlelement(name "wml2:Collection", xmlattributes('generated_collection_doc' as "gml:id",
+                          'http://www.opengis.net/waterml/2.0' as "xmlns:wml2",
+                          'http://www.w3.org/2001/XMLSchema-instance' as "xmlns:xsi",
+                          'http://www.opengis.net/gml/3.2' as "xmlns:gml",
+                          'http://www.w3.org/1999/xlink' as "xmlns:xlink",
+                          'http://www.w3.org/2001/XMLSchema' as "xmlns:xsd",
+                          'http://www.opengis.net/om/2.0' as "xmlns:om"),
+                xmlelement(name "wml2:DocumentMetadata",
+                  xmlelement(name "wml2:generationDate",
+                             to_char(now()::timestamp at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"')),
+                  xmlelement(name "wml2:version",
+                     xmlattributes('http://www.opengis.net/waterml/2.0' as "xlink:href",
+                                   'WaterML 2.0 RFC' as "xlink:title")),
+                  xmlelement(name "wml2:generationSystem",
+                                   'Water Data for the Nation - Observations Services')
+                ),
+                xmlelement(name "wml2:observationMember",
+                  xmlelement(name "om:OM_Observation",
+                         xmlattributes(time_series_unique_id as "gml:id"),
+                    xmlelement(name "om:phenomenonTime",
+                      xmlelement(name "gml:TimePeriod",
+                        xmlelement(name "gml:beginPosition",
+                           to_char(phenomenon_time_start at time zone 'UTC', 'YYYY-MM-DD')),
+                        xmlelement(name "gml:endPosition",
+                           to_char(phenomenon_time_end at time zone 'UTC', 'YYYY-MM-DD'))
+                    )),
+                    xmlelement(name "om:resultTime",
+                      xmlelement(name "gml:timePosition",
+                        xmlelement(name "gml:timePosition",
+                           to_char(phenomenon_time_end at time zone 'UTC', 'YYYY-MM-DD'))
+                    )),
+                    xmlelement(name "om:procedure",
+                      xmlelement(name "om:ObservationProcess",
+                        xmlelement(name "om:parameter",
+                          xmlelement(name "om:NamedValue",
+                            xmlelement(name "om:name",
+                              xmlattributes('statistic' as "xlink:title",
+                                           statistic_reference as "xlink:href")),
+                            xmlelement(name "om:value",
+                              xmlattributes('xsd:string' as "xsi:type"),
+                                           statistic)
+                    )))),
+                    xmlelement(name "om:observedProperty",
+                         xmlattributes(observered_property_reference as "xlink:href",
+                                       observered_property_name as "xlink:title")
+                    ),
+                    xmlelement(name "om:featureOfInterest",
+                         xmlattributes(#{serverUrl,jdbcType=VARCHAR} || 'collections/'
+                          || #{collectionId,jdbcType=VARCHAR} || '/items/' || ml.monitoring_location_identifier
+                          || '?f=json' as "xlink:href",
+                          site_name as "xlink:title")
+                    ),
+                    xmlelement(name "om:result", result_agg)
+              )))::text as xml
+          from gw_daily_value
+          join nwis.monitoring_location ml
+            on gw_daily_value.monitoring_location_identifier = ml.monitoring_location_identifier
+         where geom is not null
+           and ('monitoring-locations' = #{collectionId,jdbcType=VARCHAR}
+            or exists (
+                   select 1
+                     from nwis.network
+                     join nwis.network_sites
+                       on nwis.network.network_id = nwis.network_sites.network_id
+                    where nwis.network.network_code = #{collectionId,jdbcType=VARCHAR}
+                      and nwis.network_sites.monitoring_location_id = ml.monitoring_location_id
+           ))
+           order by ml.monitoring_location_identifier, observered_property_name,
+                    statistic
+     ]]></select>
+
+</mapper>

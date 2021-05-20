@@ -43,6 +43,14 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 public abstract class BaseIT {
 	protected String ogc404Payload = "{\"code\":\"404\", \"description\":\"Requested data not found\"}";
 
+	protected List<String> contentNotAccepted = List.of("application/atom+xml", "atom+xml", "application/cbor", "cbor",
+			"application/x-www-form-urlencoded", "x-www-form-urlencoded", "application/x-ndjson", "x-ndjson",
+			"application/octet-stream", "octet-stream", "application/pdf", "pdf", "application/rss+xml", "rss+xml",
+			"application/stream+json", "stream+json", "application/xhtml+xml", "xhtml+xml", "image/gif", "gif",
+			"image/jpeg", "jpeg", "image/png", "png", "multipart/form-data", "form-data", "multipart/mixed", "mixed",
+			"multipart/related", "related", "text/event-stream", "event-stream", "text/html", "html", "text/markdown",
+			"markdown", "text/plain", "plain", "zip");
+	protected String ogcNotAcceptedPayload = "{\"code\":\"400\",\"description\":\"Content type must be either json or xml\"}";
 
 	/**
 	 * Returns a file from the the testResult directory on the classpath,
@@ -64,6 +72,10 @@ public abstract class BaseIT {
 		} catch (JSONException e) {
 			fail("Unexpected JSONException during test", e);
 		}
+	}
+
+	public String harmonizeXml(String xmlDoc) {
+		return xmlDoc.replace("\r", "").replace("\n", "").replace("\t", "").replaceAll("> *<", "><");
 	}
 
 	/**

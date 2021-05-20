@@ -30,6 +30,12 @@ public class TimeSeriesDao extends SqlSessionDaoSupport {
 		return getSqlSession().selectOne("groundwaterDailyValue.getGeoJson", params);
 	}
 
+	public String getTimeSeriesWaterML(String collectionId, String featureId, String timeSeriesId) {
+		Map<String,Object> params = collectionsParams.builder().collectionId(collectionId)
+		.featureId(featureId).timeSeriesId(timeSeriesId).build();
+		return getSqlSession().selectOne("groundwaterDailyValueWaterML.getWaterML", params);
+	}
+
 	public String getStatisticalTimeSeries(String collectionId, String featureId) {
 		Map<String,Object> params = collectionsParams.builder().collectionId(collectionId)
 		.featureId(featureId).build();
