@@ -84,8 +84,10 @@ public class TimeSeriesController extends BaseController {
 		String rtn = null;
 		if (contentIsJson()) {
 			rtn = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
+			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		} else if (contentIsXml()) {
 			rtn = timeSeriesDao.getTimeSeriesWaterML(collectionId, featureId, timeSeriesId);
+			response.setContentType(MediaType.APPLICATION_XML_VALUE);
 		}
 
 		if (rtn == null) {

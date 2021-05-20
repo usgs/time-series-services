@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -36,6 +37,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-07227448/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
 		assertNotNull(rtn.getBody());
 
 		try {
@@ -53,6 +55,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/SAT/items/USGS-07227448/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
+		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
 		assertNotNull(rtn.getBody());
 
 		try {
@@ -70,6 +73,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-12345678/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -78,6 +82,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-12345678/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -86,6 +91,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/monitoring-locations/items/USGS-04028090/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
@@ -94,6 +100,7 @@ public class TimeSeriesControllerIT extends BaseIT {
 		String url = "/collections/SAT/items/USGS-04028090/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+		assertThat(rtn.getHeaders().getContentType(), equalTo(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 }
