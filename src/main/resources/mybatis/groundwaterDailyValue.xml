@@ -7,7 +7,7 @@
         with
             gw_daily_value as (
                 select groundwater_daily_value_identifier,
-                       monitoring_location_id,
+                       monitoring_location_identifier,
                        min(time_step) phenomenon_time_start,
                        max(time_step) phenomenon_time_end,
                        observered_property_name,
@@ -30,7 +30,7 @@
                          OR CURRENT_DATE - time_step <= 1095
                      )
                  group by groundwater_daily_value_identifier,
-                          monitoring_location_id,
+                          monitoring_location_identifier,
                           observered_property_name,
                           observered_property_reference,
                           statistic,
@@ -69,7 +69,7 @@
                                 )
           from gw_daily_value
           join nwis.monitoring_location
-            on gw_daily_value.monitoring_location_id = monitoring_location.monitoring_location_id
+            on gw_daily_value.monitoring_location_identifier = monitoring_location.monitoring_location_identifier
          where geom is not null
            and ('monitoring-locations' = #{collectionId,jdbcType=VARCHAR}
             or exists (
