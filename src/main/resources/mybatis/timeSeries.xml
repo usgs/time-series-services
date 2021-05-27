@@ -3,10 +3,10 @@
 
 <mapper namespace="timeSeries">
     <sql id="gwDailyValueJoin">
-        left join (select monitoring_location_id, time_series_unique_id, groundwater_daily_value_identifier,
+        left join (select monitoring_location_identifier, time_series_unique_id, groundwater_daily_value_identifier,
                        approvals, time_step, observered_property_id, observered_property_name, statistic_id, statistic
                    from groundwater_daily_value) gw
-        on gw.monitoring_location_id = ml.monitoring_location_id
+        on gw.monitoring_location_identifier = ml.monitoring_location_identifier
     </sql>
 
     <sql id="bestTimeSeriesQuery">
@@ -48,7 +48,7 @@
                    ),
                    'properties', json_build_object('samplingFeatureName', site_name),
                    'timeSeries', coalesce(nullif(jsonb_agg(distinct 
-                                        case when gw.monitoring_location_id is not null then
+                                        case when gw.monitoring_location_identifier is not null then
                                             jsonb_build_object(
                                                  'id', time_series_unique_id,
                                                  'description', observered_property_name||', '||statistic,
@@ -81,7 +81,7 @@
         <if test="collectionId != 'monitoring-locations'">
                 and network_code = #{collectionId}
         </if>
-                and (gw.monitoring_location_id is null or approvals ?? 'Approved'
+                and (gw.monitoring_location_identifier is null or approvals ?? 'Approved'
                      or current_date - time_step between 0 and 1095)
                 group by ml.monitoring_location_identifier, geom, site_name
     </select>
