@@ -4,13 +4,13 @@ import java.time.ZonedDateTime;
 
 public class WaterMLPoint {
 
-	ZonedDateTime measurmentTime;
-	Double value;
-	String unit;
-	Double accuracy;
-	String accuracyUnit;
-	String datum;
+	ZonedDateTime resultDateTimeUTC;
+	Double resultValue;
+	String resultUnit;
+	Double resultAccuracy;
+	String resultAccuracyUnit;
+	String verticalDatum;
 	String pcode;
-	String comment;
-	String qualifier;	//This may be a list.  Is this the same as status and approval?
+	/* String comment;  We don't have any comments - what about approval levels? */
+	String qualifiers;	//This may be a list.  Is this the same as status and approval?
 }

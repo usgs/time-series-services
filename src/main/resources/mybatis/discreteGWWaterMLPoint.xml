@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="discreteGWMLPoint">
+	<select id="getDiscreteGWMLPoint" parameterType="map" resultType="gov.usgs.wma.waterdata.domain.WaterMLPoint">
+		select
+			date_measured_raw "resultDateTimeUTC", /* timestamp of the UTC time */
+			display_result "resultValue",
+			parm.parm_unt_tx "resultUnit",
+			level_accuracy "resultAccuracy",
+			parm.parm_unt_tx "resultAccuracyUnit", /* We don't have a accuracy unit - do we know its the same? */
+			vertical_datum_code "verticalDatum",
+			parameter_code "pcode",
+			result_measure_qualifiers::text "qualifiers"
+		from nwis.discrete_ground_water_aqts dgw inner join nwis.parm parm
+			on dgw.parameter_code = parm.parm_cd
+		where
+			dgw.monitoring_location_identifier = 'USGS-353939097301901'
+	</select>
+</mapper>
