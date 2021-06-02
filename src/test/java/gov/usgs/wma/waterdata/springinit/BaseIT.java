@@ -42,6 +42,7 @@ import com.github.springtestdbunit.annotation.DbUnitConfiguration;
 @DirtiesContext
 public abstract class BaseIT {
 	protected String ogc404Payload = "{\"code\":\"404\", \"description\":\"Requested data not found\"}";
+	protected String ogcNotAcceptedPayload = "{\"code\":\"400\",\"description\":\"Content type (f=) must be one of: [json, waterml]\"}";
 
 	protected List<String> contentNotAccepted = List.of("application/atom+xml", "atom+xml", "application/cbor", "cbor",
 			"application/x-www-form-urlencoded", "x-www-form-urlencoded", "application/x-ndjson", "x-ndjson",
@@ -50,7 +51,6 @@ public abstract class BaseIT {
 			"image/jpeg", "jpeg", "image/png", "png", "multipart/form-data", "form-data", "multipart/mixed", "mixed",
 			"multipart/related", "related", "text/event-stream", "event-stream", "text/html", "html", "text/markdown",
 			"markdown", "text/plain", "plain", "zip");
-	protected String ogcNotAcceptedPayload = "{\"code\":\"400\",\"description\":\"Content type must be either json or xml\"}";
 
 	/**
 	 * Returns a file from the the testResult directory on the classpath,

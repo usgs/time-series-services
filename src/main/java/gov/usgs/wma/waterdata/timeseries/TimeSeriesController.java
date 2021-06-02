@@ -20,7 +20,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -76,7 +75,7 @@ public class TimeSeriesController extends BaseController {
 			@PathVariable(value = PARAM_TIME_SERIES_ID) String timeSeriesId, // ex: 2ae58a8bdb1b4b778577a2ce3a5362d0
 			@Parameter(in = ParameterIn.QUERY, description = contentTypeDesc, schema = @Schema(type = "string"), examples = {
 					@ExampleObject(name = "json", value = "json", description = "GeoJSON"),
-					@ExampleObject(name = "xml", value = "xml", description = "Water ML 2")})
+					@ExampleObject(name = "waterml", value = "waterml", description = "Water ML")})
 			@RequestParam(value = "f", required = false, defaultValue = "json")
 			String mimeType,
 			HttpServletResponse response)
@@ -87,7 +86,7 @@ public class TimeSeriesController extends BaseController {
 		if (contentIsJson()) {
 			rtn = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		} else if (contentIsXml()) {
+		} else if (contentIsWaterML()) {
 			rtn = timeSeriesDao.getTimeSeriesWaterML(collectionId, featureId, timeSeriesId);
 			response.setContentType(MediaType.APPLICATION_XML_VALUE);
 		}
