@@ -64,10 +64,38 @@ public class DataControllerIT extends BaseIT {
 	@Test
 	public void notFoundTest() {
 		String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=statistical_time_series";
+		runErrorCase(url, HttpStatus.NOT_FOUND, ogc404Payload);
+	}
+
+	@Test
+	public void badBestValueTest() {
+		String url = "/data?monitoringLocationID=USGS-07227448&domain=groundwater_levels&type=statistical_time_series&best=notTrue";
+		String desc = "Invalid boolean value [notTrue]";
+		runErrorCase(url, HttpStatus.BAD_REQUEST,
+				"{\"code\":\"400\",\"description\":\"Error in parameter best:  " + desc + "\"}");
+	}
+
+	@Test
+	public void badDomainValueTest() {
+		String url = "/data?monitoringLocationID=USGS-07227448&domain=xyz&type=statistical_time_series&best=false";
+		String desc = "No enum constant gov.usgs.wma.waterdata.parameter.Domain.xyz";
+		runErrorCase(url, HttpStatus.BAD_REQUEST,
+				"{\"code\":\"400\",\"description\":\"Error in parameter domain:  " + desc + "\"}");
+	}
+
+	@Test
+	public void badTypeValueTest() {
+		String url = "/data?monitoringLocationID=USGS-07227448&domain=groundwater_levels&type=none&best=true";
+		String desc = "No enum constant gov.usgs.wma.waterdata.parameter.DataType.none";
+		runErrorCase(url, HttpStatus.BAD_REQUEST,
+				"{\"code\":\"400\",\"description\":\"Error in parameter type:  " + desc + "\"}");
+	}
+
+	private void runErrorCase(String url, HttpStatus expectedStatus, String expectedBody) {
 		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "waterml"), String.class);
-		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+		assertThat(rtn.getStatusCode(), equalTo(expectedStatus));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
-		assertEquals(ogc404Payload, rtn.getBody());
+		assertEquals(expectedBody, rtn.getBody());
 	}
 
 	private void runCase(String featureId, Boolean best, String compareFile) {
