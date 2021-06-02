@@ -65,7 +65,6 @@ public class DataControllerIT extends BaseIT {
 	public void notFoundTest() {
 		String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=statistical_time_series";
 		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "waterml"), String.class);
-		System.out.println("rtn = " + rtn.getBody());
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
@@ -77,9 +76,6 @@ public class DataControllerIT extends BaseIT {
 		String url = String.format(urlFormat, featureId, bestTS);
 
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
-		if(!rtn.getStatusCode().equals(HttpStatus.OK)) {
-			System.out.println("rtn = " + rtn.getBody());
-		}
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_XML));
 		assertNotNull(rtn.getBody());

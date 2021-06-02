@@ -59,10 +59,7 @@ public class DataController extends BaseController {
 					@ExampleObject(name = "waterML", value = "WaterML", description = "Water ML") }) @RequestParam(value = "f", required = false, defaultValue = "waterml") String mimeType,
 			HttpServletResponse response) throws HttpMediaTypeNotAcceptableException, IOException {
 
-		System.out.println("in controller, mimeType = " + mimeType);
-		System.out.println("in controller, best = " + best);
 		determineContentType(mimeType, List.of(ContentType.waterml));
-		System.out.println("in controller, contentType = = " + contentType);
 		String rtn = null;
 		String bestTS = best == null ? CollectionParams.PARAM_MATCH_ANY : best.toString().toLowerCase();
 
