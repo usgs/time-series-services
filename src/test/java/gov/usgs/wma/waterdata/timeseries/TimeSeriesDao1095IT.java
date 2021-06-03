@@ -35,7 +35,8 @@ public class TimeSeriesDao1095IT extends BaseIT {
 	@Test
 	public void foundTest_UnapprovedData1095DaysOldIsOK1096IsNot() {
 		try {
-			assertEquals(getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac_1095.txt"), timeSeriesDao.getTimeSeries("USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac"));
+			assertEquals(getCompareFile("e6a4cc2de5bf437e83efe0107cf026ac_1095.txt"), timeSeriesDao.getTimeSeries(
+					CollectionParams.DEFAULT_COLLECTION_ID, "USGS-07227448", "e6a4cc2de5bf437e83efe0107cf026ac"));
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);
 		}
