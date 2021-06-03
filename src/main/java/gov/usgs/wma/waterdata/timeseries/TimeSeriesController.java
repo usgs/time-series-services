@@ -6,10 +6,11 @@ import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SER
 
 import java.io.IOException;
 
+import gov.usgs.wma.waterdata.BaseController;
 import gov.usgs.wma.waterdata.OgcException;
-import gov.usgs.wma.waterdata.collections.BaseController;
 import gov.usgs.wma.waterdata.openapi.schema.observations.StatisticalFeatureGeoJSON;
 import gov.usgs.wma.waterdata.openapi.schema.timeseries.TimeSeriesGeoJSON;
+import gov.usgs.wma.waterdata.parameter.ContentType;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -81,12 +82,12 @@ public class TimeSeriesController extends BaseController {
 			HttpServletResponse response)
 					throws HttpMediaTypeNotAcceptableException, IOException {
 
-		determineContentType(mimeType);
+		ContentType contentType = determineContentType(mimeType);
 		String rtn = null;
-		if (contentIsJson()) {
+		if (contentType.isJson()) {
 			rtn = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		} else if (contentIsWaterML()) {
+		} else if (contentType.isWaterML()) {
 			rtn = timeSeriesDao.getTimeSeriesWaterML(collectionId, featureId, timeSeriesId);
 			response.setContentType(MediaType.APPLICATION_XML_VALUE);
 		}

@@ -58,8 +58,7 @@ public class GlobalDefaultExceptionHandler {
 			if (ex.getLocalizedMessage().contains("\n")) {
 				// This exception's message contains implementation details after the new line,
 				// so only take up to that.
-				ogcException
-						.setDescription(ex.getLocalizedMessage().substring(0, ex.getLocalizedMessage().indexOf("\n")));
+				ogcException.setDescription(ex.getLocalizedMessage().substring(0, ex.getLocalizedMessage().indexOf("\n")));
 			} else {
 				ogcException.setDescription(ex.getLocalizedMessage().replaceAll("([a-zA-Z]+\\.)+", ""));
 			}

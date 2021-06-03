@@ -1,7 +1,7 @@
 package gov.usgs.wma.waterdata.data;
 
+import gov.usgs.wma.waterdata.BaseController;
 import gov.usgs.wma.waterdata.OgcException;
-import gov.usgs.wma.waterdata.collections.BaseController;
 import gov.usgs.wma.waterdata.collections.CollectionParams;
 import gov.usgs.wma.waterdata.openapi.schema.timeseries.TimeSeriesGeoJSON;
 import gov.usgs.wma.waterdata.parameter.ContentType;
@@ -59,6 +59,7 @@ public class DataController extends BaseController {
 					@ExampleObject(name = "waterML", value = "WaterML", description = "Water ML") }) @RequestParam(value = "f", required = false, defaultValue = "waterml") String mimeType,
 			HttpServletResponse response) throws HttpMediaTypeNotAcceptableException, IOException {
 
+		// not using the ContentType returned yet, since we only have waterML
 		determineContentType(mimeType, List.of(ContentType.waterml));
 		String rtn = null;
 		String bestTS = best == null ? CollectionParams.PARAM_MATCH_ANY : best.toString().toLowerCase();

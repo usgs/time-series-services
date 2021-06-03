@@ -133,7 +133,8 @@
                                      unit_of_measure_reference as "xlink:href"))),
                           point_agg)
                     )
-              ))))::text as xml
+              )) order by ml.monitoring_location_identifier, observered_property_name, statistic
+              ))::text as xml
           from gw_daily_value
           join nwis.monitoring_location ml
             on gw_daily_value.monitoring_location_identifier = ml.monitoring_location_identifier
