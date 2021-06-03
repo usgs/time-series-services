@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased](https://github.com/USGS/time-series-services/compare/time-series-services/compare/0.10.0...master)
 ### Added
 -  Unit of measure, quailfier and status fields added to WaterML
+-  New end point: /data
 
 ## [0.10.0](https://github.com/USGS/time-series-services/compare/time-series-services-0.8.0...time-series-services-0.9.0) - 2021-05-21
 ### Added

@@ -6,10 +6,11 @@ import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SER
 
 import java.io.IOException;
 
+import gov.usgs.wma.waterdata.BaseController;
 import gov.usgs.wma.waterdata.OgcException;
-import gov.usgs.wma.waterdata.collections.BaseController;
 import gov.usgs.wma.waterdata.openapi.schema.observations.StatisticalFeatureGeoJSON;
 import gov.usgs.wma.waterdata.openapi.schema.timeseries.TimeSeriesGeoJSON;
+import gov.usgs.wma.waterdata.parameter.ContentType;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,7 +21,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -76,18 +76,18 @@ public class TimeSeriesController extends BaseController {
 			@PathVariable(value = PARAM_TIME_SERIES_ID) String timeSeriesId, // ex: 2ae58a8bdb1b4b778577a2ce3a5362d0
 			@Parameter(in = ParameterIn.QUERY, description = contentTypeDesc, schema = @Schema(type = "string"), examples = {
 					@ExampleObject(name = "json", value = "json", description = "GeoJSON"),
-					@ExampleObject(name = "xml", value = "xml", description = "Water ML 2")})
+					@ExampleObject(name = "waterml", value = "waterml", description = "Water ML")})
 			@RequestParam(value = "f", required = false, defaultValue = "json")
 			String mimeType,
 			HttpServletResponse response)
 					throws HttpMediaTypeNotAcceptableException, IOException {
 
-		determineContentType(mimeType);
+		ContentType contentType = determineContentType(mimeType);
 		String rtn = null;
-		if (contentIsJson()) {
+		if (contentType.isJson()) {
 			rtn = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		} else if (contentIsXml()) {
+		} else if (contentType.isWaterML()) {
 			rtn = timeSeriesDao.getTimeSeriesWaterML(collectionId, featureId, timeSeriesId);
 			response.setContentType(MediaType.APPLICATION_XML_VALUE);
 		}
