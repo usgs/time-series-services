@@ -16,6 +16,7 @@ public class CollectionParams {
 	public static final String  PARAM_COLLECTION_ID   = "collectionId";
 	public static final String  PARAM_FEATURE_ID      = "featureId";
 	public static final String  PARAM_TIME_SERIES_ID  = "timeSeriesId";
+	public static final String  PARAM_BEST_TIME_SERIES  = "bestTS";
 	public static final String  PARAM_SERVER_URL      = "serverUrl";
 	public static final String  PARAM_LIMIT      = "limit";
 	public static final String  PARAM_START_INDEX      = "startIndex";
@@ -42,6 +43,8 @@ public class CollectionParams {
 	public static final Integer DEFAULT_START_INDEX   = 0;
 	public static final Integer MAX_LIMIT     = 10000;
 
+	public static final String  PARAM_MATCH_ANY  = "any";
+
 	protected ConfigurationService configurationService;
 
 	@Autowired
@@ -57,6 +60,7 @@ public class CollectionParams {
 		private String collectionId;
 		private String featureId;
 		private String timeSeriesId;
+		private String bestTS;
 		private ConfigurationService configurationService;
 		private BoundingBox bbox;
 		private int limitParam = MAX_LIMIT;
@@ -139,6 +143,13 @@ public class CollectionParams {
         		return this;
 		}
 
+		public Builder bestTS(String bestTS) {
+			if(bestTS != null) {
+				this.bestTS = bestTS;
+			}
+			return this;
+		}
+
 		public Builder bbox(BoundingBox bbox) {
         		this.bbox = bbox;
         		return this;
@@ -173,6 +184,7 @@ public class CollectionParams {
 			params = buildNullableItem(params, PARAM_COLLECTION_ID, collectionId);
 			params = buildNullableItem(params, PARAM_FEATURE_ID, featureId);
 			params = buildNullableItem(params, PARAM_TIME_SERIES_ID, timeSeriesId);
+			params = buildNullableItem(params, PARAM_BEST_TIME_SERIES, bestTS);
 
 			if (isPaging) {
 				params.put(PARAM_LIMIT, limitParam);

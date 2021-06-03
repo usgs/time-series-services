@@ -7,7 +7,7 @@
        with
             gw_daily_value as (
                 select time_series_unique_id,
-                       monitoring_location_identifier,
+                       gdv.monitoring_location_identifier,
                        min(time_step) phenomenon_time_start,
                        max(time_step) phenomenon_time_end,
                        observered_property_name,
@@ -39,16 +39,31 @@
                                        from jsonb_array_elements_text(approvals) as approval)
                                end
                            ))
-                       ))) point_agg
-                  from nwis.groundwater_daily_value
-                 where time_series_unique_id = #{timeSeriesId,jdbcType=VARCHAR}
-                     and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                       )) order by time_step) point_agg
+                   from nwis.groundwater_daily_value gdv
+                   left join (
+                      select monitoring_location_identifier, time_series_unique_id best_ts_id
+                      from (select *, RANK() OVER (ORDER BY ranking DESC) AS rk
+                      from nwis.best_time_series
+                      where monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                            and ranking > 0) as t
+                      where rk = 1) bts
+                    on gdv.monitoring_location_identifier = bts.monitoring_location_identifier
+                  where ('any' = #{timeSeriesId,jdbcType=VARCHAR}
+                           or time_series_unique_id = #{timeSeriesId,jdbcType=VARCHAR})
+                      and gdv.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                      and ('any' = #{bestTS,jdbcType=VARCHAR} or (bts.monitoring_location_identifier is not null
+                            and ( ('true' = #{bestTS,jdbcType=VARCHAR} and bts.best_ts_id = time_series_unique_id)
+                                    or
+                                   ('false' = #{bestTS,jdbcType=VARCHAR} and bts.best_ts_id != time_series_unique_id)
+                                ))
+                          )
                      AND (
                          approvals ?? 'Approved'
                          OR CURRENT_DATE - time_step <= 1095
                      )
                  group by time_series_unique_id,
-                          monitoring_location_identifier,
+                          gdv.monitoring_location_identifier,
                           observered_property_name,
                           observered_property_reference,
                           statistic,
@@ -74,9 +89,9 @@
                   xmlelement(name "wml2:generationSystem",
                                    'Water Data for the Nation - Observations Services')
                 ),
+             xmlagg(
                 xmlelement(name "wml2:observationMember",
                   xmlelement(name "om:OM_Observation",
-                         xmlattributes(time_series_unique_id as "gml:id"),
                     xmlelement(name "om:phenomenonTime",
                       xmlelement(name "gml:TimePeriod",
                         xmlelement(name "gml:beginPosition",
@@ -112,12 +127,14 @@
                     ),
                     xmlelement(name "om:result",
                       xmlelement(name "wml2:MeasurementTimeseries",
+                           xmlattributes(time_series_unique_id as "gml:id"),
                         xmlelement(name "wml2:DefaultTVPMeasurementMetadata",
                           xmlelement(name "wml2:uom", xmlattributes(unit_of_measure as "xlink:title",
                                      unit_of_measure_reference as "xlink:href"))),
                           point_agg)
                     )
-              )))::text as xml
+              )) order by ml.monitoring_location_identifier, observered_property_name, statistic
+              ))::text as xml
           from gw_daily_value
           join nwis.monitoring_location ml
             on gw_daily_value.monitoring_location_identifier = ml.monitoring_location_identifier
@@ -131,8 +148,8 @@
                     where nwis.network.network_code = #{collectionId,jdbcType=VARCHAR}
                       and nwis.network_sites.monitoring_location_id = ml.monitoring_location_id
            ))
-           order by ml.monitoring_location_identifier, observered_property_name,
-                    statistic
+           group by ml.monitoring_location_identifier
+           order by ml.monitoring_location_identifier
      ]]></select>
 
 </mapper>

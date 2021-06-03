@@ -74,7 +74,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 	@Test
 	public void notFoundTest() {
 		String url = "/collections/monitoring-locations/items/USGS-12345678/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
-		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "xml"), String.class);
+		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "waterml"), String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
@@ -83,7 +83,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 	@Test
 	public void notFoundInSatCollectionTest() {
 		String url = "/collections/monitoring-locations/items/USGS-12345678/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
-		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "xml"), String.class);
+		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "waterml"), String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
@@ -92,7 +92,7 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 	@Test
 	public void noGeomTest() {
 		String url = "/collections/monitoring-locations/items/USGS-04028090/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
-		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "xml"), String.class);
+		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "WaterML"), String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
@@ -101,14 +101,14 @@ public class TimeSeriesControllerXmlIT extends BaseIT {
 	@Test
 	public void noGeomSatCollectionTest() {
 		String url = "/collections/SAT/items/USGS-04028090/observations/statistical-time-series/e6a4cc2de5bf437e83efe0107cf026ac";
-		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "xml"), String.class);
+		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "waterML"), String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(ogc404Payload, rtn.getBody());
 	}
 
 	private void runCase(String collectionId, String featureId, String tsid, String compareFile) {
-		String urlFormat = "/collections/%s/items/%s/observations/statistical-time-series/%s?f=xml";
+		String urlFormat = "/collections/%s/items/%s/observations/statistical-time-series/%s?f=waterml";
 		String url = String.format(urlFormat, collectionId, featureId, tsid);
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
