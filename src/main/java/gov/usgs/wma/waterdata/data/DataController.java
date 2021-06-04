@@ -63,6 +63,9 @@ public class DataController extends BaseController {
 		String rtn = null;
 		String bestTS = best == null ? CollectionParams.PARAM_MATCH_ANY : best.toString().toLowerCase();
 
+		// Limiting to best=true due to limitations of the omsf json definition. It is not row based and only
+		// has room for one observed property (pcode) value in its Properties object. Hence the need to limit the
+		// result to one time series, best=true in this case.
 		if (contentType.isJson() && !bestTS.equals("true")) {
 			throw new HttpMediaTypeNotAcceptableException("Json content is only available with parameter best=true");
 		}
