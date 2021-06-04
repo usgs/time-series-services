@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/usgs/time-series-services.svg?branch=master)](https://travis-ci.com/usgs/time-series-services)
 [![codecov](https://codecov.io/gh/usgs/time-series-services/branch/master/graph/badge.svg)](https://codecov.io/gh/usgs/time-series-services)
 
-Water Data for the Nation time series data streaming service.
+Water Data for the Nation Observations service.
 
 ## Development
 This is a Spring Boot project. All of the normal caveats relating to a Spring Boot application apply.

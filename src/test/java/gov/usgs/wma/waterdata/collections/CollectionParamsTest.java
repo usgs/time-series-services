@@ -4,6 +4,7 @@ import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_COLLECTI
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_FEATURE_ID;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_SERVER_URL;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_TIME_SERIES_ID;
+import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_BEST_TIME_SERIES;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_LIMIT;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_POINT_LOW_lEFT;
 import static gov.usgs.wma.waterdata.collections.CollectionParams.PARAM_POINT_UP_RIGHT;
@@ -41,6 +42,8 @@ class CollectionParamsTest {
 	private String expectedCollectionId = "aCollectionId";
 	private String expectedFeatureId = "aFeatureId";
 	private String expectedTimeSeriesId = "aGUID";
+
+	private String[] expectedBestTS = {"any", "true", "false"};
 
 	private CollectionParams collectionParams;
 	private Map<String,Object> params;
@@ -203,6 +206,17 @@ class CollectionParamsTest {
 		assertEquals(expectedCollectionId, params.get(PARAM_COLLECTION_ID));
 		assertEquals(expectedFeatureId, params.get(PARAM_FEATURE_ID));
 		assertEquals(expectedTimeSeriesId, params.get(PARAM_TIME_SERIES_ID));
+	}
+
+	@Test
+	public void testFeatureIdTimeSeriesBest() {
+		for (String bestTS : expectedBestTS) {
+			params = collectionParams.builder().featureId(expectedFeatureId).
+					bestTS(bestTS).build();
+			assertCommonParams(8);
+			assertEquals(expectedFeatureId, params.get(PARAM_FEATURE_ID));
+			assertEquals(bestTS, params.get(PARAM_BEST_TIME_SERIES));
+		}
 	}
 
 	private void assertCommonParams(int expectedMapSize) {

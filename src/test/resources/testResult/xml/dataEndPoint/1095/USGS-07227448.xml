@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wml2:Collection xmlns:wml2="http://www.opengis.net/waterml/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:om="http://www.opengis.net/om/2.0" gml:id="generated_collection_doc">
   <wml2:DocumentMetadata>
-    <wml2:generationDate>2021-05-26T12:04:33Z</wml2:generationDate>
+    <wml2:generationDate>2021-06-03T05:08:32Z</wml2:generationDate>
     <wml2:version xlink:href="http://www.opengis.net/waterml/2.0" xlink:title="WaterML 2.0 RFC"/>
     <wml2:generationSystem>Water Data for the Nation - Observations Services</wml2:generationSystem>
   </wml2:DocumentMetadata>
@@ -29,7 +29,7 @@
         </om:ObservationProcess>
       </om:procedure>
       <om:observedProperty xlink:href="https://waterdata.usgs.gov/nwisweb/rdf?parmCd=72019" xlink:title="Depth to water level, ft below land surface"/>
-      <om:featureOfInterest xlink:href="https://unittest/api/observations/collections/[collectionId]/items/USGS-07227448?f=json" xlink:title="Punta De Agua Ck ñr Channing, TX"/>
+      <om:featureOfInterest xlink:href="https://unittest/api/observations/collections/monitoring-locations/items/USGS-07227448?f=json" xlink:title="Punta De Agua Ck ñr Channing, TX"/>
       <om:result>
         <wml2:MeasurementTimeseries gml:id="e6a4cc2de5bf437e83efe0107cf026ac">
           <wml2:DefaultTVPMeasurementMetadata>
@@ -39,6 +39,52 @@
             <wml2:MeasurementTVP>
               <wml2:time>[NOW-1095DAYS]</wml2:time>
               <wml2:value>14.1</wml2:value>
+              <wml2:metaData>
+                <wml2:TVPMeasurementMetadata>
+                  <wml2:qualifier>Revised</wml2:qualifier>
+                  <wml2:status>Estimated</wml2:status>
+                </wml2:TVPMeasurementMetadata>
+              </wml2:metaData>
+            </wml2:MeasurementTVP>
+          </wml2:point>
+        </wml2:MeasurementTimeseries>
+      </om:result>
+    </om:OM_Observation>
+  </wml2:observationMember>
+  <wml2:observationMember>
+    <om:OM_Observation>
+      <om:phenomenonTime>
+        <gml:TimePeriod>
+          <gml:beginPosition>[NOW-1095DAYS]</gml:beginPosition>
+          <gml:endPosition>[NOW-1095DAYS]</gml:endPosition>
+        </gml:TimePeriod>
+      </om:phenomenonTime>
+      <om:resultTime>
+        <gml:timePosition>
+          <gml:timePosition>[NOW-1095DAYS]</gml:timePosition>
+        </gml:timePosition>
+      </om:resultTime>
+      <om:procedure>
+        <om:ObservationProcess>
+          <om:parameter>
+            <om:NamedValue>
+              <om:name xlink:title="statistic" xlink:href="https://waterdata.usgs.gov/nwisweb/rdf?statCd=00002"/>
+              <om:value xsi:type="xsd:string">DAILY MINIMUM VALUES</om:value>
+            </om:NamedValue>
+          </om:parameter>
+        </om:ObservationProcess>
+      </om:procedure>
+      <om:observedProperty xlink:href="https://waterdata.usgs.gov/nwisweb/rdf?parmCd=72019" xlink:title="Depth to water level, ft below land surface"/>
+      <om:featureOfInterest xlink:href="https://unittest/api/observations/collections/monitoring-locations/items/USGS-07227448?f=json" xlink:title="Punta De Agua Ck ñr Channing, TX"/>
+      <om:result>
+        <wml2:MeasurementTimeseries gml:id="1ssdfsgfgrvmhjhjnbassdymbnjghnv0">
+          <wml2:DefaultTVPMeasurementMetadata>
+            <wml2:uom xlink:title="ft" xlink:href="http://www.opengis.net/def/uom/UCUM/degC"/>
+          </wml2:DefaultTVPMeasurementMetadata>
+          <wml2:point>
+            <wml2:MeasurementTVP>
+              <wml2:time>[NOW-1095DAYS]</wml2:time>
+              <wml2:value>14.0</wml2:value>
               <wml2:metaData>
                 <wml2:TVPMeasurementMetadata>
                   <wml2:qualifier>Revised</wml2:qualifier>
