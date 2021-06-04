@@ -2,6 +2,8 @@ package gov.usgs.wma.waterdata.springinit;
 
 import javax.sql.DataSource;
 
+import gov.usgs.wma.waterdata.domain.WaterMLPoint;
+import org.apache.ibatis.type.TypeAliasRegistry;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +27,8 @@ public class MybatisConfig {
 		config.setCacheEnabled(false);
 		config.setLazyLoadingEnabled(false);
 		config.setAggressiveLazyLoading(false);
+
+		registerAliases(config.getTypeAliasRegistry());
 		return config;
 	}
 
@@ -36,5 +40,9 @@ public class MybatisConfig {
 		Resource[] mappers = new PathMatchingResourcePatternResolver().getResources(MYBATIS_MAPPERS);
 		sqlSessionFactory.setMapperLocations(mappers);
 		return sqlSessionFactory;
+	}
+
+	private void registerAliases(TypeAliasRegistry registry) {
+		registry.registerAlias("WaterMLPoint", WaterMLPoint.class);
 	}
 }
