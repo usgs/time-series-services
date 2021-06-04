@@ -2,7 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="discreteGWMLPoint">
-	<select id="getDiscreteGWMLPoint" parameterType="map" resultType="gov.usgs.wma.waterdata.domain.WaterMLPoint">
+	<resultMap id="pointResult" type="WaterMLPoint">
+	    <result property="resultDateTimeUTC" column="resultDateTimeUTC"/>
+		<result property="resultValue" column="resultValue"/>
+		<result property="resultUnit" column="resultUnit"/>
+		<result property="resultAccuracy" column="resultAccuracy"/>
+		<result property="resultAccuracyUnit" column="resultAccuracyUnit"/>
+		<result property="verticalDatum" column="verticalDatum"/>
+		<result property="pcode" column="pcode"/>
+		<result property="qualifiers" column="qualifiers"/>
+	</resultMap>
+
+	<select id="getDiscreteGWMLPoint" parameterType="map" resultMap="pointResult">
 		select
 			date_measured_raw "resultDateTimeUTC", /* timestamp of the UTC time */
 			display_result "resultValue",
@@ -15,6 +26,6 @@
 		from nwis.discrete_ground_water_aqts dgw inner join nwis.parm parm
 			on dgw.parameter_code = parm.parm_cd
 		where
-			dgw.monitoring_location_identifier = 'USGS-353939097301901'
+			dgw.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
 	</select>
 </mapper>
