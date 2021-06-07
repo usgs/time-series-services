@@ -1,7 +1,12 @@
 package gov.usgs.wma.waterdata.domain;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.time.LocalDateTime;
+import javax.xml.bind.annotation.*;
+
+@JacksonXmlRootElement(localName = "point", namespace = "http://www.opengis.net/waterml/2.0")
 public class WaterMLPoint {
 
 	LocalDateTime resultDateTimeUTC;
@@ -13,6 +18,9 @@ public class WaterMLPoint {
 	String pcode;
 	/* String comment;  We don't have any comments - what about approval levels? */
 	String qualifiers;	//This may be a list.  Is this the same as status and approval?
+
+	@JacksonXmlProperty(namespace = "http://www.opengis.net/om/2.0")
+	public String myOM;
 
 	public Double getResultValue() {
 		return resultValue;

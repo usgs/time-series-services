@@ -1,6 +1,6 @@
 .idea/
 time-series-services.iml
-/application.yml
+/application_local.yml
 *.env
 /target
 /.settings/

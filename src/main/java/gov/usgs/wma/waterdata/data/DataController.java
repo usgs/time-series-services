@@ -1,8 +1,13 @@
 package gov.usgs.wma.waterdata.data;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import gov.usgs.wma.waterdata.BaseController;
 import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.collections.CollectionParams;
+import gov.usgs.wma.waterdata.discrete.DiscreteDao;
+import gov.usgs.wma.waterdata.format.InheritNamespaceAnnotationInspector;
+import gov.usgs.wma.waterdata.format.WaterMLPointToXmlResultHandler;
 import gov.usgs.wma.waterdata.openapi.schema.timeseries.TimeSeriesGeoJSON;
 import gov.usgs.wma.waterdata.parameter.ContentType;
 import gov.usgs.wma.waterdata.parameter.DataType;
@@ -22,6 +27,9 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.*;
+import javax.xml.stream.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,12 +42,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DataController extends BaseController {
 	protected TimeSeriesDao timeSeriesDao;
+	protected DiscreteDao discreteDao;
 
 	protected final String contentTypeDesc = "Content format returned, currently only WaterML";
 
 	@Autowired
-	public DataController(TimeSeriesDao timeSeriesDao) {
+	public DataController(TimeSeriesDao timeSeriesDao, DiscreteDao discreteDao) {
 		this.timeSeriesDao = timeSeriesDao;
+		this.discreteDao = discreteDao;
 	}
 
 	@Operation(description = "Return GeoJSON or Water ML Data specific to the requested Monitoring Location and data type.", responses = {
@@ -54,7 +64,6 @@ public class DataController extends BaseController {
 			@Parameter(description = "Data type requested") @RequestParam(value = "type", required = true) DataType dataType,
 			@Parameter(description = "Limits results to time series marked as best = true|false") @RequestParam(value = "best", required = false) Boolean best,
 			@Parameter(description = "Limits data to specfied area") @RequestParam(value = "domain", required = true) List<Domain> domains,
-
 			@Parameter(in = ParameterIn.QUERY, description = contentTypeDesc, schema = @Schema(type = "string"), examples = {
 					@ExampleObject(name = "waterML", value = "WaterML", description = "Water ML") }) @RequestParam(value = "f", required = false, defaultValue = "waterml") String mimeType,
 			HttpServletResponse response) throws HttpMediaTypeNotAcceptableException, IOException {
@@ -76,5 +85,41 @@ public class DataController extends BaseController {
 		}
 
 		response.getWriter().print(rtn);
+	}
+
+	public void getDiscrete(String monLocIdentifier, DataType dataType, Boolean best, List<Domain> domains,
+				String mimeType, HttpServletResponse response) throws HttpMediaTypeNotAcceptableException, IOException, XMLStreamException, JAXBException {
+
+		//Configure an XMLInputFactory and XMLStreamWriter
+		//I think the XMLInputFactory is used to consume a stream of XML events from the
+		//XmlMapper.  Then the XMLStreamWriter is used to convert those XML events into
+		//a character stream.
+		XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
+		XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newFactory();
+		xmlOutputFactory.setProperty("javax.xml.stream.isRepairingNamespaces", "true");
+		XMLStreamWriter sw = xmlOutputFactory.createXMLStreamWriter(response.getWriter());
+
+		//Configure FasterXML XmlMapper
+		XmlMapper mapper = new XmlMapper(xmlInputFactory);
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		mapper.findAndRegisterModules();	//Probably should be done in a more spring way so its not redone each time
+		mapper.setAnnotationIntrospector(new InheritNamespaceAnnotationInspector());	//Custom:  Allows fields to inherit the NS of the parent
+
+		WaterMLPointToXmlResultHandler formatter = new WaterMLPointToXmlResultHandler(mapper, sw);
+
+		sw.setPrefix("wml2", "http://www.opengis.net/waterml/2.0");
+		sw.setPrefix("om", "http://www.opengis.net/om/2.0");
+
+		sw.writeStartDocument("utf-8", "1.0");
+		sw.writeStartElement("wml2", "Collection", "http://www.opengis.net/waterml/2.0");
+		sw.writeNamespace("wml2", "http://www.opengis.net/waterml/2.0");
+		sw.writeNamespace("om", "http://www.opengis.net/om/2.0");
+		sw.writeDefaultNamespace("http://www.opengis.net/waterml/2.0");
+		sw.setDefaultNamespace("http://www.opengis.net/waterml/2.0");
+
+		discreteDao.getDiscreteGWMLPoint(monLocIdentifier, formatter);
+
+		sw.writeEndElement();
+		sw.writeEndDocument();
 	}
 }
