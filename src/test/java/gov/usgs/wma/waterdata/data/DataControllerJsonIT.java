@@ -73,7 +73,7 @@ public class DataControllerJsonIT extends BaseCollectionsIT {
 	@Test
 	public void booleanValueNotAcceptedTest() {
 		String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=statistical_time_series";
-		String desc = "Json content json is only available with parameter best=true";
+		String desc = "Json content is only available with parameter best=true";
 		String expectedBody = "{\"code\":\"400\",\"description\":\"" + desc + "\"}";
 		runErrorCase(url, HttpStatus.BAD_REQUEST, expectedBody);
 		url = url + "&best=false";
