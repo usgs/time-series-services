@@ -6,11 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
-import org.xmlunit.matchers.CompareMatcher;
+import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,29 +24,25 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
-import gov.usgs.wma.waterdata.springinit.BaseIT;
+import gov.usgs.wma.waterdata.collections.BaseCollectionsIT;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DatabaseSetup("classpath:/testData/timeSeries/")
 @DatabaseSetup("classpath:/testData/bestTimeSeries/csv/")
-public class DataControllerIT extends BaseIT {
+public class DataControllerJsonIT extends BaseCollectionsIT {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
 	@Test
 	@DatabaseSetup("classpath:/testData/groundwaterDailyValue/")
 	public void foundTest() {
-		runCase("USGS-07227448", null, "xml/dataEndPoint/USGS-07227448.xml");
-		runCase("USGS-07227448", true, "xml/dataEndPoint/USGS-07227448_best_true.xml");
-		runCase("USGS-07227448", false, "xml/dataEndPoint/USGS-07227448_best_false.xml");
+		runCase("USGS-07227448", true, "e6a4cc2de5bf437e83efe0107cf026ac.json");
 	}
 
 	@Test
 	@DatabaseSetup("classpath:/testData/groundwaterDailyValue1095/")
 	public void found1095Test() {
-		runCase("USGS-07227448", null, "xml/dataEndPoint/1095/USGS-07227448.xml");
-		runCase("USGS-07227448", true, "xml/dataEndPoint/1095/USGS-07227448_best_true.xml");
-		runCase("USGS-07227448", false, "xml/dataEndPoint/1095/USGS-07227448_best_false.xml");
+		runCase("USGS-07227448", true, "e6a4cc2de5bf437e83efe0107cf026ac_1095.json");
 	}
 
 	@Test
@@ -61,7 +58,7 @@ public class DataControllerIT extends BaseIT {
 
 	@Test
 	public void notFoundTest() {
-		String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=statistical_time_series";
+		String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=statistical_time_series&best=true";
 		runErrorCase(url, HttpStatus.NOT_FOUND, ogc404Payload);
 	}
 
@@ -71,6 +68,16 @@ public class DataControllerIT extends BaseIT {
 		String desc = "Required request parameter 'monitoringLocationID' for method parameter type String is not present";
 		runErrorCase(url, HttpStatus.BAD_REQUEST,
 				"{\"code\":\"400\",\"description\":\"" + desc + "\"}");
+	}
+
+	@Test
+	public void booleanValueNotAcceptedTest() {
+		String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=statistical_time_series";
+		String desc = "Json content is only available with parameter best=true";
+		String expectedBody = "{\"code\":\"400\",\"description\":\"" + desc + "\"}";
+		runErrorCase(url, HttpStatus.BAD_REQUEST, expectedBody);
+		url = url + "&best=false";
+		runErrorCase(url, HttpStatus.BAD_REQUEST, expectedBody);
 	}
 
 	@Test
@@ -98,29 +105,27 @@ public class DataControllerIT extends BaseIT {
 	}
 
 	private void runErrorCase(String url, HttpStatus expectedStatus, String expectedBody) {
-		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "waterml"), String.class);
+		ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(url, "json"), String.class);
 		assertThat(rtn.getStatusCode(), equalTo(expectedStatus));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertEquals(expectedBody, rtn.getBody());
 	}
 
 	private void runCase(String featureId, Boolean best, String compareFile) {
-		String urlFormat = "/data?monitoringLocationID=%s&domain=groundwater_levels&type=statistical_time_series%s&f=waterML";
+		String urlFormat = "/data?monitoringLocationID=%s&domain=groundwater_levels&type=statistical_time_series%s&f=json";
 		String bestTS = best == null ? "" : "&best=" + best.toString().toLowerCase();
 		String url = String.format(urlFormat, featureId, bestTS);
 
 		ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
-		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_XML));
+		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
 		assertNotNull(rtn.getBody());
 
 		try {
-			String expectedXml = harmonizeXml(getCompareFile(compareFile));
-			expectedXml = expectedXml.replaceAll("<wml2:generationDate>.*</wml2:generationDate>", "");
-
-			String actualXml = rtn.getBody();
-			actualXml = actualXml.replaceAll("<wml2:generationDate>.*</wml2:generationDate>", "");
-			assertThat(actualXml, CompareMatcher.isIdenticalTo(expectedXml));
+			assertThat(new JSONObject(rtn.getBody()),
+					sameJSONObjectAs(new JSONObject(getCompareFile(compareFile))));
+		} catch (JSONException e) {
+			fail("Unexpected JSONException during test", e);
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);
 		}

@@ -44,7 +44,7 @@ public class DataController extends BaseController {
 	protected TimeSeriesDao timeSeriesDao;
 	protected DiscreteDao discreteDao;
 
-	protected final String contentTypeDesc = "Content format returned, currently only WaterML";
+	protected final String contentTypeDesc = "Content format returned: WaterML or GeoJSON";
 
 	@Autowired
 	public DataController(TimeSeriesDao timeSeriesDao, DiscreteDao discreteDao) {
@@ -52,30 +52,42 @@ public class DataController extends BaseController {
 		this.discreteDao = discreteDao;
 	}
 
-	@Operation(description = "Return GeoJSON or Water ML Data specific to the requested Monitoring Location and data type.", responses = {
-			@ApiResponse(responseCode = "200", description = "GeoJSON representation of the Time Series.", content = @Content(schema = @Schema(implementation = TimeSeriesGeoJSON.class))),
+	@Operation(description = "Return WaterML or GeoJSON specific to the requested Monitoring Location and data type.", responses = {
+			@ApiResponse(responseCode = "200", description = "WaterML or GeoJSON representation of the Time Series.", content = @Content(schema = @Schema(implementation = TimeSeriesGeoJSON.class))),
 			@ApiResponse(responseCode = "400", description = HTTP_400_DESCRIPTION, content = @Content(schema = @Schema(implementation = OgcException.class))),
 			@ApiResponse(responseCode = "404", description = HTTP_404_DESCRIPTION, content = @Content(schema = @Schema(implementation = OgcException.class))),
 			@ApiResponse(responseCode = "500", description = HTTP_500_DESCRIPTION, content = @Content(schema = @Schema(implementation = OgcException.class))) },
 				externalDocs = @ExternalDocumentation(url = "https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json"))
 	@GetMapping(value = "data", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public void getTimeSeries(
-			@Parameter(description = "Monitoring location Identifier") @RequestParam(value = "monitoringLocationID", required = false) String monLocIdentifier,
+			@Parameter(description = "Monitoring location Identifier") @RequestParam(value = "monitoringLocationID", required = true) String monLocIdentifier,
 			@Parameter(description = "Data type requested") @RequestParam(value = "type", required = true) DataType dataType,
 			@Parameter(description = "Limits results to time series marked as best = true|false") @RequestParam(value = "best", required = false) Boolean best,
 			@Parameter(description = "Limits data to specfied area") @RequestParam(value = "domain", required = true) List<Domain> domains,
 			@Parameter(in = ParameterIn.QUERY, description = contentTypeDesc, schema = @Schema(type = "string"), examples = {
+					@ExampleObject(name = "json", value = "json", description = "GeoJSON (only available with parameter best=true)"),
 					@ExampleObject(name = "waterML", value = "WaterML", description = "Water ML") }) @RequestParam(value = "f", required = false, defaultValue = "waterml") String mimeType,
 			HttpServletResponse response) throws HttpMediaTypeNotAcceptableException, IOException {
 
-		// not using the ContentType returned yet, since we only have waterML
-		determineContentType(mimeType, List.of(ContentType.waterml));
+		ContentType contentType = determineContentType(mimeType, List.of(ContentType.json, ContentType.waterml));
 		String rtn = null;
 		String bestTS = best == null ? CollectionParams.PARAM_MATCH_ANY : best.toString().toLowerCase();
 
+		// Limiting to best=true due to limitations of the omsf json definition. It is not row based and only
+		// has room for one observed property (pcode) value in its Properties object. Hence the need to limit the
+		// result to one time series, best=true in this case.
+		if (contentType.isJson() && !bestTS.equals("true")) {
+			throw new HttpMediaTypeNotAcceptableException("Json content is only available with parameter best=true");
+		}
+
 		if (Domain.includesGroundWaterLevels(domains) && dataType.isStatisticalTimeSeries()) {
-			rtn = timeSeriesDao.getTimeSeriesWaterML(monLocIdentifier, bestTS);
-			response.setContentType(MediaType.APPLICATION_XML_VALUE);
+			if(contentType.isJson()) {
+				rtn = timeSeriesDao.getTimeSeries(monLocIdentifier, bestTS);
+				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			} else {
+				rtn = timeSeriesDao.getTimeSeriesWaterML(monLocIdentifier, bestTS);
+				response.setContentType(MediaType.APPLICATION_XML_VALUE);
+			}
 		}
 
 		if (rtn == null) {
