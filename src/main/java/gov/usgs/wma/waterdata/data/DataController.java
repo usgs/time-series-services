@@ -35,15 +35,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class DataController extends BaseController {
 	protected TimeSeriesDao timeSeriesDao;
 
-	protected final String contentTypeDesc = "Content format returned, currently only WaterML";
+	protected final String contentTypeDesc = "Content format returned: WaterML or GeoJSON";
 
 	@Autowired
 	public DataController(TimeSeriesDao timeSeriesDao) {
 		this.timeSeriesDao = timeSeriesDao;
 	}
 
-	@Operation(description = "Return GeoJSON or Water ML Data specific to the requested Monitoring Location and data type.", responses = {
-			@ApiResponse(responseCode = "200", description = "GeoJSON representation of the Time Series.", content = @Content(schema = @Schema(implementation = TimeSeriesGeoJSON.class))),
+	@Operation(description = "Return WaterML or GeoJSON specific to the requested Monitoring Location and data type.", responses = {
+			@ApiResponse(responseCode = "200", description = "WaterML or GeoJSON representation of the Time Series.", content = @Content(schema = @Schema(implementation = TimeSeriesGeoJSON.class))),
 			@ApiResponse(responseCode = "400", description = HTTP_400_DESCRIPTION, content = @Content(schema = @Schema(implementation = OgcException.class))),
 			@ApiResponse(responseCode = "404", description = HTTP_404_DESCRIPTION, content = @Content(schema = @Schema(implementation = OgcException.class))),
 			@ApiResponse(responseCode = "500", description = HTTP_500_DESCRIPTION, content = @Content(schema = @Schema(implementation = OgcException.class))) },
@@ -56,6 +56,7 @@ public class DataController extends BaseController {
 			@Parameter(description = "Limits data to specfied area") @RequestParam(value = "domain", required = true) List<Domain> domains,
 
 			@Parameter(in = ParameterIn.QUERY, description = contentTypeDesc, schema = @Schema(type = "string"), examples = {
+					@ExampleObject(name = "json", value = "json", description = "GeoJSON (only available with parameter best=true)"),
 					@ExampleObject(name = "waterML", value = "WaterML", description = "Water ML") }) @RequestParam(value = "f", required = false, defaultValue = "waterml") String mimeType,
 			HttpServletResponse response) throws HttpMediaTypeNotAcceptableException, IOException {
 
