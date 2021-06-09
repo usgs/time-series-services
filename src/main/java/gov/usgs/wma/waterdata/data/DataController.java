@@ -6,7 +6,7 @@ import gov.usgs.wma.waterdata.BaseController;
 import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.collections.CollectionParams;
 import gov.usgs.wma.waterdata.discrete.DiscreteDao;
-import gov.usgs.wma.waterdata.format.InheritNamespaceAnnotationInspector;
+import gov.usgs.wma.waterdata.format.InheritNamespaceAnnotationIntrospector;
 import gov.usgs.wma.waterdata.format.WaterMLPointToXmlResultHandler;
 import gov.usgs.wma.waterdata.openapi.schema.timeseries.TimeSeriesGeoJSON;
 import gov.usgs.wma.waterdata.parameter.ContentType;
@@ -103,7 +103,7 @@ public class DataController extends BaseController {
 		XmlMapper mapper = new XmlMapper(xmlInputFactory);
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		mapper.findAndRegisterModules();	//Probably should be done in a more spring way so its not redone each time
-		mapper.setAnnotationIntrospector(new InheritNamespaceAnnotationInspector());	//Custom:  Allows fields to inherit the NS of the parent
+		mapper.setAnnotationIntrospector(new InheritNamespaceAnnotationIntrospector());	//Custom:  Allows fields to inherit the NS of the parent
 
 		WaterMLPointToXmlResultHandler formatter = new WaterMLPointToXmlResultHandler(mapper, sw);
 

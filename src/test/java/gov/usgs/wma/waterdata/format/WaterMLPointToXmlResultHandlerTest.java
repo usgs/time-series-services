@@ -52,7 +52,7 @@ class WaterMLPointToXmlResultHandlerTest {
 		XmlMapper mapper = new XmlMapper(xmlInputFactory);
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		mapper.findAndRegisterModules();
-		mapper.setAnnotationIntrospector(new InheritNamespaceAnnotationInspector());
+		mapper.setAnnotationIntrospector(new InheritNamespaceAnnotationIntrospector());
 
 		WaterMLPointToXmlResultHandler formatter = new WaterMLPointToXmlResultHandler(mapper, sw);
 

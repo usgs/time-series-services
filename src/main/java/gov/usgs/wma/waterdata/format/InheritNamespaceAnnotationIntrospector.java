@@ -9,8 +9,34 @@ import java.lang.reflect.*;
 
 /**
  * AnnotationIntrospector that allows fields to inherit the namespace of the parent by default.
+ *
+ * This is really a convenience feature modified from example code in this discussion:
+ * https://github.com/FasterXML/jackson-dataformat-xml/issues/18.
+ *
+ * Imagine class like this:
+ * <pre>{@code
+ * @JacksonXmlRootElement(localName="point", namespace="http://www.opengis.net/waterml/2.0")
+ * class MyPpoint {
+ *   String myValue;	//Will be in no namespace by default
+ * }
+ * }</pre>
+ *
+ * Without this introspector, the generated xml would look like this (assuming xml2 prefix
+ * for waterml/2.0) :
+ * <pre>{@code
+ * <wml2:point>
+ *   <myValue xmlns=""/>
+ * </point>
+ * }</pre>
+ *
+ * myValue is not assumed to be in the same namespace as point, so its namespace is explicitly
+ * set to empty.  This could be fixed by assigning a namespace via the JacksonXmlProperty
+ * annotation to each field, however, what a pain!
+ *
+ * Instead, this Introspector assumes that unannotated fields are in the namespace of the
+ * declaring class.
  */
-public class InheritNamespaceAnnotationInspector extends JacksonXmlAnnotationIntrospector {
+public class InheritNamespaceAnnotationIntrospector extends JacksonXmlAnnotationIntrospector {
 	private static final long serialVersionUID = 1L;
 
 	private String getNameSpace(Class c) {
