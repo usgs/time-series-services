@@ -1,13 +1,17 @@
 package gov.usgs.wma.waterdata.domain;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.*;
 
 import java.time.LocalDateTime;
-import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@JacksonXmlRootElement(localName = "point", namespace = "http://www.opengis.net/waterml/2.0")
+@JacksonXmlRootElement(localName = "point", namespace = WaterML2.NAMESPACE)
 public class WaterMLPoint {
+
+	@JacksonXmlElementWrapper(localName = "qualifier", namespace = WaterML2.NAMESPACE)
+	@JacksonXmlProperty(localName = "Category", namespace = SensorWebEnablement2.NAMESPACE)
+	List<String> qualifiers = new ArrayList();	//This may be a list.  Is this the same as status and approval?
 
 	LocalDateTime resultDateTimeUTC;
 	Double resultValue;
@@ -16,10 +20,9 @@ public class WaterMLPoint {
 	String resultAccuracyUnit;
 	String verticalDatum;
 	String pcode;
-	/* String comment;  We don't have any comments - what about approval levels? */
-	String qualifiers;	//This may be a list.  Is this the same as status and approval?
 
-	@JacksonXmlProperty(namespace = "http://www.opengis.net/om/2.0")
+
+	@JacksonXmlProperty(namespace = ObsAndMeasure.NAMESPACE)
 	public String myOM;
 
 	public Double getResultValue() {
@@ -70,12 +73,12 @@ public class WaterMLPoint {
 		this.pcode = pcode;
 	}
 
-	public String getQualifiers() {
+	public List<String> getQualifiers() {
 		return qualifiers;
 	}
 
-	public void setQualifiers(String qualifiers) {
-		this.qualifiers = qualifiers;
+	public void addQualifier(String qualifier) {
+		qualifiers.add(qualifier);
 	}
 
 	public LocalDateTime getResultDateTimeUTC() {

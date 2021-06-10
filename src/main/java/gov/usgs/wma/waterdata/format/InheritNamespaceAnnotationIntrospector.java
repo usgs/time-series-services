@@ -3,9 +3,12 @@ package gov.usgs.wma.waterdata.format;
 import com.fasterxml.jackson.databind.PropertyName;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlAnnotationIntrospector;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.*;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * AnnotationIntrospector that allows fields to inherit the namespace of the parent by default.
@@ -59,30 +62,90 @@ public class InheritNamespaceAnnotationIntrospector extends JacksonXmlAnnotation
 //		}
 
 	@Override
-	public PropertyName findNameForSerialization(Annotated a)
-	{
-		AnnotatedElement ae = a.getAnnotated();
-		if (Field.class.isInstance(ae)) {
-			Field f = (Field)ae;
-			String namespace =  getNameSpace(f.getDeclaringClass());
-			if (namespace != null)
-				return PropertyName.construct(f.getName(), namespace);
+	public PropertyName findWrapperName(final Annotated ann) {
+		return super.findWrapperName(ann);
+	}
+
+	//@Override
+	public PropertyName XfindNameForSerialization(Annotated ann) {
+		AnnotatedElement ae = ann.getAnnotated();
+
+
+		if (hasNamespaceAnnotation(ae.getAnnotations())) {
+
+			//This has a specific annotation that sets its namespace
+			PropertyName pn = super.findNameForSerialization(ann);
+			return pn;
+
+		} else {
+
+			String namespace = getNameSpace(getDeclaringClass(ae));	//NS from declaring class
+
+			PropertyName pn = super.findNameForSerialization(ann);
+
+			if (pn != null) {
+				return PropertyName.construct(pn.getSimpleName(), namespace);
+			} else {
+				return PropertyName.construct(null, namespace);
+			}
+
 		}
 
-		return super.findNameForSerialization(a);
 	}
 
 	@Override
-	public String findNamespace(Annotated ann)
-	{
-		AnnotatedElement ae = ann.getAnnotated();
-		if (Method.class.isInstance(ae)) {
-			Method m = (Method)ae;
-			String namespace = getNameSpace(m.getDeclaringClass());
-			if (namespace != null)
-				return namespace;
+	public String findNamespace(Annotated ann) {
+
+		JacksonXmlProperty prop = (JacksonXmlProperty)this.findAnnotation(ann, JacksonXmlProperty.class);
+		if (prop != null) {
+
+			return prop.namespace();
+
+		} else {
+
+			AnnotatedElement ae = ann.getAnnotated();
+			String namespace = getNameSpace(getDeclaringClass(ae));	//NS from declaring class
+			return namespace;
 
 		}
-		return super.findNamespace(ann);
+
+
+//		if (hasNamespaceAnnotation(ae.getAnnotations())) {
+//			//This has a specific annotation that sets its namespace
+//			return super.findNamespace(ann);
+//		} else {
+//			String namespace = getNameSpace(getDeclaringClass(ae));	//NS from declaring class
+//			return namespace;
+//		}
+
 	}
+
+	protected Class<?> getDeclaringClass(AnnotatedElement ae) {
+		if (Method.class.isInstance(ae)) {
+			Method m = (Method) ae;
+			return m.getDeclaringClass();
+		} else if (Field.class.isInstance(ae)) {
+			Field f = (Field)ae;
+			return f.getDeclaringClass();
+		} else if (Class.class.isInstance(ae)) {
+			Class c = (Class)ae;
+			return c.getDeclaringClass();	//Nested class
+		} else {
+			return null;	//who knows??
+		}
+	}
+
+	protected boolean hasNamespaceAnnotation(Annotation[] annotations) {
+		boolean match = Arrays.stream(annotations).map(a -> a.annotationType()).anyMatch(a -> getNamespaceAnnotations().contains(a));
+		return match;
+	}
+
+	protected <A extends Annotation> A findAnnotation(Annotated ann, Class<A> annoClass) {
+		return ann.getAnnotation(annoClass);
+	}
+
+	List<Class> getNamespaceAnnotations() {
+		return List.of(JacksonXmlRootElement.class, JacksonXmlProperty.class, JacksonXmlElementWrapper.class);
+	}
+
 }
