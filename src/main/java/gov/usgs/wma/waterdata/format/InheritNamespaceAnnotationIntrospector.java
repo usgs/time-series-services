@@ -51,48 +51,18 @@ public class InheritNamespaceAnnotationIntrospector extends JacksonXmlAnnotation
 		}
 	}
 
-//		@Override
-//		public PropertyName findRootName(AnnotatedClass ac)
-//		{
-//			String namespace = getNameSpace(ac.getAnnotated());
-//			if (ac.getAnnotated() != null)
-//				return new PropertyName(ac.getAnnotated().getSimpleName(), namespace);
-//			else
-//				return super.findRootName(ac);
-//		}
 
-	@Override
-	public PropertyName findWrapperName(final Annotated ann) {
-		return super.findWrapperName(ann);
-	}
+	//It seems possible that this method may need to be overriden similar to hoow
+	//findNamespace is.  So far my test example doesn't require it.
+//	@Override
+//	public PropertyName findNameForSerialization(Annotated ann) {
+//	}
 
-	//@Override
-	public PropertyName XfindNameForSerialization(Annotated ann) {
-		AnnotatedElement ae = ann.getAnnotated();
-
-
-		if (hasNamespaceAnnotation(ae.getAnnotations())) {
-
-			//This has a specific annotation that sets its namespace
-			PropertyName pn = super.findNameForSerialization(ann);
-			return pn;
-
-		} else {
-
-			String namespace = getNameSpace(getDeclaringClass(ae));	//NS from declaring class
-
-			PropertyName pn = super.findNameForSerialization(ann);
-
-			if (pn != null) {
-				return PropertyName.construct(pn.getSimpleName(), namespace);
-			} else {
-				return PropertyName.construct(null, namespace);
-			}
-
-		}
-
-	}
-
+	/**
+	 * This override allows the class' namespace to be used when there is no JacksonXmlProperty on a field or method.
+	 * @param ann
+	 * @return
+	 */
 	@Override
 	public String findNamespace(Annotated ann) {
 
@@ -108,15 +78,6 @@ public class InheritNamespaceAnnotationIntrospector extends JacksonXmlAnnotation
 			return namespace;
 
 		}
-
-
-//		if (hasNamespaceAnnotation(ae.getAnnotations())) {
-//			//This has a specific annotation that sets its namespace
-//			return super.findNamespace(ann);
-//		} else {
-//			String namespace = getNameSpace(getDeclaringClass(ae));	//NS from declaring class
-//			return namespace;
-//		}
 
 	}
 
@@ -135,17 +96,8 @@ public class InheritNamespaceAnnotationIntrospector extends JacksonXmlAnnotation
 		}
 	}
 
-	protected boolean hasNamespaceAnnotation(Annotation[] annotations) {
-		boolean match = Arrays.stream(annotations).map(a -> a.annotationType()).anyMatch(a -> getNamespaceAnnotations().contains(a));
-		return match;
-	}
-
 	protected <A extends Annotation> A findAnnotation(Annotated ann, Class<A> annoClass) {
 		return ann.getAnnotation(annoClass);
-	}
-
-	List<Class> getNamespaceAnnotations() {
-		return List.of(JacksonXmlRootElement.class, JacksonXmlProperty.class, JacksonXmlElementWrapper.class);
 	}
 
 }
