@@ -6,7 +6,6 @@ import gov.usgs.wma.waterdata.BaseController;
 import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.collections.CollectionParams;
 import gov.usgs.wma.waterdata.discrete.DiscreteDao;
-import gov.usgs.wma.waterdata.format.InheritNamespaceAnnotationIntrospector;
 import gov.usgs.wma.waterdata.format.WaterMLPointToXmlResultHandler;
 import gov.usgs.wma.waterdata.openapi.schema.timeseries.TimeSeriesGeoJSON;
 import gov.usgs.wma.waterdata.parameter.ContentType;
@@ -67,10 +66,11 @@ public class DataController extends BaseController {
 			@Parameter(in = ParameterIn.QUERY, description = contentTypeDesc, schema = @Schema(type = "string"), examples = {
 					@ExampleObject(name = "json", value = "json", description = "GeoJSON (only available with parameter best=true)"),
 					@ExampleObject(name = "waterML", value = "WaterML", description = "Water ML") }) @RequestParam(value = "f", required = false, defaultValue = "waterml") String mimeType,
-			HttpServletResponse response) throws HttpMediaTypeNotAcceptableException, IOException {
+			HttpServletResponse response) throws HttpMediaTypeNotAcceptableException, IOException, XMLStreamException {
 
 		ContentType contentType = determineContentType(mimeType, List.of(ContentType.json, ContentType.waterml));
 		String rtn = null;
+		boolean outputStreamed = false;
 		String bestTS = best == null ? CollectionParams.PARAM_MATCH_ANY : best.toString().toLowerCase();
 
 		// Limiting to best=true due to limitations of the omsf json definition. It is not row based and only
@@ -79,59 +79,35 @@ public class DataController extends BaseController {
 		if (contentType.isJson() && !bestTS.equals("true")) {
 			throw new HttpMediaTypeNotAcceptableException("Json content is only available with parameter best=true");
 		}
+		if (contentType.isJson() && dataType.isDiscrete()) {
+			throw new HttpMediaTypeNotAcceptableException("Discrete data is only available as WaterML.");
+		}
 
 		if (Domain.includesGroundWaterLevels(domains) && dataType.isStatisticalTimeSeries()) {
-			if(contentType.isJson()) {
+			if (contentType.isJson()) {
 				rtn = timeSeriesDao.getTimeSeries(monLocIdentifier, bestTS);
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			} else {
 				rtn = timeSeriesDao.getTimeSeriesWaterML(monLocIdentifier, bestTS);
 				response.setContentType(MediaType.APPLICATION_XML_VALUE);
 			}
+		} else if (Domain.includesGroundWaterLevels(domains) && dataType.isDiscrete()) {
+			response.setContentType(MediaType.APPLICATION_XML_VALUE);
+			WaterMLPointToXmlResultHandler resultHandler = new WaterMLPointToXmlResultHandler(response.getOutputStream());
+			discreteDao.getDiscreteGWMLPoint(monLocIdentifier, resultHandler);
+			resultHandler.closeXmlDoc();
+			outputStreamed = true;
 		}
 
-		if (rtn == null) {
+		if (rtn == null && !outputStreamed) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			rtn = ogc404Payload;
 		}
 
-		response.getWriter().print(rtn);
+		if(!outputStreamed) {
+			response.getWriter().print(rtn);
+		}
 	}
 
-	public void getDiscrete(String monLocIdentifier, DataType dataType, Boolean best, List<Domain> domains,
-				String mimeType, HttpServletResponse response) throws HttpMediaTypeNotAcceptableException, IOException, XMLStreamException, JAXBException {
-
-		//Configure an XMLInputFactory and XMLStreamWriter
-		//I think the XMLInputFactory is used to consume a stream of XML events from the
-		//XmlMapper.  Then the XMLStreamWriter is used to convert those XML events into
-		//a character stream.
-		XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
-		XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newFactory();
-		xmlOutputFactory.setProperty("javax.xml.stream.isRepairingNamespaces", "true");
-		XMLStreamWriter sw = xmlOutputFactory.createXMLStreamWriter(response.getWriter());
-
-		//Configure FasterXML XmlMapper
-		XmlMapper mapper = new XmlMapper(xmlInputFactory);
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-		mapper.findAndRegisterModules();	//Probably should be done in a more spring way so its not redone each time
-		mapper.setAnnotationIntrospector(new InheritNamespaceAnnotationIntrospector());	//Custom:  Allows fields to inherit the NS of the parent
-
-		WaterMLPointToXmlResultHandler formatter = new WaterMLPointToXmlResultHandler(mapper, sw);
-
-		sw.setPrefix("wml2", "http://www.opengis.net/waterml/2.0");
-		sw.setPrefix("om", "http://www.opengis.net/om/2.0");
-
-		sw.writeStartDocument("utf-8", "1.0");
-		sw.writeStartElement("wml2", "Collection", "http://www.opengis.net/waterml/2.0");
-		sw.writeNamespace("wml2", "http://www.opengis.net/waterml/2.0");
-		sw.writeNamespace("om", "http://www.opengis.net/om/2.0");
-		sw.writeDefaultNamespace("http://www.opengis.net/waterml/2.0");
-		sw.setDefaultNamespace("http://www.opengis.net/waterml/2.0");
-
-		discreteDao.getDiscreteGWMLPoint(monLocIdentifier, formatter);
-
-		sw.writeEndElement();
-		sw.writeEndDocument();
-	}
 }

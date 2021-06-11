@@ -3,18 +3,22 @@
 
 <mapper namespace="discreteGWMLPoint">
 	<resultMap id="pointResult" type="WaterMLPoint">
-	    <result property="resultDateTimeUTC" column="resultDateTimeUTC"/>
+		<result property="monLocIdentifier" column="monLocIdentifier"/>
+		<result property="resultDateTimeUTC" column="resultDateTimeUTC"/>
 		<result property="resultValue" column="resultValue"/>
 		<result property="resultUnit" column="resultUnit"/>
 		<result property="resultAccuracy" column="resultAccuracy"/>
 		<result property="resultAccuracyUnit" column="resultAccuracyUnit"/>
 		<result property="verticalDatum" column="verticalDatum"/>
 		<result property="pcode" column="pcode"/>
-		<result property="qualifiers" column="qualifiers"/>
+		<result property="qualifiersAsJson" column="qualifiersAsJson"/>
+		<result property="pcodeDesc" column="pcodeDesc"/>
+		<result property="status" column="status"/>
 	</resultMap>
 
-	<select id="getDiscreteGWMLPoint" parameterType="map" resultMap="pointResult">
+	<select id="getDiscreteGWMLPoint" parameterType="map" resultMap="pointResult" fetchSize="500">
 		select
+			monitoring_location_identifier "monLocIdentifier",
 			date_measured_raw "resultDateTimeUTC", /* timestamp of the UTC time */
 			display_result "resultValue",
 			parm.parm_unt_tx "resultUnit",
@@ -22,10 +26,13 @@
 			parm.parm_unt_tx "resultAccuracyUnit", /* We don't have a accuracy unit - do we know its the same? */
 			vertical_datum_code "verticalDatum",
 			parameter_code "pcode",
-			result_measure_qualifiers::text "qualifiers"
-		from nwis.discrete_ground_water_aqts dgw inner join nwis.parm parm
+		    parm.parm_ds "pcodeDesc",
+			result_measure_qualifiers::text "qualifiersAsJson",
+			approval_level_description "status"
+		from nwis.discrete_ground_water_aqts dgw left join nwis.parm parm
 			on dgw.parameter_code = parm.parm_cd
 		where
 			dgw.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+		order by "monLocIdentifier", "pcode", "resultDateTimeUTC"
 	</select>
 </mapper>
