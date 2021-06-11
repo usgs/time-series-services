@@ -17,7 +17,7 @@
               )
           )
        ) where (#{collectionId,jdbcType=VARCHAR} = 'monitoring-locations'
-                  and exists (select monitoring_location_identifier from monitoring_location
+                  and exists (select monitoring_location_identifier from nwis.monitoring_location
                   where geom is not null and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}))
           or exists (select monitoring_location_identifier from nwis.network
                   join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id
@@ -35,7 +35,7 @@
               )
           )
        ) where (#{collectionId,jdbcType=VARCHAR} = 'monitoring-locations'
-                  and exists (select monitoring_location_identifier from monitoring_location
+                  and exists (select monitoring_location_identifier from nwis.monitoring_location
                   where geom is not null and monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}))
           or exists (select monitoring_location_identifier from nwis.network
                   join nwis.network_sites on nwis.network.network_id = nwis.network_sites.network_id

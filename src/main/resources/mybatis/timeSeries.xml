@@ -5,7 +5,7 @@
     <sql id="gwDailyValueJoin">
         left join (select monitoring_location_identifier, time_series_unique_id, groundwater_daily_value_identifier,
                        approvals, time_step, observered_property_id, observered_property_name, statistic_id, statistic
-                   from groundwater_daily_value) gw
+                   from nwis.groundwater_daily_value) gw
         on gw.monitoring_location_identifier = ml.monitoring_location_identifier
     </sql>
 

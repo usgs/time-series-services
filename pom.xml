@@ -98,6 +98,33 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <version>6.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <!-- 3.0.0 ? -->
+            <version>2.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.3</version>
+        </dependency>
+
         <!-- TEST dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -165,7 +192,8 @@
                         <WDFN_DATABASE_ADDRESS>${TESTING_DATABASE_ADDRESS}</WDFN_DATABASE_ADDRESS>
                         <WDFN_DATABASE_PORT>${TESTING_DATABASE_PORT}</WDFN_DATABASE_PORT>
                         <WDFN_DATABASE_NAME>wqp_db</WDFN_DATABASE_NAME>
-                        <WDFN_DB_READ_ONLY_USERNAME>wdfn_user</WDFN_DB_READ_ONLY_USERNAME>
+                        <!-- Read only user should be: 'wdfn_user', temporary fix until docker db is updated -->
+                        <WDFN_DB_READ_ONLY_USERNAME>postgres</WDFN_DB_READ_ONLY_USERNAME>
                         <WDFN_DB_READ_ONLY_PASSWORD>changeMe</WDFN_DB_READ_ONLY_PASSWORD>
                         <WDFN_SCHEMA_OWNER_USERNAME>nwis_ws_star</WDFN_SCHEMA_OWNER_USERNAME>
                         <WDFN_SCHEMA_OWNER_PASSWORD>changeMe</WDFN_SCHEMA_OWNER_PASSWORD>
