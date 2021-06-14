@@ -117,7 +117,7 @@
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
             <!-- 3.0.0 ? -->
-            <version>2.3.3</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
