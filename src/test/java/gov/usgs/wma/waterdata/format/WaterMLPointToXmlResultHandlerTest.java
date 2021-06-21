@@ -3,7 +3,6 @@ package gov.usgs.wma.waterdata.format;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
 import gov.usgs.wma.waterdata.domain.*;
 import org.apache.ibatis.session.ResultContext;
 import org.junit.jupiter.api.BeforeEach;

@@ -44,8 +44,6 @@ public class DiscreteDaoIT extends BaseIT {
 			assertNotNull(point.getResultDateTimeUTC());
 			assertNotNull(point.getResultValue());
 			assertTrue(point.getResultUnit() != null || point.getPcodeDesc() == null);
-			assertTrue(point.getResultAccuracyUnit() != null || point.getPcodeDesc() == null);
-			assertNotNull(point.getVerticalDatum());
 			assertNotNull(point.getPcode());
 			assertTrue(point.getQualifiersAsJson() == null ||
 					    point.getQualifiersAsJson().equals(("[\"Static\"]")));

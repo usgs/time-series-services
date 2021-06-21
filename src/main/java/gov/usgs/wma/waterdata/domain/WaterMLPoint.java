@@ -14,9 +14,9 @@ public class WaterMLPoint {
 
 	@JacksonXmlElementWrapper(localName = "qualifier", namespace = WaterML2.NAMESPACE)
 	@JacksonXmlProperty(localName = "Category", namespace = SensorWebEnablement2.NAMESPACE)
-	List<String> qualifiers = new ArrayList();	//This may be a list.  Is this the same as status and approval?
+	List<String> qualifiers = new ArrayList<>();	//This may be a list.  Is this the same as status and approval?
 
-	// TODO: MyBatis does not easly handle reading the jsonb column without custom type handler. Until the json array is
+	// TODO: MyBatis does not easily handle reading the jsonb column without custom type handler. Until the json array is
 	// directly mapped in sql, we'll read the field in raw and convert.
 	String qualifiersAsJson;
 
@@ -25,9 +25,6 @@ public class WaterMLPoint {
 	LocalDateTime resultDateTimeUTC;
 	Double resultValue;
 	String resultUnit;
-	Double resultAccuracy;
-	String resultAccuracyUnit;
-	String verticalDatum;
 	String pcode;
 	String pcodeDesc;
 
@@ -49,30 +46,6 @@ public class WaterMLPoint {
 
 	public void setResultUnit(String resultUnit) {
 		this.resultUnit = resultUnit;
-	}
-
-	public Double getResultAccuracy() {
-		return resultAccuracy;
-	}
-
-	public void setResultAccuracy(Double resultAccuracy) {
-		this.resultAccuracy = resultAccuracy;
-	}
-
-	public String getResultAccuracyUnit() {
-		return resultAccuracyUnit;
-	}
-
-	public void setResultAccuracyUnit(String resultAccuracyUnit) {
-		this.resultAccuracyUnit = resultAccuracyUnit;
-	}
-
-	public String getVerticalDatum() {
-		return verticalDatum;
-	}
-
-	public void setVerticalDatum(String verticalDatum) {
-		this.verticalDatum = verticalDatum;
 	}
 
 	public String getPcode() { return pcode; }

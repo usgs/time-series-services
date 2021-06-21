@@ -1,7 +1,5 @@
 package gov.usgs.wma.waterdata.data;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import gov.usgs.wma.waterdata.BaseController;
 import gov.usgs.wma.waterdata.OgcException;
 import gov.usgs.wma.waterdata.collections.CollectionParams;
@@ -26,8 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.*;
-import javax.xml.stream.*;
+import javax.xml.stream.XMLStreamException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,6 +67,7 @@ public class DataController extends BaseController {
 
 		ContentType contentType = determineContentType(mimeType, List.of(ContentType.json, ContentType.waterml));
 		String rtn = null;
+		boolean streamingOutput = false;
 		boolean outputStreamed = false;
 		String bestTS = best == null ? CollectionParams.PARAM_MATCH_ANY : best.toString().toLowerCase();
 
@@ -95,8 +93,11 @@ public class DataController extends BaseController {
 			response.setContentType(MediaType.APPLICATION_XML_VALUE);
 			WaterMLPointToXmlResultHandler resultHandler = new WaterMLPointToXmlResultHandler(response.getOutputStream());
 			discreteDao.getDiscreteGWMLPoint(monLocIdentifier, resultHandler);
-			resultHandler.closeXmlDoc();
-			outputStreamed = true;
+			streamingOutput = true;
+			if(resultHandler.getNumResults() > 0) {
+				resultHandler.closeXmlDoc();
+				outputStreamed = true;
+			}
 		}
 
 		if (rtn == null && !outputStreamed) {
@@ -105,8 +106,12 @@ public class DataController extends BaseController {
 			rtn = ogc404Payload;
 		}
 
-		if(!outputStreamed) {
-			response.getWriter().print(rtn);
+		if (!outputStreamed) {
+			if (streamingOutput) {
+				response.getOutputStream().print(rtn);
+			} else {
+				response.getWriter().print(rtn);
+			}
 		}
 	}
 

@@ -34,31 +34,39 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
     private String monLocIdentifier = "";
     private String pcode = "";
 
+    // number of results processed
+    private int numResults = 0;
+
     // elements in xml still pending
-    private Stack<String> openElements = new Stack<>();
+    private final Stack<String> openElements = new Stack<>();
 
     public WaterMLPointToXmlResultHandler(Writer writer) throws XMLStreamException {
         this.writer = XmlFactory.newXMLStreamWriter(writer);
-        initDoc();
     }
 
     public WaterMLPointToXmlResultHandler(OutputStream out) throws XMLStreamException {
         this.writer = XmlFactory.newXMLStreamWriter(out);
-        initDoc();
     }
 
     @Override
     public void handleResult(final ResultContext<? extends WaterMLPoint> resultContext) {
         WaterMLPoint point = resultContext.getResultObject();
-        boolean s = false;
         try {
+            if(numResults == 0) {
+                initDoc();
+            }
+            numResults++;
             if (onNewObservation(point)) {
                 startObservationMember(point);
             }
             addPoint(point);
-        } catch (Exception e) {
-            throw new RuntimeException("Exception during serialization", e);
+        } catch (XMLStreamException e) {
+            throw new RuntimeException("Exception during serialization to xml", e);
         }
+    }
+
+    public int getNumResults() {
+        return numResults;
     }
 
     public void closeXmlDoc() throws XMLStreamException {
@@ -178,7 +186,6 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         addPointMetadata(point);
         endElement("MeasurementTVP");
         endElement("point");
-        writer.flush();
     }
 
     private void addPointMetadata(WaterMLPoint point) throws XMLStreamException {

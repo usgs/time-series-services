@@ -50,7 +50,7 @@ public class DataControllerDiscreteXmlIT extends BaseIT {
 
     @Test
     public void notFoundTest() {
-        String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=statistical_time_series";
+        String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=discrete";
         runErrorCase(url, HttpStatus.NOT_FOUND, ogc404Payload);
     }
 
