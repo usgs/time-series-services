@@ -7,9 +7,6 @@
 		<result property="resultDateTimeUTC" column="resultDateTimeUTC"/>
 		<result property="resultValue" column="resultValue"/>
 		<result property="resultUnit" column="resultUnit"/>
-		<result property="resultAccuracy" column="resultAccuracy"/>
-		<result property="resultAccuracyUnit" column="resultAccuracyUnit"/>
-		<result property="verticalDatum" column="verticalDatum"/>
 		<result property="pcode" column="pcode"/>
 		<result property="qualifiersAsJson" column="qualifiersAsJson"/>
 		<result property="pcodeDesc" column="pcodeDesc"/>
@@ -22,9 +19,6 @@
 			date_measured_raw "resultDateTimeUTC", /* timestamp of the UTC time */
 			display_result "resultValue",
 			parm.parm_unt_tx "resultUnit",
-			level_accuracy "resultAccuracy",
-			parm.parm_unt_tx "resultAccuracyUnit", /* We don't have a accuracy unit - do we know its the same? */
-			vertical_datum_code "verticalDatum",
 			parameter_code "pcode",
 		    parm.parm_ds "pcodeDesc",
 			result_measure_qualifiers::text "qualifiersAsJson",

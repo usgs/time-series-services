@@ -1,14 +1,11 @@
 package gov.usgs.wma.waterdata.format;
 
-import com.fasterxml.jackson.databind.PropertyName;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlAnnotationIntrospector;
 import com.fasterxml.jackson.dataformat.xml.annotation.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * AnnotationIntrospector that allows fields to inherit the namespace of the parent by default.

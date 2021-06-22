@@ -12,8 +12,6 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 import java.io.IOException;
 
-import java.io.*;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
