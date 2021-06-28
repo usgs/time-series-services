@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import gov.usgs.wma.waterdata.BaseController;
 import gov.usgs.wma.waterdata.OgcException;
+import gov.usgs.wma.waterdata.format.WaterMLPointToXmlResultHandler;
 import gov.usgs.wma.waterdata.openapi.schema.observations.StatisticalFeatureGeoJSON;
 import gov.usgs.wma.waterdata.openapi.schema.timeseries.TimeSeriesGeoJSON;
 import gov.usgs.wma.waterdata.parameter.ContentType;
@@ -21,6 +22,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.stream.XMLStreamException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -80,16 +83,24 @@ public class TimeSeriesController extends BaseController {
 			@RequestParam(value = "f", required = false, defaultValue = "json")
 			String mimeType,
 			HttpServletResponse response)
-					throws HttpMediaTypeNotAcceptableException, IOException {
+			throws HttpMediaTypeNotAcceptableException, IOException, XMLStreamException {
 
 		ContentType contentType = determineContentType(mimeType);
 		String rtn = null;
+		boolean streamingOutput = false;
+		boolean outputStreamed = false;
 		if (contentType.isJson()) {
 			rtn = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		} else if (contentType.isWaterML()) {
-			rtn = timeSeriesDao.getTimeSeriesWaterML(collectionId, featureId, timeSeriesId);
 			response.setContentType(MediaType.APPLICATION_XML_VALUE);
+			WaterMLPointToXmlResultHandler resultHandler = new WaterMLPointToXmlResultHandler(response.getOutputStream());
+			timeSeriesDao.getTimeSeriesWaterML(collectionId, featureId, timeSeriesId, resultHandler);
+			streamingOutput = true;
+			if(resultHandler.getNumResults() > 0) {
+				resultHandler.closeXmlDoc();
+				outputStreamed = true;
+			}
 		}
 
 		if (rtn == null) {
@@ -98,6 +109,12 @@ public class TimeSeriesController extends BaseController {
 			rtn = ogc404Payload;
 		}
 
-		response.getWriter().print(rtn);
+		if (!outputStreamed) {
+			if (streamingOutput) {
+				response.getOutputStream().print(rtn);
+			} else {
+				response.getWriter().print(rtn);
+			}
+		}
 	}
 }

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import gov.usgs.wma.waterdata.domain.WaterML2;
 import org.xmlunit.matchers.CompareMatcher;
 
 import java.io.IOException;
@@ -113,13 +114,14 @@ public class DataControllerIT extends BaseIT {
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_XML));
 		assertNotNull(rtn.getBody());
+		assertXmlSchemaCompliant(rtn.getBody(), WaterML2.SCHEMA);
 
 		try {
 			String expectedXml = harmonizeXml(getCompareFile(compareFile));
-			expectedXml = expectedXml.replaceAll("<wml2:generationDate>.*</wml2:generationDate>", "");
+			expectedXml = expectedXml.replaceAll("<generationDate>.*</generationDate>", "");
 
 			String actualXml = rtn.getBody();
-			actualXml = actualXml.replaceAll("<wml2:generationDate>.*</wml2:generationDate>", "");
+			actualXml = actualXml.replaceAll("<generationDate>.*</generationDate>", "");
 			assertThat(actualXml, CompareMatcher.isIdenticalTo(expectedXml));
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);

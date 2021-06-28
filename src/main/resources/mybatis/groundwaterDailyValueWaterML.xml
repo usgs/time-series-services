@@ -3,153 +3,55 @@
 
 <mapper namespace="groundwaterDailyValueWaterML">
 
-    <select id="getWaterML" parameterType="String" resultType="String"><![CDATA[
-       with
-            gw_daily_value as (
-                select time_series_unique_id,
-                       gdv.monitoring_location_identifier,
-                       min(time_step) phenomenon_time_start,
-                       max(time_step) phenomenon_time_end,
-                       observered_property_name,
-                       observered_property_reference,
-                       statistic,
-                       statistic_reference,
-                       unit_of_measure,
-                       unit_of_measure_reference,
-                       xmlagg(xmlelement(name "wml2:point",
-                         xmlelement(name "wml2:MeasurementTVP",
-                           xmlelement(name "wml2:time",
-                             to_char(time_step at time zone 'UTC',
-                                     'YYYY-MM-DD')),
-                           xmlelement(name "wml2:value", result),
-                           xmlelement(name "wml2:metaData",
-                             xmlelement(name "wml2:TVPMeasurementMetadata",
-                               case
-                                 when qualifiers is null then
-                                   xmlelement(name "wml2:qualifier")
-                                 else
-                                   (select xmlagg(xmlelement(name "wml2:qualifier", qualifier))
-                                       from jsonb_array_elements_text(qualifiers) as qualifier)
-                               end,
-                               case
-                                 when approvals is null then
-                                   xmlelement(name "wml2:status")
-                                 else
-                                   (select xmlagg(xmlelement(name "wml2:status", approval))
-                                       from jsonb_array_elements_text(approvals) as approval)
-                               end
-                           ))
-                       )) order by time_step) point_agg
-                   from nwis.groundwater_daily_value gdv
-                   left join (
-                      select monitoring_location_identifier, time_series_unique_id best_ts_id
-                      from (select *, RANK() OVER (ORDER BY ranking DESC) AS rk
-                      from nwis.best_time_series
-                      where monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-                            and ranking > 0) as t
-                      where rk = 1) bts
-                    on gdv.monitoring_location_identifier = bts.monitoring_location_identifier
-                  where ('any' = #{timeSeriesId,jdbcType=VARCHAR}
-                           or time_series_unique_id = #{timeSeriesId,jdbcType=VARCHAR})
-                      and gdv.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-                      and ('any' = #{bestTS,jdbcType=VARCHAR} or (bts.monitoring_location_identifier is not null
-                            and ( ('true' = #{bestTS,jdbcType=VARCHAR} and bts.best_ts_id = time_series_unique_id)
-                                    or
-                                   ('false' = #{bestTS,jdbcType=VARCHAR} and bts.best_ts_id != time_series_unique_id)
-                                ))
-                          )
-                     AND (
-                         approvals ?? 'Approved'
-                         OR CURRENT_DATE - time_step <= 1095
-                     )
-                 group by time_series_unique_id,
-                          gdv.monitoring_location_identifier,
-                          observered_property_name,
-                          observered_property_reference,
-                          statistic,
-                          statistic_reference,
-                          unit_of_measure,
-                          unit_of_measure_reference
-            )
-        select 
-          '<?xml version="1.0" encoding="utf-8"?>' ||
-              xmlelement(name "wml2:Collection", xmlattributes('generated_collection_doc' as "gml:id",
-                          'http://www.opengis.net/waterml/2.0' as "xmlns:wml2",
-                          'http://www.w3.org/2001/XMLSchema-instance' as "xmlns:xsi",
-                          'http://www.opengis.net/gml/3.2' as "xmlns:gml",
-                          'http://www.w3.org/1999/xlink' as "xmlns:xlink",
-                          'http://www.w3.org/2001/XMLSchema' as "xmlns:xsd",
-                          'http://www.opengis.net/om/2.0' as "xmlns:om"),
-                xmlelement(name "wml2:DocumentMetadata",
-                  xmlelement(name "wml2:generationDate",
-                             to_char(now()::timestamp at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"')),
-                  xmlelement(name "wml2:version",
-                     xmlattributes('http://www.opengis.net/waterml/2.0' as "xlink:href",
-                                   'WaterML 2.0 RFC' as "xlink:title")),
-                  xmlelement(name "wml2:generationSystem",
-                                   'Water Data for the Nation - Observations Services')
-                ),
-             xmlagg(
-                xmlelement(name "wml2:observationMember",
-                  xmlelement(name "om:OM_Observation",
-                    xmlelement(name "om:phenomenonTime",
-                      xmlelement(name "gml:TimePeriod",
-                        xmlelement(name "gml:beginPosition",
-                           to_char(phenomenon_time_start at time zone 'UTC', 'YYYY-MM-DD')),
-                        xmlelement(name "gml:endPosition",
-                           to_char(phenomenon_time_end at time zone 'UTC', 'YYYY-MM-DD'))
-                    )),
-                    xmlelement(name "om:resultTime",
-                      xmlelement(name "gml:timePosition",
-                        xmlelement(name "gml:timePosition",
-                           to_char(phenomenon_time_end at time zone 'UTC', 'YYYY-MM-DD'))
-                    )),
-                    xmlelement(name "om:procedure",
-                      xmlelement(name "om:ObservationProcess",
-                        xmlelement(name "om:parameter",
-                          xmlelement(name "om:NamedValue",
-                            xmlelement(name "om:name",
-                              xmlattributes('statistic' as "xlink:title",
-                                           statistic_reference as "xlink:href")),
-                            xmlelement(name "om:value",
-                              xmlattributes('xsd:string' as "xsi:type"),
-                                           statistic)
-                    )))),
-                    xmlelement(name "om:observedProperty",
-                         xmlattributes(observered_property_reference as "xlink:href",
-                                       observered_property_name as "xlink:title")
-                    ),
-                    xmlelement(name "om:featureOfInterest",
-                         xmlattributes(#{serverUrl,jdbcType=VARCHAR} || 'collections/'
-                          || #{collectionId,jdbcType=VARCHAR} || '/items/' || ml.monitoring_location_identifier
-                          || '?f=json' as "xlink:href",
-                          site_name as "xlink:title")
-                    ),
-                    xmlelement(name "om:result",
-                      xmlelement(name "wml2:MeasurementTimeseries",
-                           xmlattributes(time_series_unique_id as "gml:id"),
-                        xmlelement(name "wml2:DefaultTVPMeasurementMetadata",
-                          xmlelement(name "wml2:uom", xmlattributes(unit_of_measure as "xlink:title",
-                                     unit_of_measure_reference as "xlink:href"))),
-                          point_agg)
-                    )
-              )) order by ml.monitoring_location_identifier, observered_property_name, statistic
-              ))::text as xml
-          from gw_daily_value
-          join nwis.monitoring_location ml
-            on gw_daily_value.monitoring_location_identifier = ml.monitoring_location_identifier
-         where geom is not null
-           and ('monitoring-locations' = #{collectionId,jdbcType=VARCHAR}
-            or exists (
-                   select 1
-                     from nwis.network
-                     join nwis.network_sites
-                       on nwis.network.network_id = nwis.network_sites.network_id
-                    where nwis.network.network_code = #{collectionId,jdbcType=VARCHAR}
-                      and nwis.network_sites.monitoring_location_id = ml.monitoring_location_id
-           ))
-           group by ml.monitoring_location_identifier
-           order by ml.monitoring_location_identifier
-     ]]></select>
+    <select id="getPoints" parameterType="map" resultMap="groundwaterML.pointResult" fetchSize="500">
+      with best as (
+        select monitoring_location_identifier, time_series_unique_id best_ts_id
+           from (select *, RANK() OVER (ORDER BY ranking DESC) AS rk
+           from nwis.best_time_series
+           where monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+           and ranking > 0) as t
+         where rk = 1)
+      SELECT
+        gw_daily_value.monitoring_location_identifier "monLocIdentifier",
+        #{serverUrl,jdbcType=VARCHAR} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
+          || '/items/' || ml.monitoring_location_identifier || '?f=json' as "monLocReference",
+        site_name "siteName",
+        first_value(time_step) OVER wnd as "phenomenonTimeStart",
+        last_value(time_step) OVER wnd as "phenomenonTimeEnd",
+        time_series_unique_id "measurementTimeseriesId",
+        observered_property_id "pcode",
+        observered_property_name "pcodeDesc",
+        observered_property_reference "pcodeReference",
+        statistic "statisticDesc",
+        statistic_reference "statisticReference",
+        unit_of_measure "resultUnit",
+        unit_of_measure_reference "resultUnitReference",
+        time_step "resultDate",
+        result "resultValue",
+        qualifiers "qualifiersAsJson",
+        approvals "approvalsAsJson"
+      FROM nwis.groundwater_daily_value gw_daily_value
+      join nwis.monitoring_location ml
+        on gw_daily_value.monitoring_location_identifier = ml.monitoring_location_identifier
+      left join best
+        on gw_daily_value.monitoring_location_identifier = best.monitoring_location_identifier
+     WHERE gw_daily_value.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR} and
+       ('any' = #{timeSeriesId,jdbcType=VARCHAR} or time_series_unique_id = #{timeSeriesId,jdbcType=VARCHAR})
+         and ('any' = #{bestTS,jdbcType=VARCHAR} or
+         (best.monitoring_location_identifier is not null
+         and ( ('true' = #{bestTS,jdbcType=VARCHAR} and best.best_ts_id = time_series_unique_id)
+         or
+             ('false' = #{bestTS,jdbcType=VARCHAR} and best.best_ts_id != time_series_unique_id)
+         )))
+         and (
+           approvals ?? 'Approved'
+           OR CURRENT_DATE - time_step between -1 and 1095
+         )
+      WINDOW wnd AS (
+        PARTITION BY ml.monitoring_location_identifier, observered_property_name, statistic
+        ORDER BY ml.monitoring_location_identifier, observered_property_name, statistic, time_step
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+      )
+    </select>
 
 </mapper>

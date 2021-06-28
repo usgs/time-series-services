@@ -2,31 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="discreteGWMLPoint">
-	<resultMap id="pointResult" type="WaterMLPoint">
-		<result property="monLocIdentifier" column="monLocIdentifier"/>
-		<result property="resultDateTimeUTC" column="resultDateTimeUTC"/>
-		<result property="resultValue" column="resultValue"/>
-		<result property="resultUnit" column="resultUnit"/>
-		<result property="pcode" column="pcode"/>
-		<result property="qualifiersAsJson" column="qualifiersAsJson"/>
-		<result property="pcodeDesc" column="pcodeDesc"/>
-		<result property="status" column="status"/>
-	</resultMap>
 
-	<select id="getDiscreteGWMLPoint" parameterType="map" resultMap="pointResult" fetchSize="500">
+	<select id="getDiscreteGWMLPoint" parameterType="map" resultMap="groundwaterML.pointResult" fetchSize="500">
 		select
-			monitoring_location_identifier "monLocIdentifier",
+			dgw.monitoring_location_identifier "monLocIdentifier",
+			#{serverUrl,jdbcType=VARCHAR} || 'collections/monitoring-locations'
+				|| '/items/' || ml.monitoring_location_identifier || '?f=json' as "monLocReference",
+			site_name "siteName",
 			date_measured_raw "resultDateTimeUTC", /* timestamp of the UTC time */
 			display_result "resultValue",
 			parm.parm_unt_tx "resultUnit",
 			parameter_code "pcode",
-		    parm.parm_ds "pcodeDesc",
+			parm.parm_ds "pcodeDesc",
+			'Daily random instantaneous values' "statisticDesc",
+			'http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011' "statisticReference",
 			result_measure_qualifiers::text "qualifiersAsJson",
 			approval_level_description "status"
-		from nwis.discrete_ground_water_aqts dgw left join nwis.parm parm
+		from nwis.discrete_ground_water_aqts dgw
+		join nwis.monitoring_location ml
+		on ml.monitoring_location_identifier = ml.monitoring_location_identifier
+		left join nwis.parm parm
 			on dgw.parameter_code = parm.parm_cd
 		where
 			dgw.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-		order by "monLocIdentifier", "pcode", "resultDateTimeUTC"
+		order by "monLocIdentifier", "pcode", "statisticDesc", "resultDateTimeUTC"
 	</select>
 </mapper>

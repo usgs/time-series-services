@@ -59,7 +59,7 @@ public class DataController extends BaseController {
 			@Parameter(description = "Monitoring location Identifier") @RequestParam(value = "monitoringLocationID", required = true) String monLocIdentifier,
 			@Parameter(description = "Data type requested") @RequestParam(value = "type", required = true) DataType dataType,
 			@Parameter(description = "Limits results to time series marked as best = true|false") @RequestParam(value = "best", required = false) Boolean best,
-			@Parameter(description = "Limits data to specfied area") @RequestParam(value = "domain", required = true) List<Domain> domains,
+			@Parameter(description = "Limits data to specified area") @RequestParam(value = "domain", required = true) List<Domain> domains,
 			@Parameter(in = ParameterIn.QUERY, description = contentTypeDesc, schema = @Schema(type = "string"), examples = {
 					@ExampleObject(name = "json", value = "json", description = "GeoJSON (only available with parameter best=true)"),
 					@ExampleObject(name = "waterML", value = "WaterML", description = "Water ML") }) @RequestParam(value = "f", required = false, defaultValue = "waterml") String mimeType,
@@ -71,23 +71,21 @@ public class DataController extends BaseController {
 		boolean outputStreamed = false;
 		String bestTS = best == null ? CollectionParams.PARAM_MATCH_ANY : best.toString().toLowerCase();
 
-		// Limiting to best=true due to limitations of the omsf json definition. It is not row based and only
-		// has room for one observed property (pcode) value in its Properties object. Hence the need to limit the
-		// result to one time series, best=true in this case.
-		if (contentType.isJson() && !bestTS.equals("true")) {
-			throw new HttpMediaTypeNotAcceptableException("Json content is only available with parameter best=true");
-		}
-		if (contentType.isJson() && dataType.isDiscrete()) {
-			throw new HttpMediaTypeNotAcceptableException("Discrete data is only available as WaterML.");
-		}
+		validateQueryParams(domains, contentType, dataType, bestTS);
 
 		if (Domain.includesGroundWaterLevels(domains) && dataType.isStatisticalTimeSeries()) {
 			if (contentType.isJson()) {
 				rtn = timeSeriesDao.getTimeSeries(monLocIdentifier, bestTS);
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			} else {
-				rtn = timeSeriesDao.getTimeSeriesWaterML(monLocIdentifier, bestTS);
 				response.setContentType(MediaType.APPLICATION_XML_VALUE);
+				WaterMLPointToXmlResultHandler resultHandler = new WaterMLPointToXmlResultHandler(response.getOutputStream());
+				timeSeriesDao.getTimeSeriesWaterML(monLocIdentifier, bestTS, resultHandler);
+				streamingOutput = true;
+				if(resultHandler.getNumResults() > 0) {
+					resultHandler.closeXmlDoc();
+					outputStreamed = true;
+				}
 			}
 		} else if (Domain.includesGroundWaterLevels(domains) && dataType.isDiscrete()) {
 			response.setContentType(MediaType.APPLICATION_XML_VALUE);
@@ -112,6 +110,33 @@ public class DataController extends BaseController {
 			} else {
 				response.getWriter().print(rtn);
 			}
+		}
+	}
+
+	// Throws exception if the parameters do not match current rules or data
+	// limitations
+	private void validateQueryParams(List<Domain> domains, ContentType contentType, DataType dataType, String bestTS)
+			throws HttpMediaTypeNotAcceptableException {
+		// Current only one Domain value, so the only check needed is to make sure one was provided
+		if (domains == null || domains.isEmpty()) {
+			throw new HttpMediaTypeNotAcceptableException("Data domain not provided (parameter 'domain'");
+		}
+
+		// Limiting to best=true due to limitations of the omsf json definition. It is not row based and only
+		// has room for one observed property (pcode) value in its Properties object.
+		// Hence the need to limit the result to one time series, best=true in this case.
+		if (contentType.isJson() && !bestTS.equals("true")) {
+			throw new HttpMediaTypeNotAcceptableException("Json content is only available with parameter best=true");
+		}
+
+		// Not implemented yet, on the road map to have best series for discrete data sets
+		if (dataType.isDiscrete() && !CollectionParams.PARAM_MATCH_ANY.equals(bestTS)) {
+			throw new HttpMediaTypeNotAcceptableException("parameter 'best' is not available with discrete data");
+		}
+
+		// Not implemented yet, the data set would have to somehow be limited to one observed property.
+		if (contentType.isJson() && dataType.isDiscrete()) {
+			throw new HttpMediaTypeNotAcceptableException("Discrete data is only available as WaterML.");
 		}
 	}
 
