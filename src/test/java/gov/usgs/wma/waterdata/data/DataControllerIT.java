@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import gov.usgs.wma.waterdata.domain.WaterML2;
 import org.xmlunit.matchers.CompareMatcher;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class DataControllerIT extends BaseIT {
 
 	@Test
 	public void mediaTypeNotAcceptableTest() {
-		String baseUrl = "/data?monitoringLocationID=USGS-07227448&domain=groundwater_levels&type=statistical_time_series";
+		String baseUrl = "/data?featureId=USGS-07227448&domain=groundwater_levels&type=statistical_time_series";
 		for (String contentType : contentNotAccepted) {
 			ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(baseUrl, contentType), String.class);
 			assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
@@ -61,21 +62,21 @@ public class DataControllerIT extends BaseIT {
 
 	@Test
 	public void notFoundTest() {
-		String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=statistical_time_series";
+		String url = "/data?featureId=USGS-12345678&domain=groundwater_levels&type=statistical_time_series";
 		runErrorCase(url, HttpStatus.NOT_FOUND, ogc404Payload);
 	}
 
 	@Test
-	public void monitoringLocationIDNotProvidedTest() {
+	public void featureIdNotProvidedTest() {
 		String url = "/data?domain=groundwater_levels&type=statistical_time_series";
-		String desc = "Required request parameter 'monitoringLocationID' for method parameter type String is not present";
+		String desc = "Required request parameter 'featureId' for method parameter type String is not present";
 		runErrorCase(url, HttpStatus.BAD_REQUEST,
 				"{\"code\":\"400\",\"description\":\"" + desc + "\"}");
 	}
 
 	@Test
 	public void badBestValueTest() {
-		String url = "/data?monitoringLocationID=USGS-07227448&domain=groundwater_levels&type=statistical_time_series&best=notTrue";
+		String url = "/data?featureId=USGS-07227448&domain=groundwater_levels&type=statistical_time_series&best=notTrue";
 		String desc = "Invalid boolean value [notTrue]";
 		runErrorCase(url, HttpStatus.BAD_REQUEST,
 				"{\"code\":\"400\",\"description\":\"Error in parameter best:  " + desc + "\"}");
@@ -83,7 +84,7 @@ public class DataControllerIT extends BaseIT {
 
 	@Test
 	public void badDomainValueTest() {
-		String url = "/data?monitoringLocationID=USGS-07227448&domain=xyz&type=statistical_time_series&best=false";
+		String url = "/data?featureId=USGS-07227448&domain=xyz&type=statistical_time_series&best=false";
 		String desc = "No enum constant gov.usgs.wma.waterdata.parameter.Domain.xyz";
 		runErrorCase(url, HttpStatus.BAD_REQUEST,
 				"{\"code\":\"400\",\"description\":\"Error in parameter domain:  " + desc + "\"}");
@@ -91,7 +92,7 @@ public class DataControllerIT extends BaseIT {
 
 	@Test
 	public void badTypeValueTest() {
-		String url = "/data?monitoringLocationID=USGS-07227448&domain=groundwater_levels&type=none&best=true";
+		String url = "/data?featureId=USGS-07227448&domain=groundwater_levels&type=none&best=true";
 		String desc = "No enum constant gov.usgs.wma.waterdata.parameter.DataType.none";
 		runErrorCase(url, HttpStatus.BAD_REQUEST,
 				"{\"code\":\"400\",\"description\":\"Error in parameter type:  " + desc + "\"}");
@@ -105,7 +106,7 @@ public class DataControllerIT extends BaseIT {
 	}
 
 	private void runCase(String featureId, Boolean best, String compareFile) {
-		String urlFormat = "/data?monitoringLocationID=%s&domain=groundwater_levels&type=statistical_time_series%s&f=waterML";
+		String urlFormat = "/data?featureId=%s&domain=groundwater_levels&type=statistical_time_series%s&f=waterML";
 		String bestTS = best == null ? "" : "&best=" + best.toString().toLowerCase();
 		String url = String.format(urlFormat, featureId, bestTS);
 
@@ -113,13 +114,14 @@ public class DataControllerIT extends BaseIT {
 		assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
 		assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_XML));
 		assertNotNull(rtn.getBody());
+		assertXmlSchemaCompliant(rtn.getBody(), WaterML2.SCHEMA);
 
 		try {
 			String expectedXml = harmonizeXml(getCompareFile(compareFile));
-			expectedXml = expectedXml.replaceAll("<wml2:generationDate>.*</wml2:generationDate>", "");
+			expectedXml = expectedXml.replaceAll("<generationDate>.*</generationDate>", "");
 
 			String actualXml = rtn.getBody();
-			actualXml = actualXml.replaceAll("<wml2:generationDate>.*</wml2:generationDate>", "");
+			actualXml = actualXml.replaceAll("<generationDate>.*</generationDate>", "");
 			assertThat(actualXml, CompareMatcher.isIdenticalTo(expectedXml));
 		} catch (IOException e) {
 			fail("Unexpected IOException during test", e);

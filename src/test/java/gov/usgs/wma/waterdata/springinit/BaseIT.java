@@ -5,12 +5,14 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONObjectAs;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 
+import gov.usgs.wma.waterdata.format.XmlFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -29,6 +31,10 @@ import org.springframework.util.FileCopyUtils;
 
 import com.github.springtestdbunit.TransactionDbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
+import org.xml.sax.SAXException;
+
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Validator;
 
 @ActiveProfiles("it")
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
@@ -76,6 +82,19 @@ public abstract class BaseIT {
 
 	public String harmonizeXml(String xmlDoc) {
 		return xmlDoc.replace("\r", "").replace("\n", "").replace("\t", "").replaceAll("> *<", "><");
+	}
+
+	public void assertXmlSchemaCompliant(String xmlDoc, String schemaUrl) {
+		try {
+			Validator validator = XmlFactory.newXMLSchema(schemaUrl).newValidator();
+			validator.validate(new StreamSource(new StringReader(xmlDoc)));
+		} catch (IOException e) {
+			fail("Unexpected IOException during xml schema validation.", e);
+		} catch (SAXException e) {
+			System.out.println("Xml failed to validate against schema: " + schemaUrl);
+			System.out.println("Xml doc:\n" + xmlDoc);
+			fail("Xml schema validation failed:", e);
+		}
 	}
 
 	/**

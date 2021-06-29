@@ -3,7 +3,6 @@ package gov.usgs.wma.waterdata.format;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
-import gov.usgs.wma.waterdata.domain.*;
 import org.apache.ibatis.session.ResultContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,15 +11,18 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.xml.stream.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayDeque;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.mockito.stubbing.Answer;
 import org.springframework.core.io.ClassPathResource;
 import org.xmlunit.matchers.CompareMatcher;
+
+import gov.usgs.wma.waterdata.domain.WaterMLPoint;
 
 @ExtendWith(MockitoExtension.class)
 class WaterMLPointToXmlResultHandlerTest {
@@ -84,15 +86,18 @@ class WaterMLPointToXmlResultHandlerTest {
 
 	protected WaterMLPoint createPoint() {
 		point = new WaterMLPoint();
-		point.setMonLocIdentifier("USGS-12345678");
+		point.setFeatureId("USGS-12345678");
+		point.setMonLocReference("https://unittest/api/observations/collections/monitoring-locations/items/USGS-12345678");
+		point.setSiteName("Unit test monitoring location");
 		point.setQualifiersAsJson("[\"good\",\"Ok\"]");
 		point.setStatus("Approved");
 		point.setPcode("72019");
 		point.setPcodeDesc("Depth to water level, ft below land surface");
+		point.setStatisticDesc("Daily random instantaneous values");
+		point.setStatisticReference("http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011");
 		point.setResultValue(11.11);
 		point.setResultUnit("ft");
 		point.setResultDateTimeUTC(LocalDateTime.of(2021, 6, 4, 14, 30));
-		point.myOM = "blah";	//Proof of concept:  Yes we can right a field w/ a different NS
 
 	    return point;
 	}

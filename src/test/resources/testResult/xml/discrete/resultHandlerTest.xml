@@ -1,103 +1,136 @@
-<?xml version='1.0' encoding='utf-8'?>
-<wml2:Collection xmlns:wml2="http://www.opengis.net/waterml/2.0"
-                 xmlns:om="http://www.opengis.net/om/2.0"
-                 xmlns:swe="http://www.opengis.net/swe/2.0"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                 xmlns="http://www.opengis.net/waterml/2.0">
-	<DocumentMetadata>
-		<generationDate>2021-06-10T16:48:00.673629-04:00</generationDate>
-		<version xlink:href="http://www.opengis.net/waterml/2.0"
-		         xlink:title="WaterML 2.0 RFC"/>
-		<generationSystem>Water Data for the Nation - Observations Services</generationSystem>
-	</DocumentMetadata>
-	<observationMember>
-		<om:OM_Observation>
-			<om:procedure>
-				<om:ObservationProcess>
-					<om:parameter xlink:title="Statistic"
-					              xlink:href="http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011&quot;"/>
-					<om:NamedValue>
-						<om:name xlink:title="Daily random instantaneous values"/>
-						<om:value xlink:href="http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011"/>
-					</om:NamedValue>
-				</om:ObservationProcess>
-			</om:procedure>
-			<om:observedProperty xlink:title="Depth to water level, ft below land surface"/>
-			<om:featureOfInterest xlink:title="Monitoring Location Identifier: USGS-12345678"/>
-			<om:result>
-				<om:defaultPointMetadata>
-					<om:DefaultTVPMeasurementMetadata>
-						<om:uom xlink:title="ft"/>
-						<interpolationType href="www.opengis.net/def/waterml/2.0/interpolationType/Continuous"
-						                   title="Continuous"/>
-					</om:DefaultTVPMeasurementMetadata>
-				</om:defaultPointMetadata>
-				<point>
-					<MeasurementTVP>
-						<time>2021-06-04T14:30:00-00:00</time>
-						<value>11.11</value>
-						<metadata>
-							<TVPMeasurementMetadata>
-								<qualifier>good</qualifier>
-								<qualifier>Ok</qualifier>
-								<status>Approved</status>
-							</TVPMeasurementMetadata>
-						</metadata>
-					</MeasurementTVP>
-				</point>
-				<point>
-					<MeasurementTVP>
-						<time>2021-06-04T14:30:00-00:00</time>
-						<value>10.0</value>
-						<metadata>
-							<TVPMeasurementMetadata>
-								<qualifier>good</qualifier>
-								<qualifier>Ok</qualifier>
-								<status>Approved</status>
-							</TVPMeasurementMetadata>
-						</metadata>
-					</MeasurementTVP>
-				</point>
-			</om:result>
-		</om:OM_Observation>
-	</observationMember>
-	<observationMember>
-		<om:OM_Observation>
-			<om:procedure>
-				<om:ObservationProcess>
-					<om:parameter xlink:title="Statistic"
-					              xlink:href="http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011&quot;"/>
-					<om:NamedValue>
-						<om:name xlink:title="Daily random instantaneous values"/>
-						<om:value xlink:href="http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011"/>
-					</om:NamedValue>
-				</om:ObservationProcess>
-			</om:procedure>
-			<om:observedProperty xlink:title="Elevation, GW, NAVD88"/>
-			<om:featureOfInterest xlink:title="Monitoring Location Identifier: USGS-12345678"/>
-			<om:result>
-				<om:defaultPointMetadata>
-					<om:DefaultTVPMeasurementMetadata>
-						<om:uom xlink:title="ft"/>
-						<interpolationType href="www.opengis.net/def/waterml/2.0/interpolationType/Continuous"
-						                   title="Continuous"/>
-					</om:DefaultTVPMeasurementMetadata>
-				</om:defaultPointMetadata>
-				<point>
-					<MeasurementTVP>
-						<time>2021-06-04T14:30:00-00:00</time>
-						<value>50.0</value>
-						<metadata>
-							<TVPMeasurementMetadata>
-								<qualifier>good</qualifier>
-								<qualifier>Ok</qualifier>
-								<status>Approved</status>
-							</TVPMeasurementMetadata>
-						</metadata>
-					</MeasurementTVP>
-				</point>
-			</om:result>
-		</om:OM_Observation>
-	</observationMember>
+<?xml version='1.0'  encoding='utf-8'?>
+<wml2:Collection xmlns="http://www.opengis.net/waterml/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:om="http://www.opengis.net/om/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:wml2="http://www.opengis.net/waterml/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/waterml/2.0 http://schemas.opengis.net/waterml/2.0/waterml2.xsd">
+  <metadata>
+    <DocumentMetadata>
+      <version xlink:href="http://www.opengis.net/waterml/2.0" xlink:title="WaterML 2.0 RFC"/>
+      <generationSystem>Water Data for the Nation - Observations Services</generationSystem>
+    </DocumentMetadata>
+  </metadata>
+  <observationMember>
+    <om:OM_Observation>
+      <om:procedure>
+        <om:ObservationProcess>
+          <parameter>
+            <om:NamedValue>
+              <om:name xlink:href="http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011" xlink:title="statistic"/>
+              <om:value xsi:type="xsd:string">Daily random instantaneous values</om:value>
+            </om:NamedValue>
+          </parameter>
+        </om:ObservationProcess>
+      </om:procedure>
+      <om:observedProperty xlink:title="Depth to water level, ft below land surface"/>
+      <om:featureOfInterest xlink:href="https://unittest/api/observations/collections/monitoring-locations/items/USGS-12345678" xlink:title="Unit test monitoring location"/>
+      <om:result>
+        <MeasurementTimeseries>
+          <defaultPointMetadata>
+            <DefaultTVPMeasurementMetadata>
+              <uom xlink:title="ft"/>
+              <interpolationType/>
+            </DefaultTVPMeasurementMetadata>
+          </defaultPointMetadata>
+          <point>
+            <MeasurementTVP>
+              <time>2021-06-04T14:30:00-00:00</time>
+              <value>11.11</value>
+              <metadata>
+                <TVPMeasurementMetadata>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>good</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Ok</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Approved</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                </TVPMeasurementMetadata>
+              </metadata>
+            </MeasurementTVP>
+          </point>
+          <point>
+            <MeasurementTVP>
+              <time>2021-06-04T14:30:00-00:00</time>
+              <value>10.0</value>
+              <metadata>
+                <TVPMeasurementMetadata>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>good</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Ok</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Approved</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                </TVPMeasurementMetadata>
+              </metadata>
+            </MeasurementTVP>
+          </point>
+        </MeasurementTimeseries>
+      </om:result>
+    </om:OM_Observation>
+  </observationMember>
+  <observationMember>
+    <om:OM_Observation>
+      <om:procedure>
+        <om:ObservationProcess>
+          <parameter>
+            <om:NamedValue>
+              <om:name xlink:href="http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011" xlink:title="statistic"/>
+              <om:value xsi:type="xsd:string">Daily random instantaneous values</om:value>
+            </om:NamedValue>
+          </parameter>
+        </om:ObservationProcess>
+      </om:procedure>
+      <om:observedProperty xlink:title="Elevation, GW, NAVD88"/>
+      <om:featureOfInterest xlink:href="https://unittest/api/observations/collections/monitoring-locations/items/USGS-12345678" xlink:title="Unit test monitoring location"/>
+      <om:result>
+        <MeasurementTimeseries>
+          <defaultPointMetadata>
+            <DefaultTVPMeasurementMetadata>
+              <uom xlink:title="ft"/>
+              <interpolationType/>
+            </DefaultTVPMeasurementMetadata>
+          </defaultPointMetadata>
+          <point>
+            <MeasurementTVP>
+              <time>2021-06-04T14:30:00-00:00</time>
+              <value>50.0</value>
+              <metadata>
+                <TVPMeasurementMetadata>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>good</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Ok</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Approved</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                </TVPMeasurementMetadata>
+              </metadata>
+            </MeasurementTVP>
+          </point>
+        </MeasurementTimeseries>
+      </om:result>
+    </om:OM_Observation>
+  </observationMember>
 </wml2:Collection>

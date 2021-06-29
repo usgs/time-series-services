@@ -55,6 +55,7 @@ public class DiscreteDaoIT extends BaseIT {
 		StringWriter out = new StringWriter();
 		WaterMLPointToXmlResultHandler resultHandler = new WaterMLPointToXmlResultHandler(out);
 		discreteDao.getDiscreteGWMLPoint("USGS-175848066350900", resultHandler);
+		assertEquals(15, resultHandler.getNumResults());
 		resultHandler.closeXmlDoc();
 		try {
 			String expectedXml = harmonizeXml(getCompareFile("xml/discrete/USGS-175848066350900.xml"));

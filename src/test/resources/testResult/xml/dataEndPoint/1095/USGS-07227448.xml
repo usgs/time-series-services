@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wml2:Collection xmlns:wml2="http://www.opengis.net/waterml/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:om="http://www.opengis.net/om/2.0" gml:id="generated_collection_doc">
-  <wml2:DocumentMetadata>
-    <wml2:generationDate>2021-06-03T05:08:32Z</wml2:generationDate>
-    <wml2:version xlink:href="http://www.opengis.net/waterml/2.0" xlink:title="WaterML 2.0 RFC"/>
-    <wml2:generationSystem>Water Data for the Nation - Observations Services</wml2:generationSystem>
-  </wml2:DocumentMetadata>
-  <wml2:observationMember>
+<wml2:Collection xmlns:wml2="http://www.opengis.net/waterml/2.0" xmlns:om="http://www.opengis.net/om/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.opengis.net/waterml/2.0" xsi:schemaLocation="http://www.opengis.net/waterml/2.0 http://schemas.opengis.net/waterml/2.0/waterml2.xsd">
+  <metadata>
+    <DocumentMetadata>
+      <generationDate>2021-06-25T14:14:45.9971531-04:00</generationDate>
+      <version xlink:href="http://www.opengis.net/waterml/2.0" xlink:title="WaterML 2.0 RFC"/>
+      <generationSystem>Water Data for the Nation - Observations Services</generationSystem>
+    </DocumentMetadata>
+  </metadata>
+  <observationMember>
     <om:OM_Observation>
       <om:phenomenonTime>
         <gml:TimePeriod>
@@ -14,44 +16,55 @@
         </gml:TimePeriod>
       </om:phenomenonTime>
       <om:resultTime>
-        <gml:timePosition>
+        <gml:TimeInstant>
           <gml:timePosition>[NOW-1095DAYS]</gml:timePosition>
-        </gml:timePosition>
+        </gml:TimeInstant>
       </om:resultTime>
       <om:procedure>
         <om:ObservationProcess>
-          <om:parameter>
+          <parameter>
             <om:NamedValue>
               <om:name xlink:title="statistic" xlink:href="https://waterdata.usgs.gov/nwisweb/rdf?statCd=00001"/>
               <om:value xsi:type="xsd:string">DAILY MAXIMUM VALUES</om:value>
             </om:NamedValue>
-          </om:parameter>
+          </parameter>
         </om:ObservationProcess>
       </om:procedure>
       <om:observedProperty xlink:href="https://waterdata.usgs.gov/nwisweb/rdf?parmCd=72019" xlink:title="Depth to water level, ft below land surface"/>
       <om:featureOfInterest xlink:href="https://unittest/api/observations/collections/monitoring-locations/items/USGS-07227448?f=json" xlink:title="Punta De Agua Ck ñr Channing, TX"/>
       <om:result>
-        <wml2:MeasurementTimeseries gml:id="e6a4cc2de5bf437e83efe0107cf026ac">
-          <wml2:DefaultTVPMeasurementMetadata>
-            <wml2:uom xlink:title="ft" xlink:href="http://www.opengis.net/def/uom/UCUM/degC"/>
-          </wml2:DefaultTVPMeasurementMetadata>
-          <wml2:point>
-            <wml2:MeasurementTVP>
-              <wml2:time>[NOW-1095DAYS]</wml2:time>
-              <wml2:value>14.1</wml2:value>
-              <wml2:metaData>
-                <wml2:TVPMeasurementMetadata>
-                  <wml2:qualifier>Revised</wml2:qualifier>
-                  <wml2:status>Estimated</wml2:status>
-                </wml2:TVPMeasurementMetadata>
-              </wml2:metaData>
-            </wml2:MeasurementTVP>
-          </wml2:point>
-        </wml2:MeasurementTimeseries>
+        <MeasurementTimeseries gml:id="aqts-tsid-e6a4cc2de5bf437e83efe0107cf026ac">
+          <defaultPointMetadata>
+            <DefaultTVPMeasurementMetadata>
+              <uom xlink:title="ft" xlink:href="http://www.opengis.net/def/uom/UCUM/degC"/>
+              <interpolationType/>
+            </DefaultTVPMeasurementMetadata>
+          </defaultPointMetadata>
+          <point>
+            <MeasurementTVP>
+              <time>[NOW-1095DAYS]</time>
+              <value>14.1</value>
+              <metadata>
+                <TVPMeasurementMetadata>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Revised</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Estimated</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                </TVPMeasurementMetadata>
+              </metadata>
+            </MeasurementTVP>
+          </point>
+        </MeasurementTimeseries>
       </om:result>
     </om:OM_Observation>
-  </wml2:observationMember>
-  <wml2:observationMember>
+  </observationMember>
+  <observationMember>
     <om:OM_Observation>
       <om:phenomenonTime>
         <gml:TimePeriod>
@@ -60,41 +73,52 @@
         </gml:TimePeriod>
       </om:phenomenonTime>
       <om:resultTime>
-        <gml:timePosition>
+        <gml:TimeInstant>
           <gml:timePosition>[NOW-1095DAYS]</gml:timePosition>
-        </gml:timePosition>
+        </gml:TimeInstant>
       </om:resultTime>
       <om:procedure>
         <om:ObservationProcess>
-          <om:parameter>
+          <parameter>
             <om:NamedValue>
               <om:name xlink:title="statistic" xlink:href="https://waterdata.usgs.gov/nwisweb/rdf?statCd=00002"/>
               <om:value xsi:type="xsd:string">DAILY MINIMUM VALUES</om:value>
             </om:NamedValue>
-          </om:parameter>
+          </parameter>
         </om:ObservationProcess>
       </om:procedure>
       <om:observedProperty xlink:href="https://waterdata.usgs.gov/nwisweb/rdf?parmCd=72019" xlink:title="Depth to water level, ft below land surface"/>
       <om:featureOfInterest xlink:href="https://unittest/api/observations/collections/monitoring-locations/items/USGS-07227448?f=json" xlink:title="Punta De Agua Ck ñr Channing, TX"/>
       <om:result>
-        <wml2:MeasurementTimeseries gml:id="1ssdfsgfgrvmhjhjnbassdymbnjghnv0">
-          <wml2:DefaultTVPMeasurementMetadata>
-            <wml2:uom xlink:title="ft" xlink:href="http://www.opengis.net/def/uom/UCUM/degC"/>
-          </wml2:DefaultTVPMeasurementMetadata>
-          <wml2:point>
-            <wml2:MeasurementTVP>
-              <wml2:time>[NOW-1095DAYS]</wml2:time>
-              <wml2:value>14.0</wml2:value>
-              <wml2:metaData>
-                <wml2:TVPMeasurementMetadata>
-                  <wml2:qualifier>Revised</wml2:qualifier>
-                  <wml2:status>Estimated</wml2:status>
-                </wml2:TVPMeasurementMetadata>
-              </wml2:metaData>
-            </wml2:MeasurementTVP>
-          </wml2:point>
-        </wml2:MeasurementTimeseries>
+        <MeasurementTimeseries gml:id="aqts-tsid-1ssdfsgfgrvmhjhjnbassdymbnjghnv0">
+          <defaultPointMetadata>
+            <DefaultTVPMeasurementMetadata>
+              <uom xlink:title="ft" xlink:href="http://www.opengis.net/def/uom/UCUM/degC"/>
+              <interpolationType/>
+            </DefaultTVPMeasurementMetadata>
+          </defaultPointMetadata>
+          <point>
+            <MeasurementTVP>
+              <time>[NOW-1095DAYS]</time>
+              <value>14.0</value>
+              <metadata>
+                <TVPMeasurementMetadata>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Revised</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                  <qualifier>
+                    <swe:Category>
+                      <swe:value>Estimated</swe:value>
+                    </swe:Category>
+                  </qualifier>
+                </TVPMeasurementMetadata>
+              </metadata>
+            </MeasurementTVP>
+          </point>
+        </MeasurementTimeseries>
       </om:result>
     </om:OM_Observation>
-  </wml2:observationMember>
+  </observationMember>
 </wml2:Collection>

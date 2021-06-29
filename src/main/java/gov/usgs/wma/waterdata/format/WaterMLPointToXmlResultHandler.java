@@ -1,6 +1,6 @@
 package gov.usgs.wma.waterdata.format;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import gov.usgs.wma.waterdata.domain.GeoMarkupLanguage;
 import gov.usgs.wma.waterdata.domain.ObsAndMeasure;
 import gov.usgs.wma.waterdata.domain.SensorWebEnablement2;
 import gov.usgs.wma.waterdata.domain.WaterML2;
@@ -18,12 +18,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 
 public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoint> {
     // xml namespace URIs
     public static final String XLINK_NS = "http://www.w3.org/1999/xlink";
     public static final String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
+    public static final String XSD_NS = "http://www.w3.org/2001/XMLSchema";
+    public static final String SWE_NS = "http://www.opengis.net/swe/2.0";
     public static final String GEN_SYS = "Water Data for the Nation - Observations Services";
 
     // Not using mapper yet
@@ -31,8 +34,10 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
     private final XMLStreamWriter writer;
 
     // current monitoring location and parameter code being serialized
-    private String monLocIdentifier = "";
+    private String featureId = "";
     private String pcode = "";
+    private String statisticDesc = null;
+    private String measurementTimeseriesId = null;
 
     // number of results processed
     private int numResults = 0;
@@ -86,12 +91,16 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         writer.setPrefix(WaterML2.PREFIX, WaterML2.NAMESPACE);
         writer.setPrefix(ObsAndMeasure.PREFIX, ObsAndMeasure.NAMESPACE);
         writer.setPrefix(SensorWebEnablement2.PREFIX, SensorWebEnablement2.NAMESPACE);
+        writer.setPrefix(GeoMarkupLanguage.PREFIX, GeoMarkupLanguage.NAMESPACE);
         // writer.setDefaultNamespace(WaterML2.NAMESPACE);   //This method doesn't seem to do anything
 
         writer.writeNamespace(WaterML2.PREFIX, WaterML2.NAMESPACE);
         writer.writeNamespace(ObsAndMeasure.PREFIX, ObsAndMeasure.NAMESPACE);
         writer.writeNamespace(SensorWebEnablement2.PREFIX, SensorWebEnablement2.NAMESPACE);
+        writer.writeNamespace(GeoMarkupLanguage.PREFIX, GeoMarkupLanguage.NAMESPACE);
         writer.writeNamespace("xsi", XSI_NS);
+        writer.writeNamespace("xsd", XSD_NS);
+        writer.writeNamespace("swe", SWE_NS);
         writer.writeNamespace("xlink", XLINK_NS);
 
         //This next line sets a namespace default for the document.  If set, any un-prefixed
@@ -99,21 +108,24 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         //be unprefixed.  If you take this line out, all wml2 elements will get a 'wml2' prefix.
         //Either way it means the same thing, but using a default will make the doc smaller.
         writer.writeDefaultNamespace(WaterML2.NAMESPACE);
+        writeAttribute(XSI_NS, "schemaLocation", WaterML2.NAMESPACE + " " + WaterML2.SCHEMA);
         addHeaderMetData();
     }
 
     private void addHeaderMetData() throws XMLStreamException {
+        startElement("metadata");
         startElement("DocumentMetadata");
         OffsetDateTime now = OffsetDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         addElement("generationDate", formatter.format(now));
         startElement("version");
-        writer.writeAttribute(XLINK_NS, "href", "http://www.opengis.net/waterml/2.0");
-        writer.writeAttribute(XLINK_NS, "title",
+        writeAttribute(XLINK_NS, "href", "http://www.opengis.net/waterml/2.0");
+        writeAttribute(XLINK_NS, "title",
                 "WaterML 2.0 RFC");
         endElement("version");
         addElement("generationSystem", GEN_SYS);
         endElement("DocumentMetadata");
+        endElement("metadata");
     }
 
     private void startObservationMember(WaterMLPoint point) throws XMLStreamException {
@@ -121,30 +133,50 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         endElement("observationMember"); // close any previous started observationMember
         startElement("observationMember");
         startElement(ObsAndMeasure.NAMESPACE, "OM_Observation");
+        addObservationTimes(point);
         startElement(ObsAndMeasure.NAMESPACE, "procedure");
         startElement(ObsAndMeasure.NAMESPACE, "ObservationProcess");
-        startElement(ObsAndMeasure.NAMESPACE, "parameter");
-        writer.writeAttribute(XLINK_NS, "title", "Statistic");
-        writer.writeAttribute(XLINK_NS, "href",
-                "http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011\"");
-        endElement("parameter");
-        startElement(ObsAndMeasure.NAMESPACE, "NamedValue");
-        startElement(ObsAndMeasure.NAMESPACE, "name");
-        writer.writeAttribute(XLINK_NS, "title",
-                "Daily random instantaneous values");
-        endElement("name");
-        startElement(ObsAndMeasure.NAMESPACE, "value");
-        writer.writeAttribute(XLINK_NS, "href",
-                "http://waterdata.usgs.gov/nwisweb/rdf?statCd=00011");
-        endElement("value");
+        addParameterBlockForStatistic(point);
+        endElement("ObservationProcess");
         endElement("procedure");
         addObservedProperty(point);
         startElement(ObsAndMeasure.NAMESPACE, "featureOfInterest");
-        // TODO: link with the monitoring_location table, print the actual title
-        writer.writeAttribute(XLINK_NS, "title", "Monitoring Location Identifier: "
-                + point.getMonLocIdentifier());
+        writeAttribute(XLINK_NS, "href", point.getMonLocReference());
+        writeAttribute(XLINK_NS, "title", point.getSiteName());
         endElement("featureOfInterest");
         startResult(point);
+    }
+
+    private void addParameterBlockForStatistic(WaterMLPoint point) throws XMLStreamException {
+        startElement("parameter");
+        startElement(ObsAndMeasure.NAMESPACE, "NamedValue");
+        startElement(ObsAndMeasure.NAMESPACE, "name");
+        writeAttribute(XLINK_NS, "title", "statistic");
+        writeAttribute(XLINK_NS, "href", point.getStatisticReference());
+        endElement("name");
+        startElement(ObsAndMeasure.NAMESPACE, "value");
+        writeAttribute(XSI_NS, "type", "xsd:string");
+        writer.writeCharacters(point.getStatisticDesc());
+        endElement("value");
+        endElement("parameter");
+    }
+
+    private void addObservationTimes(WaterMLPoint point) throws XMLStreamException {
+        if(point.getPhenomenonTimeStart() != null || point.getPhenomenonTimeEnd() != null) {
+            startElement(ObsAndMeasure.NAMESPACE, "phenomenonTime");
+            startElement(GeoMarkupLanguage.NAMESPACE, "TimePeriod");
+            addElement(GeoMarkupLanguage.NAMESPACE, "beginPosition", point.getPhenomenonTimeStart());
+            addElement(GeoMarkupLanguage.NAMESPACE, "endPosition", point.getPhenomenonTimeEnd());
+            endElement("TimePeriod");
+            endElement("phenomenonTime");
+        }
+        if(point.getPhenomenonTimeEnd() != null) {
+            startElement(ObsAndMeasure.NAMESPACE, "resultTime");
+            startElement(GeoMarkupLanguage.NAMESPACE, "TimeInstant");
+            addElement(GeoMarkupLanguage.NAMESPACE, "timePosition", point.getPhenomenonTimeEnd());
+            endElement("TimeInstant");
+            endElement("resultTime");
+        }
     }
 
     private void addObservedProperty(WaterMLPoint point) throws XMLStreamException {
@@ -152,29 +184,54 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
             writer.writeEmptyElement(ObsAndMeasure.NAMESPACE, "observedProperty");
         } else {
             startElement(ObsAndMeasure.NAMESPACE, "observedProperty");
+            writeAttribute(XLINK_NS, "href", point.getPcodeReference());
             String title = point.getPcodeDesc() == null ? "Parameter code " + point.getPcode() : point.getPcodeDesc();
-            writer.writeAttribute(XLINK_NS, "title", title);
+            writeAttribute(XLINK_NS, "title", title);
             endElement("observedProperty");
         }
     }
 
     private void startResult(WaterMLPoint point) throws XMLStreamException {
         startElement(ObsAndMeasure.NAMESPACE, "result");
-        startElement(ObsAndMeasure.NAMESPACE, "defaultPointMetadata");
-        startElement(ObsAndMeasure.NAMESPACE, "DefaultTVPMeasurementMetadata");
+        startElement("MeasurementTimeseries");
+        writeAttribute(GeoMarkupLanguage.NAMESPACE,"id", formatMeasureTimeSeriesId(point));
+        startElement("defaultPointMetadata");
+        startElement("DefaultTVPMeasurementMetadata");
         if (point.getResultUnit() == null) {
             writer.writeEmptyElement("uom");
         } else {
-            startElement(ObsAndMeasure.NAMESPACE, "uom");
-            writer.writeAttribute(XLINK_NS, "title", point.getResultUnit());
+            startElement("uom");
+            writeAttribute(XLINK_NS, "title", point.getResultUnit());
+            writeAttribute(XLINK_NS, "href", point.getResultUnitReference());
             endElement("uom");
         }
-        startElement("interpolationType");
-        writer.writeAttribute("href",
-                "www.opengis.net/def/waterml/2.0/interpolationType/Continuous");
-        writer.writeAttribute("title", "Continuous");
+        addInterpolationType(point);
         endElement("interpolationType");
         endElement("defaultPointMetadata");
+    }
+
+    // the gml:id can not start with a number or contain space or ":" etc, else schema validation
+    // fails
+    private String formatMeasureTimeSeriesId(WaterMLPoint point) {
+        String id = null;
+        if(point.getMeasurementTimeseriesId() != null) {
+            // Only have ids for time series data now.
+            // Todo: check for other data types (discrete,...) as they are implemented
+            id = "aqts-tsid-" + point.getMeasurementTimeseriesId();
+        }
+        return id;
+    }
+
+    private void addInterpolationType(WaterMLPoint point) throws XMLStreamException {
+        if(point.getInterpolationTypeRef() == null &&
+           point.getInterpolationTypeDesc() == null) {
+            writer.writeEmptyElement("interpolationType");
+        } else {
+            startElement("interpolationType");
+            writeAttribute("href", point.getInterpolationTypeRef());
+            writeAttribute("title", point.getInterpolationTypeDesc());
+            endElement("interpolationType");
+        }
     }
 
     private void addPoint(WaterMLPoint point) throws XMLStreamException {
@@ -192,18 +249,26 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         startElement("metadata");
         startElement("TVPMeasurementMetadata");
         addPointQualifiers(point);
-        addElement("status", point.getStatus());
         endElement("TVPMeasurementMetadata");
         endElement("metadata");
     }
 
     private void addPointQualifiers(WaterMLPoint point) throws XMLStreamException {
-        List<String> qualifiers = getQualifierList(point);
+       addQualifiers(getQualifierList(point));
+       // statuses are add to WaterMl as a qualifier element
+        addQualifiers(getStatusList(point));
+    }
+
+    private void addQualifiers(List<String> qualifiers) throws XMLStreamException {
         if (qualifiers.isEmpty()) {
             writer.writeEmptyElement("qualifier");
         } else {
             for(String qualifier : qualifiers) {
-               addElement("qualifier", qualifier);
+                startElement("qualifier");
+                startElement(SWE_NS, "Category");
+                addElement(SWE_NS, "value", qualifier);
+                endElement("Category");
+                endElement("qualifier");
             }
         }
     }
@@ -214,16 +279,22 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         if(resultTime != null) {
              DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
              resultTimeStr = formatter.format(resultTime) + "-00:00"; // add timezone off set from UTC
+        } else {
+           resultTimeStr = point.getResultDate();
         }
         return resultTimeStr;
     }
 
     private boolean onNewObservation(WaterMLPoint point) {
-        boolean onNew = (!point.getMonLocIdentifier().equals(this.monLocIdentifier))
-                || (!point.getPcode().equals(this.pcode));
+        boolean onNew = (!point.getFeatureId().equals(this.featureId))
+                || (!point.getPcode().equals(this.pcode))
+                || (!Objects.equals(point.getStatisticDesc(), this.statisticDesc))
+                || (!Objects.equals(point.getMeasurementTimeseriesId(), this.measurementTimeseriesId));
         if (onNew) {
-            monLocIdentifier = point.getMonLocIdentifier();
+            featureId = point.getFeatureId();
             pcode = point.getPcode();
+            statisticDesc = point.getStatisticDesc();
+            measurementTimeseriesId = point.getMeasurementTimeseriesId();
         }
         return onNew;
     }
@@ -255,6 +326,28 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         }
     }
 
+    private void addElement(String namespaceURI, String name, String value) throws XMLStreamException {
+        if (value == null) {
+            writer.writeEmptyElement(namespaceURI, name);
+        } else {
+            writer.writeStartElement(namespaceURI, name);
+            writer.writeCharacters(value);
+            writer.writeEndElement();
+        }
+    }
+
+    private void writeAttribute(String localName, String value) throws XMLStreamException {
+        if(value != null) {
+            writer.writeAttribute(localName, value);
+        }
+    }
+
+    private void writeAttribute(String namespaceURI, String localName, String value) throws XMLStreamException {
+        if(value != null) {
+            writer.writeAttribute(namespaceURI, localName, value);
+        }
+    }
+
     // closes the specified element, first closing any outstanding inner elements.
     private void endElement(String name) throws XMLStreamException {
         while (openElements.contains(name)) {
@@ -269,10 +362,24 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
               // convert to csv separated
               String csv =  point.getQualifiersAsJson().replace("[", "").
                       replace("]","").replace("\"", "");
-              qualifierList =  Arrays.asList(csv.split(",", 10));
+              qualifierList =  Arrays.asList(csv.split(","));
           }
 
           return qualifierList;
+    }
+
+    private List<String> getStatusList(WaterMLPoint point) {
+        List<String> statusList = new ArrayList<>();
+        if(point.getStatus() != null) {
+           statusList.add(point.getStatus());
+        } else if(point.getApprovalsAsJson() != null) {
+            // convert to csv separated
+            String csv =  point.getApprovalsAsJson().replace("[", "").
+                    replace("]","").replace("\"", "");
+            statusList =  Arrays.asList(csv.split(","));
+        }
+
+        return statusList;
     }
 
 }
