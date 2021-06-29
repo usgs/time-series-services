@@ -87,34 +87,31 @@ public class TimeSeriesController extends BaseController {
 
 		ContentType contentType = determineContentType(mimeType);
 		String rtn = null;
-		boolean streamingOutput = false;
-		boolean outputStreamed = false;
+		boolean responseWritten = false;
+		ResponseWriter writer = new ResponseWriter(response);
 		if (contentType.isJson()) {
 			rtn = timeSeriesDao.getTimeSeries(collectionId, featureId, timeSeriesId);
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+			writer.usePrintWriter();
 		} else if (contentType.isWaterML()) {
 			response.setContentType(MediaType.APPLICATION_XML_VALUE);
 			WaterMLPointToXmlResultHandler resultHandler = new WaterMLPointToXmlResultHandler(response.getOutputStream());
 			timeSeriesDao.getTimeSeriesWaterML(collectionId, featureId, timeSeriesId, resultHandler);
-			streamingOutput = true;
+			writer.useOutputStream();
 			if(resultHandler.getNumResults() > 0) {
 				resultHandler.closeXmlDoc();
-				outputStreamed = true;
+				responseWritten = true;
 			}
 		}
 
-		if (rtn == null) {
+		if (rtn == null && !responseWritten) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			rtn = ogc404Payload;
 		}
 
-		if (!outputStreamed) {
-			if (streamingOutput) {
-				response.getOutputStream().print(rtn);
-			} else {
-				response.getWriter().print(rtn);
-			}
+		if(!responseWritten) {
+			writer.print(rtn);
 		}
 	}
 }

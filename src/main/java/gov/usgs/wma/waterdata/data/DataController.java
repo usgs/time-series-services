@@ -56,7 +56,7 @@ public class DataController extends BaseController {
 				externalDocs = @ExternalDocumentation(url = "https://github.com/opengeospatial/omsf-profile/tree/master/omsf-json"))
 	@GetMapping(value = "data", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public void getTimeSeries(
-			@Parameter(description = "Monitoring location Identifier") @RequestParam(value = "monitoringLocationID", required = true) String monLocIdentifier,
+			@Parameter(description = "Identifier for monitoring location") @RequestParam(value = "featureId", required = true) String featureId,
 			@Parameter(description = "Data type requested") @RequestParam(value = "type", required = true) DataType dataType,
 			@Parameter(description = "Limits results to time series marked as best = true|false") @RequestParam(value = "best", required = false) Boolean best,
 			@Parameter(description = "Limits data to specified area") @RequestParam(value = "domain", required = true) List<Domain> domains,
@@ -67,49 +67,46 @@ public class DataController extends BaseController {
 
 		ContentType contentType = determineContentType(mimeType, List.of(ContentType.json, ContentType.waterml));
 		String rtn = null;
-		boolean streamingOutput = false;
-		boolean outputStreamed = false;
+		boolean responseWritten = false;
+		ResponseWriter writer = new ResponseWriter(response);
 		String bestTS = best == null ? CollectionParams.PARAM_MATCH_ANY : best.toString().toLowerCase();
 
 		validateQueryParams(domains, contentType, dataType, bestTS);
 
 		if (Domain.includesGroundWaterLevels(domains) && dataType.isStatisticalTimeSeries()) {
 			if (contentType.isJson()) {
-				rtn = timeSeriesDao.getTimeSeries(monLocIdentifier, bestTS);
+				rtn = timeSeriesDao.getTimeSeries(featureId, bestTS);
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+				writer.usePrintWriter();
 			} else {
 				response.setContentType(MediaType.APPLICATION_XML_VALUE);
 				WaterMLPointToXmlResultHandler resultHandler = new WaterMLPointToXmlResultHandler(response.getOutputStream());
-				timeSeriesDao.getTimeSeriesWaterML(monLocIdentifier, bestTS, resultHandler);
-				streamingOutput = true;
+				timeSeriesDao.getTimeSeriesWaterML(featureId, bestTS, resultHandler);
+				writer.useOutputStream();
 				if(resultHandler.getNumResults() > 0) {
 					resultHandler.closeXmlDoc();
-					outputStreamed = true;
+					responseWritten = true;
 				}
 			}
 		} else if (Domain.includesGroundWaterLevels(domains) && dataType.isDiscrete()) {
 			response.setContentType(MediaType.APPLICATION_XML_VALUE);
 			WaterMLPointToXmlResultHandler resultHandler = new WaterMLPointToXmlResultHandler(response.getOutputStream());
-			discreteDao.getDiscreteGWMLPoint(monLocIdentifier, resultHandler);
-			streamingOutput = true;
+			discreteDao.getDiscreteGWMLPoint(featureId, resultHandler);
+			writer.useOutputStream();
 			if(resultHandler.getNumResults() > 0) {
 				resultHandler.closeXmlDoc();
-				outputStreamed = true;
+				responseWritten = true;
 			}
 		}
 
-		if (rtn == null && !outputStreamed) {
+		if (rtn == null && !responseWritten) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			rtn = ogc404Payload;
 		}
 
-		if (!outputStreamed) {
-			if (streamingOutput) {
-				response.getOutputStream().print(rtn);
-			} else {
-				response.getWriter().print(rtn);
-			}
+		if(!responseWritten) {
+			writer.print(rtn);
 		}
 	}
 

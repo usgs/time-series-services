@@ -40,7 +40,7 @@ public class DataControllerDiscreteXmlIT extends BaseIT {
 
     @Test
     public void mediaTypeNotAcceptableTest() {
-        String baseUrl = "/data?monitoringLocationID=USGS-07227448&domain=groundwater_levels&type=discrete";
+        String baseUrl = "/data?featureId=USGS-07227448&domain=groundwater_levels&type=discrete";
         for (String contentType : contentNotAccepted) {
             ResponseEntity<String> rtn = restTemplate.getForEntity(buildUrl(baseUrl, contentType), String.class);
             assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON));
@@ -51,12 +51,12 @@ public class DataControllerDiscreteXmlIT extends BaseIT {
 
     @Test
     public void notFoundTest() {
-        String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=discrete";
+        String url = "/data?featureId=USGS-12345678&domain=groundwater_levels&type=discrete";
         runErrorCase(url, HttpStatus.NOT_FOUND, ogc404Payload);
     }
 
     public void jsonNotAvailableTest() {
-        String url = "/data?monitoringLocationID=USGS-12345678&domain=groundwater_levels&type=discrete";
+        String url = "/data?featureId=USGS-12345678&domain=groundwater_levels&type=discrete";
         String desc = "Discrete data is only available as WaterML";
         String expectedBody = "{\"code\":\"400\",\"description\":\"" + desc + "\"}";
         runErrorCase(url, HttpStatus.BAD_REQUEST, expectedBody, "json");
@@ -65,16 +65,16 @@ public class DataControllerDiscreteXmlIT extends BaseIT {
     }
 
     @Test
-    public void monitoringLocationIDNotProvidedTest() {
+    public void featureIdNotProvidedTest() {
         String url = "/data?domain=groundwater_levels&type=discrete";
-        String desc = "Required request parameter 'monitoringLocationID' for method parameter type String is not present";
+        String desc = "Required request parameter 'featureId' for method parameter type String is not present";
         runErrorCase(url, HttpStatus.BAD_REQUEST,
                 "{\"code\":\"400\",\"description\":\"" + desc + "\"}");
     }
 
     @Test
     public void badDomainValueTest() {
-        String url = "/data?monitoringLocationID=USGS-07227448&domain=xyz&type=discrete&best=false";
+        String url = "/data?featureId=USGS-07227448&domain=xyz&type=discrete&best=false";
         String desc = "No enum constant gov.usgs.wma.waterdata.parameter.Domain.xyz";
         runErrorCase(url, HttpStatus.BAD_REQUEST,
                 "{\"code\":\"400\",\"description\":\"Error in parameter domain:  " + desc + "\"}");
@@ -82,7 +82,7 @@ public class DataControllerDiscreteXmlIT extends BaseIT {
 
     @Test
     public void badTypeValueTest() {
-        String url = "/data?monitoringLocationID=USGS-07227448&domain=groundwater_levels&type=none&best=true";
+        String url = "/data?featureId=USGS-07227448&domain=groundwater_levels&type=none&best=true";
         String desc = "No enum constant gov.usgs.wma.waterdata.parameter.DataType.none";
         runErrorCase(url, HttpStatus.BAD_REQUEST,
                 "{\"code\":\"400\",\"description\":\"Error in parameter type:  " + desc + "\"}");
@@ -100,7 +100,7 @@ public class DataControllerDiscreteXmlIT extends BaseIT {
     }
 
     private void runCase(String featureId, String compareFile) {
-        String urlFormat = "/data?monitoringLocationID=%s&domain=groundwater_levels&type=discrete&f=waterML";
+        String urlFormat = "/data?featureId=%s&domain=groundwater_levels&type=discrete&f=waterML";
         String url = String.format(urlFormat, featureId);
 
         ResponseEntity<String> rtn = restTemplate.getForEntity(url, String.class);

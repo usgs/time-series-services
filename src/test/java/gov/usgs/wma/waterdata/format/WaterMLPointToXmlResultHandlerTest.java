@@ -86,7 +86,7 @@ class WaterMLPointToXmlResultHandlerTest {
 
 	protected WaterMLPoint createPoint() {
 		point = new WaterMLPoint();
-		point.setMonLocIdentifier("USGS-12345678");
+		point.setFeatureId("USGS-12345678");
 		point.setMonLocReference("https://unittest/api/observations/collections/monitoring-locations/items/USGS-12345678");
 		point.setSiteName("Unit test monitoring location");
 		point.setQualifiersAsJson("[\"good\",\"Ok\"]");

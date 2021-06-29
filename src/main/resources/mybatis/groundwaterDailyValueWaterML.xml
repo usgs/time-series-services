@@ -12,7 +12,7 @@
            and ranking > 0) as t
          where rk = 1)
       SELECT
-        gw_daily_value.monitoring_location_identifier "monLocIdentifier",
+        gw_daily_value.monitoring_location_identifier "featureId",
         #{serverUrl,jdbcType=VARCHAR} || 'collections/' || #{collectionId,jdbcType=VARCHAR}
           || '/items/' || ml.monitoring_location_identifier || '?f=json' as "monLocReference",
         site_name "siteName",

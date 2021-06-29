@@ -4,7 +4,7 @@
 <!-- Common blocks for WaterML queries -->
 <mapper namespace="groundwaterML">
 	<resultMap id="pointResult" type="WaterMLPoint">
-		<result property="monLocIdentifier" column="monLocIdentifier"/>
+		<result property="featureId" column="featureId"/>
 		<result property="monLocReference" column="monLocReference"/>
 		<result property="siteName" column="siteName"/>
 		<result property="interpolationType" column="interpolationType"/>

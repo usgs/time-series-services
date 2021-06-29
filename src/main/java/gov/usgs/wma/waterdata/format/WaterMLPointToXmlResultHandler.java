@@ -34,7 +34,7 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
     private final XMLStreamWriter writer;
 
     // current monitoring location and parameter code being serialized
-    private String monLocIdentifier = "";
+    private String featureId = "";
     private String pcode = "";
     private String statisticDesc = null;
     private String measurementTimeseriesId = null;
@@ -119,8 +119,8 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         addElement("generationDate", formatter.format(now));
         startElement("version");
-        writer.writeAttribute(XLINK_NS, "href", "http://www.opengis.net/waterml/2.0");
-        writer.writeAttribute(XLINK_NS, "title",
+        writeAttribute(XLINK_NS, "href", "http://www.opengis.net/waterml/2.0");
+        writeAttribute(XLINK_NS, "title",
                 "WaterML 2.0 RFC");
         endElement("version");
         addElement("generationSystem", GEN_SYS);
@@ -136,6 +136,18 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         addObservationTimes(point);
         startElement(ObsAndMeasure.NAMESPACE, "procedure");
         startElement(ObsAndMeasure.NAMESPACE, "ObservationProcess");
+        addParameterBlockForStatistic(point);
+        endElement("ObservationProcess");
+        endElement("procedure");
+        addObservedProperty(point);
+        startElement(ObsAndMeasure.NAMESPACE, "featureOfInterest");
+        writeAttribute(XLINK_NS, "href", point.getMonLocReference());
+        writeAttribute(XLINK_NS, "title", point.getSiteName());
+        endElement("featureOfInterest");
+        startResult(point);
+    }
+
+    private void addParameterBlockForStatistic(WaterMLPoint point) throws XMLStreamException {
         startElement("parameter");
         startElement(ObsAndMeasure.NAMESPACE, "NamedValue");
         startElement(ObsAndMeasure.NAMESPACE, "name");
@@ -146,13 +158,7 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         writeAttribute(XSI_NS, "type", "xsd:string");
         writer.writeCharacters(point.getStatisticDesc());
         endElement("value");
-        endElement("procedure");
-        addObservedProperty(point);
-        startElement(ObsAndMeasure.NAMESPACE, "featureOfInterest");
-        writeAttribute(XLINK_NS, "href", point.getMonLocReference());
-        writeAttribute(XLINK_NS, "title", point.getSiteName());
-        endElement("featureOfInterest");
-        startResult(point);
+        endElement("parameter");
     }
 
     private void addObservationTimes(WaterMLPoint point) throws XMLStreamException {
@@ -222,12 +228,8 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
             writer.writeEmptyElement("interpolationType");
         } else {
             startElement("interpolationType");
-            if(point.getInterpolationTypeRef() != null) {
-                writer.writeAttribute("href", point.getInterpolationTypeRef());
-            }
-            if(point.getInterpolationTypeDesc() != null) {
-                writer.writeAttribute("title", point.getInterpolationTypeDesc());
-            }
+            writeAttribute("href", point.getInterpolationTypeRef());
+            writeAttribute("title", point.getInterpolationTypeDesc());
             endElement("interpolationType");
         }
     }
@@ -284,12 +286,12 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
     }
 
     private boolean onNewObservation(WaterMLPoint point) {
-        boolean onNew = (!point.getMonLocIdentifier().equals(this.monLocIdentifier))
+        boolean onNew = (!point.getFeatureId().equals(this.featureId))
                 || (!point.getPcode().equals(this.pcode))
                 || (!Objects.equals(point.getStatisticDesc(), this.statisticDesc))
                 || (!Objects.equals(point.getMeasurementTimeseriesId(), this.measurementTimeseriesId));
         if (onNew) {
-            monLocIdentifier = point.getMonLocIdentifier();
+            featureId = point.getFeatureId();
             pcode = point.getPcode();
             statisticDesc = point.getStatisticDesc();
             measurementTimeseriesId = point.getMeasurementTimeseriesId();
@@ -334,6 +336,12 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
         }
     }
 
+    private void writeAttribute(String localName, String value) throws XMLStreamException {
+        if(value != null) {
+            writer.writeAttribute(localName, value);
+        }
+    }
+
     private void writeAttribute(String namespaceURI, String localName, String value) throws XMLStreamException {
         if(value != null) {
             writer.writeAttribute(namespaceURI, localName, value);
@@ -354,7 +362,7 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
               // convert to csv separated
               String csv =  point.getQualifiersAsJson().replace("[", "").
                       replace("]","").replace("\"", "");
-              qualifierList =  Arrays.asList(csv.split(",", 0));
+              qualifierList =  Arrays.asList(csv.split(","));
           }
 
           return qualifierList;
@@ -368,7 +376,7 @@ public class WaterMLPointToXmlResultHandler implements ResultHandler<WaterMLPoin
             // convert to csv separated
             String csv =  point.getApprovalsAsJson().replace("[", "").
                     replace("]","").replace("\"", "");
-            statusList =  Arrays.asList(csv.split(",", 0));
+            statusList =  Arrays.asList(csv.split(","));
         }
 
         return statusList;

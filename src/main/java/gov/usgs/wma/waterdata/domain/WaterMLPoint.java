@@ -1,8 +1,6 @@
 package gov.usgs.wma.waterdata.domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WaterMLPoint {
 
@@ -11,7 +9,7 @@ public class WaterMLPoint {
 	String qualifiersAsJson;
 	String approvalsAsJson;
 
-	String monLocIdentifier;
+	String featureId;
 	String monLocReference;
 	String siteName;
 
@@ -136,8 +134,8 @@ public class WaterMLPoint {
 		this.qualifiersAsJson = qualifiersAsJson;
 	}
 
-	public String getMonLocIdentifier() {
-		return monLocIdentifier;
+	public String getFeatureId() {
+		return featureId;
 	}
 
 	public String getMonLocReference() {
@@ -172,8 +170,8 @@ public class WaterMLPoint {
 		this.siteName = siteName;
 	}
 
-	public void setMonLocIdentifier(String monLocIdentifier) {
-		this.monLocIdentifier = monLocIdentifier;
+	public void setFeatureId(String featureId) {
+		this.featureId = featureId;
 	}
 
 	public String getStatus() {
