@@ -14,6 +14,7 @@
        from (select *, RANK() OVER (ORDER BY ranking DESC) AS rk
              from nwis.best_time_series
              where monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
+                   and rank_type = 'GW_DAILY' and time_series_unique_id is not null
                    and ranking > 0) as t
        where rk = 1
     </sql>

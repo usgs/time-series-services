@@ -1,3 +1,4 @@
-"time_series_unique_id","ranking","monitoring_location_identifier","site_identification_number","parameter_cd","statistic_cd"
-"e6a4cc2de5bf437e83efe0107cf026ac",1024,"USGS-07227448","07227448","1","00001"
-"1ssdfsgfgrvmhjhjnbassdymbnjghnv0",512,"USGS-07227448","07227448","2","00003"
+"data_set_id","time_series_unique_id","ranking","rank_type","monitoring_location_identifier","site_identification_number","parameter_cd","statistic_cd"
+"e6a4cc2de5bf437e83efe0107cf026ac","e6a4cc2de5bf437e83efe0107cf026ac",1024,"GW_DAILY","USGS-07227448","07227448","1","00001"
+"1ssdfsgfgrvmhjhjnbassdymbnjghnv0","1ssdfsgfgrvmhjhjnbassdymbnjghnv0",512,"GW_DAILY","USGS-07227448","07227448","2","00003"
+USGS-07227448-2-00003,null,512,"GW_DISCRETE","USGS-07227448","07227448","2","00003"
