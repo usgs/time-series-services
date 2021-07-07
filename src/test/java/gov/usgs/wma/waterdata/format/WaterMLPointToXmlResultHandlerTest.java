@@ -72,6 +72,9 @@ class WaterMLPointToXmlResultHandlerTest {
 
 	    WaterMLPoint point = createPoint();
 	    pointQueue.add(point);
+	    point.setPhenomenonTimeStart(LocalDateTime.of(2007, 9, 5, 14, 28, 0).toString());
+	    point.setPhenomenonTimeEnd(LocalDateTime.of(2008, 7, 29, 19, 12, 0).toString());
+
 		point = createPoint();
 		point.setResultValue(10.0);
 		pointQueue.add(point);

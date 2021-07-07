@@ -8,6 +8,17 @@
   </metadata>
   <observationMember>
     <om:OM_Observation>
+      <om:phenomenonTime>
+        <gml:TimePeriod>
+          <gml:beginPosition>2007-09-05T14:28:00Z</gml:beginPosition>
+          <gml:endPosition>2008-07-29T19:12:00Z</gml:endPosition>
+        </gml:TimePeriod>
+      </om:phenomenonTime>
+      <om:resultTime>
+        <gml:TimeInstant>
+          <gml:timePosition>2008-07-29T19:12:00Z</gml:timePosition>
+        </gml:TimeInstant>
+      </om:resultTime>
       <om:procedure>
         <om:ObservationProcess>
           <parameter>
@@ -130,6 +141,17 @@
   </observationMember>
   <observationMember>
     <om:OM_Observation>
+      <om:phenomenonTime>
+        <gml:TimePeriod>
+          <gml:beginPosition>2007-09-05T14:28:00Z</gml:beginPosition>
+          <gml:endPosition>2008-07-29T19:12:00Z</gml:endPosition>
+        </gml:TimePeriod>
+      </om:phenomenonTime>
+      <om:resultTime>
+        <gml:TimeInstant>
+          <gml:timePosition>2008-07-29T19:12:00Z</gml:timePosition>
+        </gml:TimeInstant>
+      </om:resultTime>
       <om:procedure>
         <om:ObservationProcess>
           <parameter>
@@ -252,6 +274,17 @@
   </observationMember>
   <observationMember>
     <om:OM_Observation>
+      <om:phenomenonTime>
+        <gml:TimePeriod>
+          <gml:beginPosition>2007-09-05T14:28:00Z</gml:beginPosition>
+          <gml:endPosition>2008-07-29T19:12:00Z</gml:endPosition>
+        </gml:TimePeriod>
+      </om:phenomenonTime>
+      <om:resultTime>
+        <gml:TimeInstant>
+          <gml:timePosition>2008-07-29T19:12:00Z</gml:timePosition>
+        </gml:TimeInstant>
+      </om:resultTime>
       <om:procedure>
         <om:ObservationProcess>
           <parameter>

@@ -10,6 +10,10 @@
 				|| '/items/' || ml.monitoring_location_identifier || '?f=json' as "monLocReference",
 			site_name "siteName",
 			date_measured_raw "resultDateTimeUTC", /* timestamp of the UTC time */
+			to_char(first_value(date_measured_raw) OVER wnd, 'YYYY-MM-DD"T"HH24:MI:SS"Z"')
+				as "phenomenonTimeStart",
+			to_char(last_value(date_measured_raw) OVER wnd, 'YYYY-MM-DD"T"HH24:MI:SS"Z"')
+				as "phenomenonTimeEnd",
 			display_result "resultValue",
 			parm.parm_unt_tx "resultUnit",
 			parameter_code "pcode",
@@ -20,11 +24,16 @@
 			approval_level_description "status"
 		from nwis.discrete_ground_water_aqts dgw
 		join nwis.monitoring_location ml
-		on ml.monitoring_location_identifier = ml.monitoring_location_identifier
+		on dgw.monitoring_location_identifier = ml.monitoring_location_identifier
 		left join nwis.parm parm
 			on dgw.parameter_code = parm.parm_cd
 		where
 			dgw.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
-		order by "featureId", "pcode", "statisticDesc", "resultDateTimeUTC"
+		WINDOW wnd AS (
+			PARTITION BY dgw.monitoring_location_identifier, parameter_code
+			ORDER BY dgw.monitoring_location_identifier, parameter_code, date_measured_raw
+			ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+		)
+		order by dgw.monitoring_location_identifier, parameter_code, date_measured_raw
 	</select>
 </mapper>
