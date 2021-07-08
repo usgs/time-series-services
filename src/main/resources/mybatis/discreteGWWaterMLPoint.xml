@@ -31,9 +31,9 @@
 			dgw.monitoring_location_identifier = #{featureId,jdbcType=VARCHAR}
 		WINDOW wnd AS (
 			PARTITION BY dgw.monitoring_location_identifier, parameter_code
-			ORDER BY dgw.monitoring_location_identifier, parameter_code, date_measured_raw
+			ORDER BY date_measured_raw
 			ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
 		)
-		order by dgw.monitoring_location_identifier, parameter_code, date_measured_raw
+		order by parameter_code, date_measured_raw
 	</select>
 </mapper>
