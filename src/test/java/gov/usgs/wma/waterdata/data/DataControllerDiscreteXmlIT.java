@@ -107,9 +107,7 @@ public class DataControllerDiscreteXmlIT extends BaseIT {
         assertThat(rtn.getStatusCode(), equalTo(HttpStatus.OK));
         assertTrue(rtn.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_XML));
         assertNotNull(rtn.getBody());
-        // TODO: xml schema validation currently fails due to missing required element after
-        //  {"http://www.opengis.net/om/2.0":procedure}
-        // assertXmlSchemaCompliant(rtn.getBody(), WaterML2.SCHEMA);
+        assertXmlSchemaCompliant(rtn.getBody(), WaterML2.SCHEMA);
 
         try {
             String expectedXml = harmonizeXml(getCompareFile(compareFile));
